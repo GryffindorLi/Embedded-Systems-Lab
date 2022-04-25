@@ -74,12 +74,17 @@ void delete_message(D2PC_message_p m){
 /*
  * @Author Zirui Li
  * @Param m A pointer to a D2PC_message struct.
- * @Param arr A double pointer that points to the pointer of a byte array
- * @Return return the number of bytes, in our current implementation is 10.
+ * @Return return a pointer to the bytes_array union.
  */
-int to_bytes_array(D2PC_message_p m, uint16_t** arr){
+bytes_array* to_bytes_array(D2PC_message_p m){
     bytes_array* ba = (bytes_array*)malloc(sizeof(bytes_array));
     ba->m = *m;
-    *arr = ba->bytes;
-    return 10;
+    return ba;
+}
+
+/*
+ * @Author Zirui Li
+ */
+void delete_bytes_array(bytes_array* b){
+    free(b);
 }

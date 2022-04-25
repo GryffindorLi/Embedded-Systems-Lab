@@ -30,4 +30,6 @@ D2PC_message init_message(void);
 
 void delete_message(D2PC_message_p m);
 
-int to_bytes_array(D2PC_message_p m, uint16_t** arr);
+bytes_array* to_bytes_array(D2PC_message_p m);
+
+void delete_bytes_array(bytes_array* b);
