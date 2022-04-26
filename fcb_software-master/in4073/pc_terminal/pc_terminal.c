@@ -81,6 +81,7 @@ int	term_getchar()
 #include <assert.h>
 #include <time.h>
 #include "PC2D.h"
+#include "D2PC.h"
 
 static int fd_serial_port;
 /*
@@ -148,6 +149,20 @@ uint8_t serial_port_getchar()
 	return c;
 }
 
+/*
+ * @Author Zirui Li
+ * @Param bytes A double pointer to a bytes array. Data read into this array.
+ * @Return A flag indicates fail(-1) or succeed(10)
+ */
+int8_t serial_port_getmessage(uint8_t** bytes){
+	int8_t flag;
+	do {
+		flag = read(fd_serial_port, *bytes, 10);
+	} while (flag != 10 && flag != -1);
+
+	return flag;
+}
+
 int serial_port_putmessage(PC2D_message mes)
 {
 	int result;
@@ -162,6 +177,10 @@ int serial_port_putmessage(PC2D_message mes)
 /*----------------------------------------------------------------
  * main -- execute terminal
  *----------------------------------------------------------------
+ */
+ /*
+ * @Author Hanyuan Ban
+ * @Author Zirui Li
  */
 int main(int argc, char **argv)
 {
@@ -200,8 +219,23 @@ int main(int argc, char **argv)
 			int bytes = serial_port_putmessage(new_message);
 			fprintf(stderr,"Sent %d bytes to DRONE!", bytes);
 		}
+
+		/*
 		if ((c = serial_port_getchar()) != -1) {
 			term_putchar(c);
+		}
+		*/
+		uint8_t* mess;
+		if ((serial_port_getmessage(&mess)) != -1){
+			bytes_array ba;
+			memcpy((void*)(&ba.bytes), (void*)mess, 10);
+
+			D2PC_message_p recv_mess = &ba.m;
+			printf("Mode is %d\n", recv_mess->mode);
+			printf("Battery is %d\n", recv_mess->battery);
+			printf("Yaw is %d\n", recv_mess->y);
+			printf("Pitch is %d\n", recv_mess->p);
+			printf("Roll is %d\n", recv_mess->r);
 		}
 	}
 

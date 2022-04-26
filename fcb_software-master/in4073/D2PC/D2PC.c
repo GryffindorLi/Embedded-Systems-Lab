@@ -46,6 +46,8 @@ D2PC_message init_message(void){
     D2PC_message_p m = (D2PC_message_p)malloc(sizeof(D2PC_message));
 
     /* A conceputual implementation
+    adc_request_sample();
+	read_baro();
     m->mode = get_mode();
     m->battery = get_battery();
     m->y = get_yaw();

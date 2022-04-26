@@ -31,6 +31,7 @@
 #include "utils/quad_ble.h"
 #include "PC2D.h"
 #include "queue.h"
+#include "D2PC.h"
 
 bool demo_done;
 
@@ -113,6 +114,11 @@ void process_key(uint8_t c)
  * main -- everything you need is here :)
  *------------------------------------------------------------------
  */
+
+/*
+ * @Author Hanyuan Ban
+ * @Author Zirui Li
+ */
 int main(void)
 {
 	uart_init();
@@ -149,7 +155,7 @@ int main(void)
 			if (counter++%20 == 0) {
 				nrf_gpio_pin_toggle(BLUE);
 			}
-
+			/*
 			adc_request_sample();
 			read_baro();
 
@@ -158,6 +164,15 @@ int main(void)
 			printf("%6d %6d %6d | ", phi, theta, psi);
 			printf("%6d %6d %6d | ", sp, sq, sr);
 			printf("%4d | %4ld | %6ld \n", bat_volt, temperature, pressure);
+			*/
+
+			D2PC_message m = init_message();
+			bytes_array* b = to_bytes_array(&m);
+			for (int i = 0; i < 10; ++i){
+				uart_put(b->bytes[i]);
+			}
+			delete_message(&m);
+			delete_bytes_array(b);
 
 			clear_timer_flag();
 		}
