@@ -22,11 +22,11 @@ typedef struct {
 
 // the message type
 typedef struct {
-    char header;      // 1 byte
+    uint8_t Preamble; // 1 byte
+    uint8_t checksum; // 1 byte
     uint8_t mode;     // 1 byte
     controls control; // 2 * 3 byte
     char key;         // 1 byte
-    uint8_t checksum; // 1 byte
 } PC2D_message;
 
 typedef PC2D_message* PC2D_message_p;

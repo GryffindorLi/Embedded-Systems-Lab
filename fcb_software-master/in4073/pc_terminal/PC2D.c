@@ -1,8 +1,8 @@
 #include <stdbool.h>
 #include "PC2D.h"
-
+#define START_BYTE 0xAA
 PC2D_message create_message() {
-    PC2D_message new_message = {0, MODE_SAFE, {0, 0, 0}, '\0'};
+    PC2D_message new_message = {START_BYTE, 0, MODE_SAFE, {0, 0, 0}, '\0'};
     set_checksum(&new_message, sizeof(new_message));
     return new_message;
 }
