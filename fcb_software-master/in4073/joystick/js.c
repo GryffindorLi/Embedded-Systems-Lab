@@ -102,7 +102,9 @@ int main (int argc, char **argv)
 
 		}
 		if (errno != EAGAIN) {
-			perror("\njs: error reading (EAGAIN)");
+			perror("\njs: error reading (EAGAIN)");//If USB connection of Joystick is lost, 
+													//Enter safe mode
+			button[MODE_SAFE]=1;
 			exit (1);
 		}
 
