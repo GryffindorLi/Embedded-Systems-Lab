@@ -9,7 +9,7 @@ pc_terminal.o: pc_terminal.c PC2D.h
 	cc -c pc_terminal.c
 
 PC2D.o: PC2D.c
-	cc -c PC2D.c
+	cc -c ../communication/PC2D.c
 
 clean:
 	rm $(EXEC)

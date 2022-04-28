@@ -49,7 +49,6 @@ $(abspath ./hal/barometer.c) \
 $(abspath ./hal/spi_flash.c) \
 $(abspath ./utils/quad_ble.c) \
 $(abspath ./utils/queue.c) \
-$(abspath ./pc_terminal/PC2D.c) \
 $(abspath ./mpu6050/inv_mpu.c) \
 $(abspath ./mpu6050/inv_mpu_dmp_motion_driver.c) \
 $(abspath ./mpu6050/ml.c) \
@@ -65,6 +64,8 @@ $(abspath ../components/ble/common/ble_conn_params.c) \
 $(abspath ../components/ble/ble_services/ble_nus/ble_nus.c) \
 $(abspath ../components/ble/common/ble_srv_common.c) \
 $(abspath ../components/softdevice/common/softdevice_handler/softdevice_handler.c) \
+$(abspath ./communication/D2PC.c) \
+$(abspath ./communication/PC2D.c) \
 
 #assembly files common to all targets
 ASM_SOURCE_FILES  = $(abspath ../components/toolchain/gcc/gcc_startup_nrf51.s)
@@ -76,7 +77,6 @@ INC_PATHS += -I$(abspath ./utils/config)
 INC_PATHS += -I$(abspath ./utils)
 INC_PATHS += -I$(abspath ./hal)
 INC_PATHS += -I$(abspath ./messages)
-INC_PATHS += -I$(abspath ./pc_terminal)
 INC_PATHS += -I$(abspath ../components/device)
 INC_PATHS += -I$(abspath ../components/toolchain/gcc)
 INC_PATHS += -I$(abspath ../components/toolchain)
@@ -93,6 +93,7 @@ INC_PATHS += -I$(abspath ../components/drivers_nrf/common)
 INC_PATHS += -I$(abspath ../components/ble/ble_advertising)
 INC_PATHS += -I$(abspath ../components/libraries/trace)
 INC_PATHS += -I$(abspath ../components/softdevice/common/softdevice_handler)
+INC_PATHS += -I$(abspath ./communication)
 
 
 OBJECT_DIRECTORY = _build

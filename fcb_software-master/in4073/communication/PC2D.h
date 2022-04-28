@@ -1,6 +1,10 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
+/*
+ * @Author: Hanyuan Ban
+ */
+
 // mode defines
 #define MODE_SAFE 0
 #define MODE_PANIC 1
@@ -12,7 +16,6 @@
 #define MODE_HEIGHT_CONTROL 7
 #define MODE_WIRELESS 8
 
-
 // control type define
 typedef struct {
     uint16_t x;
@@ -22,11 +25,10 @@ typedef struct {
 
 // the message type
 typedef struct {
-    char header;      // 1 byte
+    uint8_t checksum; // 1 byte
     uint8_t mode;     // 1 byte
     controls control; // 2 * 3 byte
     char key;         // 1 byte
-    uint8_t checksum; // 1 byte
 } PC2D_message;
 
 typedef PC2D_message* PC2D_message_p;

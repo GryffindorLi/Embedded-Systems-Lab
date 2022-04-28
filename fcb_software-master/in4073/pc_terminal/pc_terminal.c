@@ -13,6 +13,8 @@
 #include <string.h>
 #include <inttypes.h>
 
+#define TRANSMISSION_FREQ 50
+
 /*------------------------------------------------------------
  * console I/O
  *------------------------------------------------------------
@@ -80,7 +82,8 @@ int	term_getchar()
 #include <stdio.h>
 #include <assert.h>
 #include <time.h>
-#include "PC2D.h"
+#include "../communication/PC2D.h"
+#include "../communication/D2PC.h"
 
 static int fd_serial_port;
 /*
@@ -148,6 +151,25 @@ uint8_t serial_port_getchar()
 	return c;
 }
 
+/*
+ * @Author Zirui Li
+ * @Param bytes A double pointer to a bytes array. Data read into this array.
+ * @Return A flag indicates fail(-1) or succeed(10)
+ */
+int8_t serial_port_getmessage(uint8_t** bytes){
+	int8_t flag;
+	do {
+		flag = read(fd_serial_port, *bytes, 10);
+	} while (flag != 10 && flag != -1);
+
+	return flag;
+}
+
+/*
+ * @Author: Hanyuan Ban
+ * @Param mes The message that needs to be sent..
+ * @Return A flag indicates fail(-1) or succeed(sizeof(mes))
+ */
 int serial_port_putmessage(PC2D_message mes)
 {
 	int result;
@@ -163,10 +185,12 @@ int serial_port_putmessage(PC2D_message mes)
  * main -- execute terminal
  *----------------------------------------------------------------
  */
+ /*
+ * @Author Hanyuan Ban
+ * @Author Zirui Li
+ */
 int main(int argc, char **argv)
 {
-	char c;
-
 	term_initio();
 	term_puts("\nTerminal program - Embedded Real-Time Systems\n");
 
@@ -183,25 +207,60 @@ int main(int argc, char **argv)
 
 	term_puts("Type ^C to exit\n");
 
-	/* send & receive
+	/* 
+	 *send & receive
 	 */
-	int seq_no = 0;
+
+	clock_t time = 0;
+	char c = -1;
+	char tmp_c = -1;
+	uint8_t current_mode = MODE_SAFE;
+
 	for (;;) {
-		if ((c = term_getchar_nb()) != -1) {
-			seq_no++;
+		// read the keyboard command every loop
+		if ((tmp_c = term_getchar_nb()) != -1) {
+			c = tmp_c;
+		}
+
+
+		/*
+			TODO: read joystick
+		*/
+		uint16_t cont_x = 20000;
+		uint16_t cont_y = 19999;
+		uint16_t cont_z = 19998;
+
+		// transmit control signal at transmission frequency (50Hz)
+		if (clock() - time > TRANSMISSION_FREQ) {
+			time = clock();
 			PC2D_message new_message = create_message();
 
-			set_checksum(&new_message, 10);
-			set_mode(&new_message, MODE_SAFE);
-			controls cont = {20000,19999,19998};
+			set_checksum(&new_message, sizeof(new_message));
+			set_mode(&new_message, current_mode);
+			controls cont = {cont_x, cont_y, cont_z};
 			set_control(&new_message, cont);
 			set_key(&new_message, c);
 			
 			int bytes = serial_port_putmessage(new_message);
-			fprintf(stderr,"Sent %d bytes to DRONE!", bytes);
+			if (bytes > -1) {
+				fprintf(stderr,"Sent %d bytes to DRONE!", bytes);
+			} else {
+				fprintf(stderr,"Failed to send from PC to DRONE");
+			}
 		}
-		if ((c = serial_port_getchar()) != -1) {
-			term_putchar(c);
+		
+		// receive bytes from drone
+		uint8_t* mess;
+		if ((serial_port_getmessage(&mess)) != -1){
+			bytes_array ba;
+			memcpy((void*)(&ba.bytes), (void*)mess, 10);
+
+			D2PC_message_p recv_mess = &ba.m;
+			printf("Mode is %d\n", recv_mess->mode);
+			printf("Battery is %d\n", recv_mess->battery);
+			printf("Yaw is %d\n", recv_mess->y);
+			printf("Pitch is %d\n", recv_mess->p);
+			printf("Roll is %d\n", recv_mess->r);
 		}
 	}
 

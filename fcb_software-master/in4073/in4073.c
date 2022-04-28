@@ -16,6 +16,7 @@
 #include <stdbool.h>
 #include <inttypes.h>
 #include <stdio.h>
+#include <string.h>
 #include "nrf_gpio.h"
 #include "nrf_delay.h"
 #include "app_util_platform.h"
@@ -29,40 +30,61 @@
 #include "control.h"
 #include "mpu6050/mpu6050.h"
 #include "utils/quad_ble.h"
-#include "PC2D.h"
+#include "communication/PC2D.h"
 #include "queue.h"
+#include "communication/D2PC.h"
 
 bool demo_done;
 
-/*------------------------------------------------------------
- * parse message
- *------------------------------------------------------------
+/*
+ * @Author: Hanyuan Ban
+ * @Param lq The receiving local queue, q The queue handling serial data.
  */
+void receive_message(Queue* lq, Queue* q) {
+	for (int i = 0; i < q->count; i++) {
+		enqueue(lq, dequeue(q));
+	}
+}
 
-int receive_message(PC2D_message_p mes, Queue* q, int len) {
-	for (int i = 0; i < len; i++) {
-		uint8_t val = dequeue(q);
-		if (val == (uint8_t) -1) {
-			printf("wrong at %d\n", i);
-			return -1;
+/*
+ * @Author: Hanyuan Ban
+ * @Param mes The message needed to be filled, q The receiving local queue, len Size of message
+ * @Return A flag indicates "parse failure" (0), "parse successful" (1), "parsed more than one message" (No. of message).
+ */
+int parse_message(PC2D_message_p mes, Queue* q, uint8_t len) {
+	uint16_t header_p = q->first;
+	uint16_t checksum_p = q->first;
+	uint16_t pointer = q->first;
+	uint8_t val;
+	int iter = q->count;
+	int result = 0;
+	for (int j = 0; j < iter; j++) {
+		val = q->items[pointer];	// read the data
+		// if it is the header
+		if ((char)val == '*') {
+			header_p = pointer; // set the header pointer to here
+			// remove the unparsed bytes
+			for (int i = q->first; i < header_p; i++) {
+				dequeue(q);
+			}
+			pointer = q->first;
 		}
-		if (i == 0) {
-			mes->checksum = val;
-			if (val != len) {
-				printf("wrong checksum");
-				return -1;
+		// if it is a checksum
+		if (val == len) {
+			checksum_p = pointer; // set the checksum pointer to here
+			// if exactly a message length
+			if (checksum_p - header_p == len - 1) {
+				memcpy(&mes, &(q->items[header_p]), len);	// copy the data to message
+				for(int i = 0; i < len; i++) {
+					dequeue(q); // delete the data from queue
+				}
+				pointer = q->first;
+				result++;
 			}
 		}
-		if (i == 1) mes->mode = val;
-		if (i == 2) mes->control.x = (uint16_t) val;
-		if (i == 3) mes->control.x |= ((uint16_t) val) << 8;
-		if (i == 4) mes->control.y = (uint16_t) val;
-		if (i == 5) mes->control.y |= ((uint16_t) val) << 8;
-		if (i == 6) mes->control.z = (uint16_t) val;
-		if (i == 7) mes->control.z |= ((uint16_t) val) << 8;
-		if (i == 8) mes->key = (char) val;
+		pointer++;
 	}
-	return 1;
+	return result;
 }
 
 /*------------------------------------------------------------------
@@ -113,6 +135,15 @@ void process_key(uint8_t c)
  * main -- everything you need is here :)
  *------------------------------------------------------------------
  */
+
+/*
+ * @Author Hanyuan Ban
+ * @Author Zirui Li
+ */
+
+Queue local_receive_q;
+PC2D_message rec_mes;
+
 int main(void)
 {
 	uart_init();
@@ -125,31 +156,34 @@ int main(void)
 	spi_flash_init();
 	quad_ble_init();
 
+	init_queue(&local_receive_q);
+
 	uint32_t counter = 0;
 	demo_done = false;
 	wireless_mode = false;
 
-	PC2D_message rec_mes = create_message();
+	rec_mes = create_message();
+	int parse_result = 0;
 
 	while (!demo_done) {
 		if (rx_queue.count) {
-			if (receive_message(&rec_mes, &rx_queue, sizeof(rec_mes)) == 1) {
-				printf("RECEIVED_MESSAGE:\n");
-				printf("checksum: %d\n", rec_mes.checksum);
-				printf("mode: %d\n", rec_mes.mode);
-				printf("controls: %d %d %d\n", rec_mes.control.x, rec_mes.control.y, rec_mes.control.z);
-				printf("key: %c\n", rec_mes.key);
+			receive_message(&local_receive_q, &rx_queue);
+		}
+
+		parse_result = parse_message(&rec_mes, &local_receive_q, sizeof(rec_mes));
+		if (parse_result >= 1) {
+			printf("Mode: %d\n", rec_mes.mode);
+			printf("Control: %d %d %d\n", rec_mes.control.x, rec_mes.control.y, rec_mes.control.z);
+			if (parse_result > 1) {
+				printf("Over-parsed %d messages", parse_result - 1);
 			}
-		}
-		if (ble_rx_queue.count) {
-			process_key(dequeue(&ble_rx_queue));
-		}
+		} 
 
 		if (check_timer_flag()) {
 			if (counter++%20 == 0) {
 				nrf_gpio_pin_toggle(BLUE);
 			}
-
+			/*
 			adc_request_sample();
 			read_baro();
 
@@ -158,6 +192,15 @@ int main(void)
 			printf("%6d %6d %6d | ", phi, theta, psi);
 			printf("%6d %6d %6d | ", sp, sq, sr);
 			printf("%4d | %4ld | %6ld \n", bat_volt, temperature, pressure);
+			*/
+
+			D2PC_message m = init_message();
+			bytes_array* b = to_bytes_array(&m);
+			for (int i = 0; i < 10; ++i){
+				uart_put(b->bytes[i]);
+			}
+			delete_message(&m);
+			delete_bytes_array(b);
 
 			clear_timer_flag();
 		}
