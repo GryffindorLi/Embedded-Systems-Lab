@@ -51,7 +51,6 @@ int main (int argc, char **argv)
 	int 		fd;
 	struct js_event js;
 	unsigned int	t, i;
-
 	if ((fd = open(JS_DEV, O_RDONLY)) < 0) {
 		perror("jstest");
 		exit(1);
@@ -60,23 +59,20 @@ int main (int argc, char **argv)
 	/* non-blocking mode
 	 */
 	fcntl(fd, F_SETFL, O_NONBLOCK);
-
+	//printf("%ld", sizeof(struct js_event));
 	while (1) {
-
-
+		
 		/* simulate work
 		 */
 		mon_delay_ms(300);
 		t = mon_time_ms();
-
-		/* check up on JS
-		 */
+		
 		while (read(fd, &js, sizeof(struct js_event)) == 
 		       			sizeof(struct js_event))  {
 
 			/* register data
 			 */
-			// fprintf(stderr,".");
+			//fprintf(stderr,".");
 			switch(js.type & ~JS_EVENT_INIT) {
 				case JS_EVENT_BUTTON:
 					button[js.number] = js.value;
@@ -85,6 +81,17 @@ int main (int argc, char **argv)
 					axis[js.number] = js.value;
 					break;
 			}
+		}
+		if (sizeof(struct js_event) != CHECK_SUM)
+		{
+			printf("Message Lost");
+		}
+		if (button[MODE_PANIC])
+		{
+			//Break and send the information to the drone
+			printf("PANIC: DO NOT PANIC!");
+			break;
+
 		}
 		if (errno != EAGAIN) {
 			perror("\njs: error reading (EAGAIN)");
