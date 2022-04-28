@@ -48,6 +48,7 @@ void    mon_delay_ms(unsigned int ms)
 
 int main (int argc, char **argv)
 {
+	int timeout = 300;
 	int 		fd;
 	struct js_event js;
 	unsigned int	t, i;
@@ -81,11 +82,18 @@ int main (int argc, char **argv)
 					axis[js.number] = js.value;
 					break;
 			}
+		i = mon_time_ms();
+		if ((t-i)> timeout)
+		{
+			printf("Timeout");
 		}
 		if (sizeof(struct js_event) != CHECK_SUM)
 		{
 			printf("Message Lost");
 		}
+
+		}
+		
 		if (button[MODE_PANIC])
 		{
 			//Break and send the information to the drone
@@ -108,7 +116,10 @@ int main (int argc, char **argv)
 			printf("%d ",button[i]);
 		}
 		if (button[0])
+		{
+			printf("SAFE MODE ENTERED");
 			break;
+		}
 	}
 	printf("\n<exit>\n");
 
