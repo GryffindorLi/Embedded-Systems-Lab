@@ -166,10 +166,12 @@ int main(void)
 	int parse_result = 0;
 
 	while (!demo_done) {
+		// receive message when there is message
 		if (rx_queue.count) {
 			receive_message(&local_receive_q, &rx_queue);
 		}
 
+		// parse message every loop
 		parse_result = parse_message(&rec_mes, &local_receive_q, sizeof(rec_mes));
 		if (parse_result >= 1) {
 			printf("Mode: %d\n", rec_mes.mode);
@@ -178,7 +180,7 @@ int main(void)
 				printf("Over-parsed %d messages", parse_result - 1);
 			}
 		} 
-
+		
 		if (check_timer_flag()) {
 			if (counter++%20 == 0) {
 				nrf_gpio_pin_toggle(BLUE);
