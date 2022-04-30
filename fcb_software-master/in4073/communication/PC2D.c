@@ -2,7 +2,7 @@
 #include "PC2D.h"
 
 CTRL_msg new_ctrl_msg() {
-    CTRL_msg new_message = {'C', {0, 0, 0}, '\0', 0};
+    CTRL_msg new_message = {'C', {0, 0, 0, 0}, '\0', 0};
     new_message.checksum = sizeof(new_message);
     return new_message;
 }

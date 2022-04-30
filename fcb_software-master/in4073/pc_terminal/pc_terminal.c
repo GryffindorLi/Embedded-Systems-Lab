@@ -170,14 +170,48 @@ int8_t serial_port_getmessage(uint8_t** bytes){
  * @Param msg The message that needs to be sent..
  * @Return A flag indicates fail(-1) or succeed(sizeof(msg))
  */
-int serial_port_putmessage(pc_msg msg, int len)
+int serial_port_putmessage(pc_msg* msg, int len)
 {
 	int result;
 	do {
-		result = (int) write(fd_serial_port, &msg, len);
+		result = (int) write(fd_serial_port, msg, len);
 	} while (result == 0);
 
 	return result;
+}
+
+int send_ctrl_msg(pc_msg* msg, controls cont, char c) {
+	msg->cm.checksum = sizeof(msg->cm);
+	msg->cm.key = c;
+	msg->cm.control = cont;
+	
+	int bytes = serial_port_putmessage(msg, sizeof(msg->cm));
+	if (bytes > -1) {
+		fprintf(stderr,"Sent %d bytes to DRONE!", bytes);
+	} else {
+		fprintf(stderr,"Failed to send from PC to DRONE");
+	}
+	return bytes;
+}
+
+int send_mode_msg(pc_msg* msg, uint8_t mode) {
+	msg->mm.checksum = sizeof(msg->mm);
+	msg->mm.mode = mode;
+	
+	int bytes = serial_port_putmessage(msg, sizeof(msg->mm));
+	if (bytes > -1) {
+		fprintf(stderr,"Sent %d bytes to DRONE!", bytes);
+	} else {
+		fprintf(stderr,"Failed to send from PC to DRONE");
+	}
+	return bytes;
+}
+
+uint8_t get_mode_change(char key, uint8_t* buttons) {
+	if (key == 27) return MODE_PANIC;	//escape
+	if (key >= '0' && key <= '8') return (uint8_t) key - '0';  //change mode from
+	if (buttons[0] == 1) return 255;
+	return 255;
 }
 
 
@@ -214,9 +248,10 @@ int main(int argc, char **argv)
 	clock_t time = 0;
 	char c = -1;
 	char tmp_c = -1;
-	// uint8_t current_mode = MODE_SAFE;
-	controls cont = {20000, 19999, 19998};
-	// uint8_t buttons[12] = {};
+	uint8_t current_mode = MODE_SAFE;
+	uint8_t tmp_mode = -1;
+	controls cont = {500, 20000, 19999, 19998};
+	uint8_t buttons[12] = {0};
 
 	for (;;) {
 		// read the keyboard command every loop
@@ -224,42 +259,34 @@ int main(int argc, char **argv)
 			c = tmp_c;
 		}
 
-
-
-
 		// --------------------------------------------------
 		/*
 			TODO: read joystick
 
-				get xyz controls into:
-					cont = {uint16_t, uint16_t, uint16_t};
+				get lift roll pitch yaw controls into:
+					cont = {uint16_t, uint16_t, uint16_t, uint16_t};
 
-				(uncomment the buttons[12] on top of for(;;))
-				
 				get buttons into:    
 					buttons = [uint8_t * 12];
 				
 		*/
 		// --------------------------------------------------
-
-
-
+		
+		tmp_mode = get_mode_change(c, buttons);
+		// transmit mode change signal immediately after detection
+		if (tmp_mode != 255 && tmp_mode != current_mode) {
+			current_mode = tmp_mode;
+			pc_msg  msg;
+			msg.mm = new_mode_msg();
+			send_mode_msg(&msg, current_mode);
+		}
 
 		// transmit control signal at transmission frequency (50Hz)
 		if (clock() - time > TRANSMISSION_FREQ) {
 			time = clock();
 			pc_msg msg;
 			msg.cm = new_ctrl_msg();
-			msg.cm.checksum = sizeof(msg.cm);
-			msg.cm.key = c;
-			msg.cm.control = cont;
-			
-			int bytes = serial_port_putmessage(msg, sizeof(msg.cm));
-			if (bytes > -1) {
-				fprintf(stderr,"Sent %d bytes to DRONE!", bytes);
-			} else {
-				fprintf(stderr,"Failed to send from PC to DRONE");
-			}
+			send_ctrl_msg(&msg, cont, c);
 		}
 		
 		// receive bytes from drone

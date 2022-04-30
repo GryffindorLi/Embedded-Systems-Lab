@@ -103,13 +103,6 @@ char on_set_key(pc_msg* msg) {
 	return msg->cm.key;
 }
 
-// driving motors given the control features
-void drive_motors(uint8_t mode, controls cont, char c) {
-	return;
-}
-
-
-
 /*------------------------------------------------------------------
  * process_key -- process command keys
  *------------------------------------------------------------------
@@ -205,13 +198,24 @@ int main(void)
 			current_control = on_set_control(&rec_msg);
 			current_key = on_set_key(&rec_msg);
 		}
-
-		drive_motors(current_mode, current_control, current_key);
 		
+		
+		// --------------------------------------------------------------
+		/*
+			TODO: given current_mode,
+						current_control {lift, roll, pitch, yaw},
+						current_key
+				  implement control theory and drive the motors 
+		*/
+		// --------------------------------------------------------------
+
+
+
 		if (check_timer_flag()) {
 			if (counter++%20 == 0) {
 				nrf_gpio_pin_toggle(BLUE);
 			}
+
 			/*
 			adc_request_sample();
 			read_baro();

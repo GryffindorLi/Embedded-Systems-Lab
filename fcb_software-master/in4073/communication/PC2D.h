@@ -15,15 +15,16 @@
 
 // control type define
 typedef struct {
-    uint16_t x;
-    uint16_t y;
-    uint16_t z;
+    uint16_t lift;
+    uint16_t roll;
+    uint16_t pitch;
+    uint16_t yaw;
 } controls;
 
 // the message type
 typedef struct {
     char type;      // 1 byte
-    controls control; // 2 * 3 byte
+    controls control; // 2 * 4 byte
     char key;         // 1 byte
     uint8_t checksum; // 1 byte
 } CTRL_msg;
