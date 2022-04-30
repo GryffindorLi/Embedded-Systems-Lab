@@ -22,23 +22,26 @@ typedef struct {
 
 // the message type
 typedef struct {
-    char header;      // 1 byte
-    uint8_t mode;     // 1 byte
+    char type;      // 1 byte
     controls control; // 2 * 3 byte
     char key;         // 1 byte
     uint8_t checksum; // 1 byte
-} PC2D_message;
+} CTRL_msg;
 
-typedef PC2D_message* PC2D_message_p;
+typedef struct {
+    char type;      // 1 byte
+    uint8_t mode;   // 1 byte
+    uint8_t checksum; // 1 byte
+} MODE_msg;
+
+typedef CTRL_msg* CTRL_msg_p;
+typedef MODE_msg* MODE_msg_p;
+
+typedef union {
+    CTRL_msg cm;
+    MODE_msg mm;
+} pc_msg; 
 
 // create message from scratch
-PC2D_message create_message(void);
-
-// create message from previous message
-PC2D_message create_message_from_prev(PC2D_message_p old_message);
-
-// change message contents
-void set_checksum(PC2D_message_p mes, uint8_t sum);
-void set_mode(PC2D_message_p mes, uint8_t m);
-void set_control(PC2D_message_p mes, controls cont);
-void set_key(PC2D_message_p mes, char k);
+CTRL_msg new_ctrl_msg(void);
+MODE_msg new_mode_msg(void);

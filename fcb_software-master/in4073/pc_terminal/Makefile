@@ -5,10 +5,10 @@ EXEC = ./pc-terminal
 default: pc_terminal.o PC2D.o
 	$(CC) $(CFLAGS) pc_terminal.c PC2D.o -o $(EXEC)
 
-pc_terminal.o: pc_terminal.c PC2D.h
+pc_terminal.o: pc_terminal.c ../communication/PC2D.h 
 	cc -c pc_terminal.c
 
-PC2D.o: PC2D.c
+PC2D.o: ../communication/PC2D.c
 	cc -c ../communication/PC2D.c
 
 clean:

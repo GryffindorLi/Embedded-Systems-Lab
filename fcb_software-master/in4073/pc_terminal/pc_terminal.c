@@ -167,14 +167,14 @@ int8_t serial_port_getmessage(uint8_t** bytes){
 
 /*
  * @Author: Hanyuan Ban
- * @Param mes The message that needs to be sent..
- * @Return A flag indicates fail(-1) or succeed(sizeof(mes))
+ * @Param msg The message that needs to be sent..
+ * @Return A flag indicates fail(-1) or succeed(sizeof(msg))
  */
-int serial_port_putmessage(PC2D_message mes)
+int serial_port_putmessage(pc_msg msg, int len)
 {
 	int result;
 	do {
-		result = (int) write(fd_serial_port, &mes, sizeof(mes));
+		result = (int) write(fd_serial_port, &msg, len);
 	} while (result == 0);
 
 	return result;
@@ -214,14 +214,13 @@ int main(int argc, char **argv)
 	clock_t time = 0;
 	char c = -1;
 	char tmp_c = -1;
-	uint8_t current_mode = MODE_SAFE;
+	// uint8_t current_mode = MODE_SAFE;
 
 	for (;;) {
 		// read the keyboard command every loop
 		if ((tmp_c = term_getchar_nb()) != -1) {
 			c = tmp_c;
 		}
-
 
 		/*
 			TODO: read joystick
@@ -233,15 +232,14 @@ int main(int argc, char **argv)
 		// transmit control signal at transmission frequency (50Hz)
 		if (clock() - time > TRANSMISSION_FREQ) {
 			time = clock();
-			PC2D_message new_message = create_message();
-
-			set_checksum(&new_message, sizeof(new_message));
-			set_mode(&new_message, current_mode);
+			pc_msg msg;
+			msg.cm = new_ctrl_msg();
+			msg.cm.checksum = sizeof(msg.cm);
+			msg.cm.key = c;
 			controls cont = {cont_x, cont_y, cont_z};
-			set_control(&new_message, cont);
-			set_key(&new_message, c);
+			msg.cm.control = cont;
 			
-			int bytes = serial_port_putmessage(new_message);
+			int bytes = serial_port_putmessage(msg, sizeof(msg.cm));
 			if (bytes > -1) {
 				fprintf(stderr,"Sent %d bytes to DRONE!", bytes);
 			} else {
@@ -267,7 +265,5 @@ int main(int argc, char **argv)
 	term_exitio();
 	serial_port_close();
 	term_puts("\n<exit>\n");
-
-	return 0;
 }
 

@@ -49,43 +49,66 @@ void receive_message(Queue* lq, Queue* q) {
 /*
  * @Author: Hanyuan Ban
  * @Param mes The message needed to be filled, q The receiving local queue, len Size of message
- * @Return A flag indicates "parse failure" (0), "parse successful" (1), "parsed more than one message" (No. of message).
+ * @Return A flag indicates "parse failure" (-1), "parsed mode message" (0), "parsed n control message" (No. of message).
  */
-int parse_message(PC2D_message_p mes, Queue* q, uint8_t len) {
+int parse_message(pc_msg* msg, Queue* q) {
 	uint16_t header_p = q->first;
-	uint16_t checksum_p = q->first;
 	uint16_t pointer = q->first;
+	uint16_t checksum = 0;
 	uint8_t val;
-	int iter = q->count;
-	int result = 0;
-	for (int j = 0; j < iter; j++) {
+	uint16_t iter = q->count;
+	int result = -1;
+	for (uint16_t j = 0; j < iter; j++) {
 		val = q->items[pointer];	// read the data
 		// if it is the header
-		if ((char)val == '*') {
-			header_p = pointer; // set the header pointer to here
+		if ((char)val == 'M' || (char)val == 'C') {
 			// remove the unparsed bytes
-			for (int i = q->first; i < header_p; i++) {
+			for (int i = q->first; i < pointer; i++) {
 				dequeue(q);
 			}
+			if ((char)val == 'M') checksum = (uint16_t) sizeof(msg->mm);
+			else checksum = (uint16_t) sizeof(msg->cm);
 			pointer = q->first;
+			header_p = pointer; // set the header pointer to here
 		}
-		// if it is a checksum
-		if (val == len) {
-			checksum_p = pointer; // set the checksum pointer to here
-			// if exactly a message length
-			if (checksum_p - header_p == len - 1) {
-				memcpy(&mes, &(q->items[header_p]), len);	// copy the data to message
-				for(int i = 0; i < len; i++) {
-					dequeue(q); // delete the data from queue
-				}
-				pointer = q->first;
-				result++;
+		// if it is a checksum and the length of message is correct
+		if (val == (uint8_t) checksum && pointer - header_p == checksum - 1) {
+			if (checksum == (uint16_t) sizeof(msg->mm)) memcpy(&msg->mm, &(q->items[header_p]), checksum);	// copy the data to message
+			if (checksum == (uint16_t) sizeof(msg->cm)) memcpy(&msg->cm, &(q->items[header_p]), checksum);
+			for(int i = 0; i < checksum; i++) {
+				dequeue(q); // delete the data from queue
 			}
+			if (checksum == (uint16_t) sizeof(msg->mm)) return 0;
+			if (checksum == (uint16_t) sizeof(msg->cm)) {
+				if (result == -1) result = 1;
+				else result++;
+			}
+			pointer = q->first;
+			header_p = pointer; // set the header pointer to here
 		}
 		pointer++;
 	}
 	return result;
 }
+
+uint8_t on_mode_change(pc_msg* msg) {
+	return msg->mm.mode;
+}
+
+controls on_set_control(pc_msg* msg) {
+	return msg->cm.control;
+}
+
+char on_set_key(pc_msg* msg) {
+	return msg->cm.key;
+}
+
+// driving motors given the control features
+void drive_motors(uint8_t mode, controls cont, char c) {
+	return;
+}
+
+
 
 /*------------------------------------------------------------------
  * process_key -- process command keys
@@ -142,7 +165,10 @@ void process_key(uint8_t c)
  */
 
 Queue local_receive_q;
-PC2D_message rec_mes;
+pc_msg rec_msg;
+uint8_t current_mode;
+controls current_control;
+char current_key;
 
 int main(void)
 {
@@ -162,7 +188,6 @@ int main(void)
 	demo_done = false;
 	wireless_mode = false;
 
-	rec_mes = create_message();
 	int parse_result = 0;
 
 	while (!demo_done) {
@@ -172,14 +197,16 @@ int main(void)
 		}
 
 		// parse message every loop
-		parse_result = parse_message(&rec_mes, &local_receive_q, sizeof(rec_mes));
-		if (parse_result >= 1) {
-			printf("Mode: %d\n", rec_mes.mode);
-			printf("Control: %d %d %d\n", rec_mes.control.x, rec_mes.control.y, rec_mes.control.z);
-			if (parse_result > 1) {
-				printf("Over-parsed %d messages", parse_result - 1);
-			}
-		} 
+		parse_result = parse_message(&rec_msg, &local_receive_q);
+		
+		if (parse_result == 0) {
+			current_mode = on_mode_change(&rec_msg);
+		} else if (parse_result > 0) {
+			current_control = on_set_control(&rec_msg);
+			current_key = on_set_key(&rec_msg);
+		}
+
+		drive_motors(current_mode, current_control, current_key);
 		
 		if (check_timer_flag()) {
 			if (counter++%20 == 0) {
