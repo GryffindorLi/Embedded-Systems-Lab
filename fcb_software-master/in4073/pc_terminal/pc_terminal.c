@@ -215,6 +215,8 @@ int main(int argc, char **argv)
 	char c = -1;
 	char tmp_c = -1;
 	// uint8_t current_mode = MODE_SAFE;
+	controls cont = {20000, 19999, 19998};
+	// uint8_t buttons[12] = {};
 
 	for (;;) {
 		// read the keyboard command every loop
@@ -222,12 +224,26 @@ int main(int argc, char **argv)
 			c = tmp_c;
 		}
 
+
+
+
+		// --------------------------------------------------
 		/*
 			TODO: read joystick
+
+				get xyz controls into:
+					cont = {uint16_t, uint16_t, uint16_t};
+
+				(uncomment the buttons[12] on top of for(;;))
+				
+				get buttons into:    
+					buttons = [uint8_t * 12];
+				
 		*/
-		uint16_t cont_x = 20000;
-		uint16_t cont_y = 19999;
-		uint16_t cont_z = 19998;
+		// --------------------------------------------------
+
+
+
 
 		// transmit control signal at transmission frequency (50Hz)
 		if (clock() - time > TRANSMISSION_FREQ) {
@@ -236,7 +252,6 @@ int main(int argc, char **argv)
 			msg.cm = new_ctrl_msg();
 			msg.cm.checksum = sizeof(msg.cm);
 			msg.cm.key = c;
-			controls cont = {cont_x, cont_y, cont_z};
 			msg.cm.control = cont;
 			
 			int bytes = serial_port_putmessage(msg, sizeof(msg.cm));
