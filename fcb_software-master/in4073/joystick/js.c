@@ -21,7 +21,7 @@ typedef struct {
 	int axis[6];
 	int button[12];/* data */
 } new_message;
-void create_message(new_message *message,int *axis, u_int8_t *button)
+void create_message_js2D(new_message *message,int *axis, u_int8_t *button)
 {
 	message = (new_message*) malloc (sizeof(new_message));
 	for (int i=0;i<6;i++)
