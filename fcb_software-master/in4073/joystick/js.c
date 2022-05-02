@@ -15,9 +15,24 @@
 /* current axis and button readings
  */
 int	axis[6];
-int	button[12];
+int button[12];
 
-
+typedef struct {
+	int axis[6];
+	int button[12];/* data */
+} new_message;
+void create_message(new_message *message,int *axis, u_int8_t *button)
+{
+	message = (new_message*) malloc (sizeof(new_message));
+	for (int i=0;i<6;i++)
+	{
+	message->axis[i]= axis[i];
+	}
+	for (int j=0;j<12;j++)
+	{
+	message->button[j]=button[j];
+	}
+}
 /* time
  */
 #include <time.h>
@@ -82,6 +97,7 @@ int main (int argc, char **argv)
 					axis[js.number] = js.value;
 					break;
 			}
+		
 		i = mon_time_ms();
 		if ((t-i)> timeout)
 		{
@@ -122,6 +138,7 @@ int main (int argc, char **argv)
 			printf("SAFE MODE ENTERED");
 			break;
 		}
+
 	}
 	printf("\n<exit>\n");
 
