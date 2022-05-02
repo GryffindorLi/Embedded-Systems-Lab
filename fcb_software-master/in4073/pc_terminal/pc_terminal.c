@@ -13,6 +13,8 @@
 #include <string.h>
 #include <inttypes.h>
 
+#define TRANSMISSION_FREQ 50
+
 /*------------------------------------------------------------
  * console I/O
  *------------------------------------------------------------
@@ -80,7 +82,8 @@ int	term_getchar()
 #include <stdio.h>
 #include <assert.h>
 #include <time.h>
-#include "PC2D.h"
+#include "../communication/PC2D.h"
+#include "../communication/D2PC.h"
 
 static int fd_serial_port;
 /*
@@ -148,14 +151,67 @@ uint8_t serial_port_getchar()
 	return c;
 }
 
-int serial_port_putmessage(PC2D_message mes)
+/*
+ * @Author Zirui Li
+ * @Param bytes A double pointer to a bytes array. Data read into this array.
+ * @Return A flag indicates fail(-1) or succeed(10)
+ */
+int8_t serial_port_getmessage(uint8_t** bytes){
+	int8_t flag;
+	do {
+		flag = read(fd_serial_port, *bytes, 10);
+	} while (flag != 10 && flag != -1);
+
+	return flag;
+}
+
+/*
+ * @Author: Hanyuan Ban
+ * @Param msg The message that needs to be sent..
+ * @Return A flag indicates fail(-1) or succeed(sizeof(msg))
+ */
+int serial_port_putmessage(pc_msg* msg, int len)
 {
 	int result;
 	do {
-		result = (int) write(fd_serial_port, &mes, sizeof(mes));
+		result = (int) write(fd_serial_port, msg, len);
 	} while (result == 0);
 
 	return result;
+}
+
+int send_ctrl_msg(pc_msg* msg, controls cont, char c) {
+	msg->cm.checksum = sizeof(msg->cm);
+	msg->cm.key = c;
+	msg->cm.control = cont;
+	
+	int bytes = serial_port_putmessage(msg, sizeof(msg->cm));
+	if (bytes > -1) {
+		fprintf(stderr,"Sent %d bytes to DRONE!", bytes);
+	} else {
+		fprintf(stderr,"Failed to send from PC to DRONE");
+	}
+	return bytes;
+}
+
+int send_mode_msg(pc_msg* msg, uint8_t mode) {
+	msg->mm.checksum = sizeof(msg->mm);
+	msg->mm.mode = mode;
+	
+	int bytes = serial_port_putmessage(msg, sizeof(msg->mm));
+	if (bytes > -1) {
+		fprintf(stderr,"Sent %d bytes to DRONE!", bytes);
+	} else {
+		fprintf(stderr,"Failed to send from PC to DRONE");
+	}
+	return bytes;
+}
+
+uint8_t get_mode_change(char key, uint8_t* buttons) {
+	if (key == 27) return MODE_PANIC;	//escape
+	if (key >= '0' && key <= '8') return (uint8_t) key - '0';  //change mode from
+	if (buttons[0] == 1) return 255;
+	return 255;
 }
 
 
@@ -163,10 +219,12 @@ int serial_port_putmessage(PC2D_message mes)
  * main -- execute terminal
  *----------------------------------------------------------------
  */
+ /*
+ * @Author Hanyuan Ban
+ * @Author Zirui Li
+ */
 int main(int argc, char **argv)
 {
-	char c;
-
 	term_initio();
 	term_puts("\nTerminal program - Embedded Real-Time Systems\n");
 
@@ -183,32 +241,71 @@ int main(int argc, char **argv)
 
 	term_puts("Type ^C to exit\n");
 
-	/* send & receive
+	/* 
+	 *send & receive
 	 */
-	int seq_no = 0;
-	for (;;) {
-		if ((c = term_getchar_nb()) != -1) {
-			seq_no++;
-			PC2D_message new_message = create_message();
 
-			set_checksum(&new_message, 10);
-			set_mode(&new_message, MODE_SAFE);
-			controls cont = {20000,19999,19998};
-			set_control(&new_message, cont);
-			set_key(&new_message, c);
-			
-			int bytes = serial_port_putmessage(new_message);
-			fprintf(stderr,"Sent %d bytes to DRONE!", bytes);
+	clock_t time = 0;
+	char c = -1;
+	char tmp_c = -1;
+	uint8_t current_mode = MODE_SAFE;
+	uint8_t tmp_mode = -1;
+	controls cont = {500, 20000, 19999, 19998};
+	uint8_t buttons[12] = {0};
+
+	for (;;) {
+		// read the keyboard command every loop
+		if ((tmp_c = term_getchar_nb()) != -1) {
+			c = tmp_c;
 		}
-		if ((c = serial_port_getchar()) != -1) {
-			term_putchar(c);
+
+		// --------------------------------------------------
+		/*
+			TODO: read joystick
+
+				get lift roll pitch yaw controls into:
+					cont = {uint16_t, uint16_t, uint16_t, uint16_t};
+
+				get buttons into:    
+					buttons = [uint8_t * 12];
+				
+		*/
+		// --------------------------------------------------
+		
+		tmp_mode = get_mode_change(c, buttons);
+		// transmit mode change signal immediately after detection
+		if (tmp_mode != 255 && tmp_mode != current_mode) {
+			current_mode = tmp_mode;
+			pc_msg  msg;
+			msg.mm = new_mode_msg();
+			send_mode_msg(&msg, current_mode);
+		}
+
+		// transmit control signal at transmission frequency (50Hz)
+		if (clock() - time > TRANSMISSION_FREQ) {
+			time = clock();
+			pc_msg msg;
+			msg.cm = new_ctrl_msg();
+			send_ctrl_msg(&msg, cont, c);
+		}
+		
+		// receive bytes from drone
+		uint8_t* mess;
+		if ((serial_port_getmessage(&mess)) != -1){
+			bytes_array ba;
+			memcpy((void*)(&ba.bytes), (void*)mess, 10);
+
+			D2PC_message_p recv_mess = &ba.m;
+			printf("Mode is %d\n", recv_mess->mode);
+			printf("Battery is %d\n", recv_mess->battery);
+			printf("Yaw is %d\n", recv_mess->y);
+			printf("Pitch is %d\n", recv_mess->p);
+			printf("Roll is %d\n", recv_mess->r);
 		}
 	}
 
 	term_exitio();
 	serial_port_close();
 	term_puts("\n<exit>\n");
-
-	return 0;
 }
 
