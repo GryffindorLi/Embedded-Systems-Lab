@@ -56,7 +56,7 @@ int16_t pitch_command;
 int16_t roll_command;
 
 // control input:
-PC2D_message message;
+pc_msg msg;
 
 void update_motors(void)
 {
@@ -72,10 +72,10 @@ void filter_angles(void){
 	yaw = gyro_rate *(psi+sr*dt) + acc_rate*saz;
 }
 
-void get_error(PC2D_message_p mes){
-	error[1] = mes->control.yaw - yaw;
-	error[2] = mes->control.pitch - pitch;
-	error[3] = mes->control.roll - roll;
+void get_error(pc_msg *mes){
+	error[1] = mes->cm.control.yaw - yaw;
+	error[2] = mes->cm.control.pitch - pitch;
+	error[3] = mes->cm.control.roll - roll;
 
 	derror[1] = (error[1] - prev_error[1])/dt;
 	derror[2] = (error[2] - prev_error[2])/dt;
@@ -86,15 +86,15 @@ void get_error(PC2D_message_p mes){
 	ierror[3] = ((error[2] + prev_error[2])/2)*dt;
 }
 
-void controller(PC2D_message_p mes){
+void controller(pc_msg *mes){
 	yaw_command = Kpy*error[1] + Kiy*ierror[1] + Kdy*derror[1];
 	pitch_command = Kpp*error[2] + Kip*ierror[2] + Kdp*derror[2];
 	roll_command = Kpr*error[3] + Kir*ierror[3] + Kdr*derror[3];
 
-	ae[0] = mes->control.throttle - yaw_command + pitch_command + roll_command; // add controls
-	ae[1] = mes->control.throttle + yaw_command + pitch_command - roll_command; // add controls
-	ae[2] = mes->control.throttle + yaw_command - pitch_command + roll_command; // add controls
-	ae[3] = mes->control.throttle - yaw_command - pitch_command - roll_command; // add controls
+	ae[0] = mes->cm.control.throttle - yaw_command + pitch_command + roll_command; // add controls
+	ae[1] = mes->cm.control.throttle + yaw_command + pitch_command - roll_command; // add controls
+	ae[2] = mes->cm.control.throttle + yaw_command - pitch_command + roll_command; // add controls
+	ae[3] = mes->cm.control.throttle - yaw_command - pitch_command - roll_command; // add controls
 }
 
 
@@ -103,8 +103,8 @@ void run_filters_and_control()
 	// fancy stuff here
 	// control loops and/or filters
 	filter_angles();
-	get_error(&message);
-	controller(&message);
+	get_error(&msg);
+	controller(&msg);
 
 	// ae[0] = xxx, ae[1] = yyy etc etc
 	update_motors();

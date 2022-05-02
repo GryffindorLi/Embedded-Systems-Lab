@@ -203,7 +203,7 @@ int main(void)
 		// --------------------------------------------------------------
 		/*
 			TODO: given current_mode,
-						current_control {lift, roll, pitch, yaw},
+						current_control {throttle, roll, pitch, yaw},
 						current_key
 				  implement control theory and drive the motors 
 		*/
