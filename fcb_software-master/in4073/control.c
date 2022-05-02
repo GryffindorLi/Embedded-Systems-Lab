@@ -21,10 +21,42 @@
 #include "mpu6050/mpu6050.h"
 #include "uart.h"
 #include "gpio.h"
+#include "PC2D.h"
 
 uint16_t motor[4];
 int16_t ae[4];
 bool wireless_mode;
+
+// for IMU:
+int16_t phi, theta, psi;
+int16_t sp, sq, sr;
+int16_t sax, say, saz;
+
+// angle definitions:
+int16_t yaw, pitch, roll;
+
+// set control gains:
+Kpy = 18.5; Kiy = 1.07; Kdy = 79.8; // yaw
+Kpp = 0.471; Kip = 0.0273; Kdp = 2.04; // pitch
+Kpr = 0.471; Kir = 0.0273; Kdr = 2.04; // roll
+
+// filter settings:
+dt = 0.010; // in seconds
+gyro_rate = 0.98;
+acc_rate = 0.02;
+
+// control variables:
+int16_t error[3];
+int16_t prev_error[3];
+int16_t derror[3];
+int16_t ierror[3];
+
+int16_t yaw_command;
+int16_t pitch_command;
+int16_t roll_command;
+
+// control input:
+PC2D_message message;
 
 void update_motors(void)
 {
@@ -34,11 +66,45 @@ void update_motors(void)
 	motor[3] = ae[3];
 }
 
+void filter_angles(void){
+	pitch = gyro_rate*(phi+sp*dt) + acc_rate*sax;
+	roll = gyro_rate*(theta+sq*dt) + acc_rate*say;
+	yaw = gyro_rate *(psi+sr*dt) + acc_rate*saz;
+}
+
+void get_error(PC2D_message_p mes){
+	error[1] = mes->control.yaw - yaw;
+	error[2] = mes->control.pitch - pitch;
+	error[3] = mes->control.roll - roll;
+
+	derror[1] = (error[1] - prev_error[1])/dt;
+	derror[2] = (error[2] - prev_error[2])/dt;
+	derror[3] = (error[3] - prev_error[3])/dt;
+
+	ierror[1] = ((error[1] + prev_error[1])/2)*dt;
+	ierror[2] = ((error[2] + prev_error[2])/2)*dt;
+	ierror[3] = ((error[2] + prev_error[2])/2)*dt;
+}
+
+void controller(PC2D_message_p mes){
+	yaw_command = Kpy*error[1] + Kiy*ierror[1] + Kdy*derror[1];
+	pitch_command = Kpp*error[2] + Kip*ierror[2] + Kdp*derror[2];
+	roll_command = Kpr*error[3] + Kir*ierror[3] + Kdr*derror[3];
+
+	ae[0] = mes->control.throttle - yaw_command + pitch_command + roll_command; // add controls
+	ae[1] = mes->control.throttle + yaw_command + pitch_command - roll_command; // add controls
+	ae[2] = mes->control.throttle + yaw_command - pitch_command + roll_command; // add controls
+	ae[3] = mes->control.throttle - yaw_command - pitch_command - roll_command; // add controls
+}
+
+
 void run_filters_and_control()
 {
-
 	// fancy stuff here
 	// control loops and/or filters
+	filter_angles();
+	get_error(&message);
+	controller(&message);
 
 	// ae[0] = xxx, ae[1] = yyy etc etc
 	update_motors();
