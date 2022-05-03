@@ -35,21 +35,14 @@ int16_t sax, say, saz;
 // angle definitions:
 int16_t yaw, pitch, roll;
 
-// set control gains:
-Kpy = 57.9; Kiy = 3.35; Kdy = 250.0; // yaw
-Kpp = 1.48; Kip = 0.0856; Kdp = 6.39; // pitch
-Kpr = 1.48; Kir = 0.0856; Kdr = 6.39; // roll
-
-// filter settings:
-dt = 0.1; // in seconds
-gyro_rate = 0.98;
-acc_rate = 0.02;
+// time settings:
+dt = 100; // in milliseconds (ms)
 
 // control variables:
-float error[3];
-float prev_error[3];
-float derror[3];
-float ierror[3];
+int16_t error[3];
+int16_t prev_error[3];
+int16_t derror[3];
+int16_t ierror[3];
 
 int16_t yaw_command;
 int16_t pitch_command;
@@ -67,43 +60,55 @@ void update_motors(void)
 }
 
 void filter_angles(void){
+	// angles are in degrees
 	// combine gyro and accelerometer to remove drift:
-	pitch = gyro_rate*(phi+sp*dt) + acc_rate*sax;
-	roll = gyro_rate*(theta+sq*dt) + acc_rate*say;
-	yaw = gyro_rate *(psi+sr*dt) + acc_rate*saz;
+	// constants are LSB values from mpu6050.c
+
+	float gyro_rate = 0.98;
+	float acc_rate = 0.02;
+
+	pitch = (int16_t) 182*(gyro_rate*(phi/182+(sp*dt)/16.4) + acc_rate*(sax/16384));
+	roll = (int16_t) 182*(gyro_rate*(theta/182+(sq*dt)/16.4) + acc_rate*(say/16384));
+	yaw = (int16_t) 182*(gyro_rate *(psi/182+(sr*dt)/16.4) + acc_rate*(saz/16384));
 }
 
 void get_error(pc_msg *mes){
 	// convert degree to radian = pi/180 = 0.0174533
 	// IMU angles to radians = 1/10430
+	// TODO: check if int16_t can have negative values
 
 	// find the error between control input and filtered IMU values:
-	error[1] = mes->cm.control.yaw*0.0174533 - yaw/10430;
-	error[2] = mes->cm.control.pitch*0.0174533 - pitch/10430;
-	error[3] = mes->cm.control.roll*0.0174533 - roll/10430;
+	error[1] = (int16_t) mes->cm.control.yaw - yaw;
+	error[2] = (int16_t) mes->cm.control.pitch - pitch;
+	error[3] = (int16_t) mes->cm.control.roll - roll;
 
 	// compute the derivative of the error:
-	derror[1] = (error[1] - prev_error[1])/dt;
-	derror[2] = (error[2] - prev_error[2])/dt;
-	derror[3] = (error[3] - prev_error[3])/dt;
+	derror[1] = (int16_t) (error[1] - prev_error[1])/(dt/1000);
+	derror[2] = (int16_t) (error[2] - prev_error[2])/(dt/1000);
+	derror[3] = (int16_t) (error[3] - prev_error[3])/(dt/1000);
 
 	// compute the integral of the error:
-	ierror[1] = ((error[1] + prev_error[1])/2)*dt;
-	ierror[2] = ((error[2] + prev_error[2])/2)*dt;
-	ierror[3] = ((error[2] + prev_error[2])/2)*dt;
+	ierror[1] = (int16_t) ((error[1] + prev_error[1])/2)*(dt/1000);
+	ierror[2] = (int16_t) ((error[2] + prev_error[2])/2)*(dt/1000);
+	ierror[3] = (int16_t) ((error[2] + prev_error[2])/2)*(dt/1000);
 }
 
 void controller(pc_msg *mes){
+	// set control gains:
+	float Kpy = 57.9; float Kiy = 3.35; float Kdy = 250.0; // yaw
+	float Kpp = 1.48; float Kip = 0.0856; float Kdp = 6.39; // pitch
+	float Kpr = 1.48; float Kir = 0.0856; float Kdr = 6.39; // roll
+
 	// define all 3 PID controllers
-	yaw_command = Kpy*error[1] + Kiy*ierror[1] + Kdy*derror[1];
-	pitch_command = Kpp*error[2] + Kip*ierror[2] + Kdp*derror[2];
-	roll_command = Kpr*error[3] + Kir*ierror[3] + Kdr*derror[3];
+	yaw_command = (int16_t) Kpy*error[1] + Kiy*ierror[1] + Kdy*derror[1];
+	pitch_command = (int16_t) Kpp*error[2] + Kip*ierror[2] + Kdp*derror[2];
+	roll_command = (int16_t) Kpr*error[3] + Kir*ierror[3] + Kdr*derror[3];
 
 	// calculate motor outputs, scale them between 0 and 800:
-	ae[0] = min(800, max(0, mes->cm.control.throttle - yaw_command + pitch_command + roll_command)); 
-	ae[1] = min(800, max(0, mes->cm.control.throttle + yaw_command + pitch_command - roll_command)); 
-	ae[2] = min(800, max(0, mes->cm.control.throttle + yaw_command - pitch_command + roll_command)); 
-	ae[3] = min(800, max(0, mes->cm.control.throttle - yaw_command - pitch_command - roll_command)); 
+	ae[0] = min(800, max(0, (mes->cm.control.throttle - yaw_command + pitch_command + roll_command)/82)); 
+	ae[1] = min(800, max(0, (mes->cm.control.throttle + yaw_command + pitch_command - roll_command)/82)); 
+	ae[2] = min(800, max(0, (mes->cm.control.throttle + yaw_command - pitch_command + roll_command)/82)); 
+	ae[3] = min(800, max(0, (mes->cm.control.throttle - yaw_command - pitch_command - roll_command)/82)); 
 }
 
 

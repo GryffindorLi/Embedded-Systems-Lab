@@ -14,26 +14,16 @@ extern int16_t sp, sq, sr;
 extern int16_t sax, say, saz;
 
 // for filter
-float dt;
-const float gyro_rate;
-const float acc_rate;
+int16_t dt; // loop time period in milliseconds (ms)
 
 // Angle definitions
 int16_t yaw, pitch, roll;
 
-// define controller gains
-float Kpy; // controller P gain yaw
-float Kiy; // controller I gain yaw
-float Kdy; // controller D gain yaw
-
-float Kpp; // controller P gain pitch
-float Kip; // controller I gain pitch
-float Kdp; // controller D gain pitch
-
-float Kpr; // controller P gain roll
-float Kir; // controller I gain roll
-float Kdr; // controller D gain roll
-
 void run_filters_and_control();
+void filter_angles();
+
+// check functions below
+void get_error(&msg);
+void controller(&msg);
 
 #endif /* CONTROL_H_ */
