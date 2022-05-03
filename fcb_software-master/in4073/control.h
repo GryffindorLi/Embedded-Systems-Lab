@@ -3,6 +3,7 @@
 
 #include <inttypes.h>
 #include <stdbool.h>
+#include "communication/PC2D.h"
 
 extern uint16_t motor[4];
 extern int16_t ae[4];
@@ -23,7 +24,7 @@ void run_filters_and_control();
 void filter_angles();
 
 // check functions below
-void get_error(&msg);
-void controller(&msg);
+void get_error(pc_msg *mes);
+void controller(pc_msg *mes);
 
 #endif /* CONTROL_H_ */

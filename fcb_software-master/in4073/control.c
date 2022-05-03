@@ -21,7 +21,7 @@
 #include "mpu6050/mpu6050.h"
 #include "uart.h"
 #include "gpio.h"
-#include "PC2D.h"
+#include "communication/PC2D.h"
 
 uint16_t motor[4];
 int16_t ae[4];
@@ -36,7 +36,7 @@ int16_t sax, say, saz;
 int16_t yaw, pitch, roll;
 
 // time settings:
-dt = 100; // in milliseconds (ms)
+int16_t dt = 100; // in milliseconds (ms)
 
 // control variables:
 int16_t error[3];
@@ -78,19 +78,19 @@ void get_error(pc_msg *mes){
 	// TODO: check if int16_t can have negative values
 
 	// find the error between control input and filtered IMU values:
-	error[1] = (int16_t) mes->cm.control.yaw - yaw;
-	error[2] = (int16_t) mes->cm.control.pitch - pitch;
-	error[3] = (int16_t) mes->cm.control.roll - roll;
+	error[0] = (int16_t) mes->cm.control.yaw - yaw;
+	error[1] = (int16_t) mes->cm.control.pitch - pitch;
+	error[2] = (int16_t) mes->cm.control.roll - roll;
 
 	// compute the derivative of the error:
+	derror[0] = (int16_t) (error[0] - prev_error[0])/(dt/1000);
 	derror[1] = (int16_t) (error[1] - prev_error[1])/(dt/1000);
 	derror[2] = (int16_t) (error[2] - prev_error[2])/(dt/1000);
-	derror[3] = (int16_t) (error[3] - prev_error[3])/(dt/1000);
 
 	// compute the integral of the error:
+	ierror[0] = (int16_t) ((error[0] + prev_error[0])/2)*(dt/1000);
 	ierror[1] = (int16_t) ((error[1] + prev_error[1])/2)*(dt/1000);
 	ierror[2] = (int16_t) ((error[2] + prev_error[2])/2)*(dt/1000);
-	ierror[3] = (int16_t) ((error[2] + prev_error[2])/2)*(dt/1000);
 }
 
 void controller(pc_msg *mes){
@@ -100,15 +100,42 @@ void controller(pc_msg *mes){
 	float Kpr = 1.48; float Kir = 0.0856; float Kdr = 6.39; // roll
 
 	// define all 3 PID controllers
-	yaw_command = (int16_t) Kpy*error[1] + Kiy*ierror[1] + Kdy*derror[1];
-	pitch_command = (int16_t) Kpp*error[2] + Kip*ierror[2] + Kdp*derror[2];
-	roll_command = (int16_t) Kpr*error[3] + Kir*ierror[3] + Kdr*derror[3];
+	yaw_command = (int16_t) Kpy*error[0] + Kiy*ierror[0] + Kdy*derror[0];
+	pitch_command = (int16_t) Kpp*error[1] + Kip*ierror[1] + Kdp*derror[1];
+	roll_command = (int16_t) Kpr*error[2] + Kir*ierror[2] + Kdr*derror[2];
 
 	// calculate motor outputs, scale them between 0 and 800:
-	ae[0] = min(800, max(0, (mes->cm.control.throttle - yaw_command + pitch_command + roll_command)/82)); 
-	ae[1] = min(800, max(0, (mes->cm.control.throttle + yaw_command + pitch_command - roll_command)/82)); 
-	ae[2] = min(800, max(0, (mes->cm.control.throttle + yaw_command - pitch_command + roll_command)/82)); 
-	ae[3] = min(800, max(0, (mes->cm.control.throttle - yaw_command - pitch_command - roll_command)/82)); 
+	ae[0] = (mes->cm.control.throttle - yaw_command + pitch_command + roll_command)/82; 
+	if( ae[0] < 0 ) {
+		ae[0] = 0;
+	}
+	if( ae[0] > 800 ) {
+		ae[0] = 800;
+	}
+
+	ae[1] = (mes->cm.control.throttle + yaw_command + pitch_command - roll_command)/82; 
+	if( ae[1] < 0 ) {
+		ae[1] = 0;
+	}
+	if( ae[1] > 800 ) {
+		ae[1] = 800;
+	}
+
+	ae[2] = (mes->cm.control.throttle + yaw_command - pitch_command + roll_command)/82; 
+	if( ae[2] < 0 ) {
+		ae[2] = 0;
+	}
+	if( ae[2] > 800 ) {
+		ae[2] = 800;
+	}
+
+	ae[3] = (mes->cm.control.throttle - yaw_command - pitch_command - roll_command)/82;
+	if( ae[3] < 0 ) {
+		ae[3] = 0;
+	}
+	if( ae[3] > 800 ) {
+		ae[3] = 800;
+	} 
 }
 
 
