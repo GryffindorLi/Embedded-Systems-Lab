@@ -21,9 +21,9 @@ typedef struct {
 	int axis[6];
 	int button[12];/* data */
 } new_message;
-void create_message_js2D(new_message *message,int *axis, u_int8_t *button)
+void create_message_js2D(new_message* message,int* axis, int* button)
 {
-	message = (new_message*) malloc (sizeof(new_message));
+	//message = (new_message*) malloc (sizeof(new_message));
 	for (int i=0;i<6;i++)
 	{
 	message->axis[i]= axis[i];
@@ -66,6 +66,7 @@ int main (int argc, char **argv)
 	int timeout = 300;
 	int 		fd;
 	struct js_event js;
+	new_message message;
 	unsigned int	t, i;
 	if ((fd = open(JS_DEV, O_RDONLY)) < 0) {
 		perror("jstest");
@@ -108,6 +109,8 @@ int main (int argc, char **argv)
 			printf("Message Lost");
 		}
 
+		create_message_js2D(&message, axis, button);
+		//free(&message);
 		}
 		
 		if (button[MODE_PANIC])
