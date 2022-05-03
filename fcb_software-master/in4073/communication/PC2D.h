@@ -15,7 +15,7 @@
 
 // control type define
 typedef struct {
-    uint16_t lift;
+    uint16_t throttle;
     uint16_t roll;
     uint16_t pitch;
     uint16_t yaw;

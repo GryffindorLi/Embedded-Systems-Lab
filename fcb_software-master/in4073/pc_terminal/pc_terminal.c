@@ -13,7 +13,7 @@
 #include <string.h>
 #include <inttypes.h>
 
-#define TRANSMISSION_FREQ 50
+#define TRANSMISSION_FREQ 1
 
 /*------------------------------------------------------------
  * console I/O
@@ -81,11 +81,15 @@ int	term_getchar()
 #include <unistd.h>
 #include <stdio.h>
 #include <assert.h>
-#include <time.h>
+#include <sys/time.h>
 #include "../communication/PC2D.h"
 #include "../communication/D2PC.h"
+// #include "../joystick/joystick.h"
 
 static int fd_serial_port;
+struct timeval start;
+struct timeval end;
+int timer_flag = 0;
 /*
  * Open the terminal I/O interface to the serial/pseudo serial port.
  *
@@ -144,11 +148,9 @@ uint8_t serial_port_getchar()
 	int8_t result;
 	uint8_t c;
 
-	do {
-		result = read(fd_serial_port, &c, 1);
-	} while (result != 1);
-
-	return c;
+	result = read(fd_serial_port, &c, 1);
+	if (result == 1) return c;
+	else return -1;
 }
 
 /*
@@ -187,9 +189,9 @@ int send_ctrl_msg(pc_msg* msg, controls cont, char c) {
 	
 	int bytes = serial_port_putmessage(msg, sizeof(msg->cm));
 	if (bytes > -1) {
-		fprintf(stderr,"Sent %d bytes to DRONE!", bytes);
+		fprintf(stderr,"Sent Control Message to DRONE!\n");
 	} else {
-		fprintf(stderr,"Failed to send from PC to DRONE");
+		fprintf(stderr,"Failed to send from PC to DRONE\n");
 	}
 	return bytes;
 }
@@ -200,9 +202,9 @@ int send_mode_msg(pc_msg* msg, uint8_t mode) {
 	
 	int bytes = serial_port_putmessage(msg, sizeof(msg->mm));
 	if (bytes > -1) {
-		fprintf(stderr,"Sent %d bytes to DRONE!", bytes);
+		fprintf(stderr,"Sent Mode Message to DRONE!\n");
 	} else {
-		fprintf(stderr,"Failed to send from PC to DRONE");
+		fprintf(stderr,"Failed to send from PC to DRONE\n");
 	}
 	return bytes;
 }
@@ -212,6 +214,10 @@ uint8_t get_mode_change(char key, uint8_t* buttons) {
 	if (key >= '0' && key <= '8') return (uint8_t) key - '0';  //change mode from
 	if (buttons[0] == 1) return 255;
 	return 255;
+}
+
+float time_dif(struct timeval st, struct timeval ed) {
+	return (ed.tv_sec - st.tv_sec) * 1000.0f + (ed.tv_usec - st.tv_usec) / 1000.0f;
 }
 
 
@@ -245,25 +251,32 @@ int main(int argc, char **argv)
 	 *send & receive
 	 */
 
-	clock_t time = 0;
+	char rc = -1;
 	char c = -1;
 	char tmp_c = -1;
 	uint8_t current_mode = MODE_SAFE;
 	uint8_t tmp_mode = -1;
 	controls cont = {500, 20000, 19999, 19998};
-	uint8_t buttons[12] = {0};
+	int buttons[12] = {0};
+	JS_message js_msg;
 
 	for (;;) {
+		if (timer_flag == 0) {
+			gettimeofday(&start, 0);
+			timer_flag = 1;
+		}
 		// read the keyboard command every loop
 		if ((tmp_c = term_getchar_nb()) != -1) {
 			c = tmp_c;
 		}
 
+		create_message_js2D(&js_msg, int *axis, u_int8_t *button)
+
 		// --------------------------------------------------
 		/*
 			TODO: read joystick
 
-				get lift roll pitch yaw controls into:
+				get throttle roll pitch yaw controls into:
 					cont = {uint16_t, uint16_t, uint16_t, uint16_t};
 
 				get buttons into:    
@@ -282,25 +295,31 @@ int main(int argc, char **argv)
 		}
 
 		// transmit control signal at transmission frequency (50Hz)
-		if (clock() - time > TRANSMISSION_FREQ) {
-			time = clock();
+
+		gettimeofday(&end, 0);
+		if (time_dif(start, end) > (float) (1000 / TRANSMISSION_FREQ)) {
+			timer_flag = 0;
 			pc_msg msg;
 			msg.cm = new_ctrl_msg();
 			send_ctrl_msg(&msg, cont, c);
 		}
 		
 		// receive bytes from drone
-		uint8_t* mess;
-		if ((serial_port_getmessage(&mess)) != -1){
-			bytes_array ba;
-			memcpy((void*)(&ba.bytes), (void*)mess, 10);
+		// uint8_t* mess;
+		// if ((serial_port_getmessage(&mess)) != -1){
+		// 	bytes_array ba;
+		// 	memcpy((void*)(&ba.bytes), (void*)mess, 10);
 
-			D2PC_message_p recv_mess = &ba.m;
-			printf("Mode is %d\n", recv_mess->mode);
-			printf("Battery is %d\n", recv_mess->battery);
-			printf("Yaw is %d\n", recv_mess->y);
-			printf("Pitch is %d\n", recv_mess->p);
-			printf("Roll is %d\n", recv_mess->r);
+		// 	D2PC_message_p recv_mess = &ba.m;
+		// 	printf("Mode is %d\n", recv_mess->mode);
+		// 	printf("Battery is %d\n", recv_mess->battery);
+		// 	printf("Yaw is %d\n", recv_mess->y);
+		// 	printf("Pitch is %d\n", recv_mess->p);
+		// 	printf("Roll is %d\n", recv_mess->r);
+		// }
+
+		if ((rc = serial_port_getchar()) != -1) {
+			term_putchar(rc);
 		}
 	}
 

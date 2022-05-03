@@ -125,4 +125,9 @@ struct JS_DATA_SAVE_TYPE {
 	struct JS_DATA_TYPE JS_CORR;
 };
 
+typedef struct {
+	int axis[6];
+	int button[12];/* data */
+} JS_message;
+
 #endif /* _LINUX_JOYSTICK_H */

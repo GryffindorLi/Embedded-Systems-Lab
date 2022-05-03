@@ -104,50 +104,6 @@ char on_set_key(pc_msg* msg) {
 }
 
 /*------------------------------------------------------------------
- * process_key -- process command keys
- *------------------------------------------------------------------
- */
-void process_key(uint8_t c)
-{
-	switch (c) {
-	case 'q':
-		ae[0] += 10;
-		break;
-	case 'a':
-		ae[0] -= 10;
-		if (ae[0] < 0) ae[0] = 0;
-		break;
-	case 'w':
-		ae[1] += 10;
-		break;
-	case 's':
-		ae[1] -= 10;
-		if (ae[1] < 0) ae[1] = 0;
-		break;
-	case 'e':
-		ae[2] += 10;
-		break;
-	case 'd':
-		ae[2] -= 10;
-		if (ae[2] < 0) ae[2] = 0;
-		break;
-	case 'r':
-		ae[3] += 10;
-		break;
-	case 'f':
-		ae[3] -= 10;
-		if (ae[3] < 0) ae[3] = 0;
-		break;
-	case 27:
-		demo_done = true;
-		break;
-	default:
-		nrf_gpio_pin_toggle(RED);
-	}
-}
-
-
-/*------------------------------------------------------------------
  * main -- everything you need is here :)
  *------------------------------------------------------------------
  */
@@ -193,8 +149,10 @@ int main(void)
 		parse_result = parse_message(&rec_msg, &local_receive_q);
 		
 		if (parse_result == 0) {
+			printf("\nMODE CHANGE: %d\n", rec_msg.mm.mode);
 			current_mode = on_mode_change(&rec_msg);
 		} else if (parse_result > 0) {
+			printf("\nControl: %d %d %d %d", rec_msg.cm.control.throttle, rec_msg.cm.control.roll,rec_msg.cm.control.pitch,rec_msg.cm.control.yaw);
 			current_control = on_set_control(&rec_msg);
 			current_key = on_set_key(&rec_msg);
 		}
@@ -203,7 +161,7 @@ int main(void)
 		// --------------------------------------------------------------
 		/*
 			TODO: given current_mode,
-						current_control {lift, roll, pitch, yaw},
+						current_control {throttle, roll, pitch, yaw},
 						current_key
 				  implement control theory and drive the motors 
 		*/
@@ -227,15 +185,15 @@ int main(void)
 			printf("%4d | %4ld | %6ld \n", bat_volt, temperature, pressure);
 			*/
 
-			D2PC_message m = init_message();
-			bytes_array* b = to_bytes_array(&m);
-			for (int i = 0; i < 10; ++i){
-				uart_put(b->bytes[i]);
-			}
-			delete_message(&m);
-			delete_bytes_array(b);
+			// D2PC_message m = init_message();
+			// bytes_array* b = to_bytes_array(&m);
+			// for (int i = 0; i < 10; ++i){
+			// 	uart_put(b->bytes[i]);
+			// }
+			// delete_message(&m);
+			// delete_bytes_array(b);
 
-			clear_timer_flag();
+			// clear_timer_flag();
 		}
 
 		if (check_sensor_int_flag()) {

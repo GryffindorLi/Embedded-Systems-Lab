@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "stdbool.h": "c",
+        "pc2d.h": "c",
+        "joystick.h": "c",
+        "quad_ble.h": "c"
+    }
+}

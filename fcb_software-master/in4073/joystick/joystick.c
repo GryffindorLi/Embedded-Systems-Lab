@@ -1,5 +1,5 @@
 
-#include <sys/ioctl.h>
+#include <linux/ioctl.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <stdlib.h>
@@ -15,9 +15,24 @@
 /* current axis and button readings
  */
 int	axis[6];
-int	button[12];
+int button[12];
 
-
+typedef struct {
+	int axis[6];
+	int button[12];/* data */
+} new_message;
+void create_message_js2D(JS_message* message, int* axis, int* button)
+{
+	//message = (new_message*) malloc (sizeof(new_message));
+	for (int i=0;i<6;i++)
+	{
+	message->axis[i]= axis[i];
+	}
+	for (int j=0;j<12;j++)
+	{
+	message->button[j]=button[j];
+	}
+}
 /* time
  */
 #include <time.h>
@@ -48,10 +63,11 @@ void    mon_delay_ms(unsigned int ms)
 
 int main (int argc, char **argv)
 {
+	int timeout = 300;
 	int 		fd;
 	struct js_event js;
+	new_message message;
 	unsigned int	t, i;
-
 	if ((fd = open(JS_DEV, O_RDONLY)) < 0) {
 		perror("jstest");
 		exit(1);
@@ -60,23 +76,20 @@ int main (int argc, char **argv)
 	/* non-blocking mode
 	 */
 	fcntl(fd, F_SETFL, O_NONBLOCK);
-
+	//printf("%ld", sizeof(struct js_event));
 	while (1) {
-
-
+		
 		/* simulate work
 		 */
 		mon_delay_ms(300);
 		t = mon_time_ms();
-
-		/* check up on JS
-		 */
+		
 		while (read(fd, &js, sizeof(struct js_event)) == 
 		       			sizeof(struct js_event))  {
 
 			/* register data
 			 */
-			// fprintf(stderr,".");
+			//fprintf(stderr,".");
 			switch(js.type & ~JS_EVENT_INIT) {
 				case JS_EVENT_BUTTON:
 					button[js.number] = js.value;
@@ -85,9 +98,32 @@ int main (int argc, char **argv)
 					axis[js.number] = js.value;
 					break;
 			}
+		
+		i = mon_time_ms();
+		if ((t-i)> timeout)
+		{
+			printf("Timeout");
+		}
+		if (sizeof(struct js_event) != CHECK_SUM)
+		{
+			printf("Message Lost");
+		}
+
+		create_message_js2D(&message, axis, button);
+		//free(&message);
+		}
+		
+		if (button[MODE_PANIC])
+		{
+			//Break and send the information to the drone
+			printf("PANIC: DO NOT PANIC!");
+			break;
+
 		}
 		if (errno != EAGAIN) {
-			perror("\njs: error reading (EAGAIN)");
+			perror("\njs: error reading (EAGAIN)");//If USB connection of Joystick is lost, 
+													//Enter safe mode
+			button[MODE_SAFE]=1;
 			exit (1);
 		}
 
@@ -101,7 +137,11 @@ int main (int argc, char **argv)
 			printf("%d ",button[i]);
 		}
 		if (button[0])
+		{
+			printf("SAFE MODE ENTERED");
 			break;
+		}
+
 	}
 	printf("\n<exit>\n");
 
