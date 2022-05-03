@@ -160,25 +160,6 @@ int main(void)
 			current_control = on_set_control(&rec_msg);
 			current_key = on_set_key(&rec_msg);
 		}
-<<<<<<< HEAD
-=======
-		if (current_mode==1){
-			//do it in lab
-				//printf("entered PANIC MODE %d",rec_msg.cm.);
-				
-
-				nrf_delay_ms(2000);
-				current_mode=0;
-		}
-		
-		if (current_mode == 0){
-			controller_manual(&rec_msg_default);
-			printf("entered SAFE MODE: %d",rec_msg_default.mm.mode);
-			printf("entered SAFE MODE: %d",rec_msg_default.cm.control.throttle);
-			printf("\nControl: %d %d %d %d", rec_msg_default.cm.control.throttle, rec_msg_default.cm.control.roll,rec_msg_default.cm.control.pitch,rec_msg_default.cm.control.yaw);
-		}
-		
->>>>>>> 45dc8ff48957a996f4658c508bb81bfeae9df892
 
 		if (current_mode == MODE_PANIC){
 			if (panic_to_safe_timer == -1) {
