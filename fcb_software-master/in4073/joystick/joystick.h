@@ -110,6 +110,12 @@ struct js_corr {
 #define JS_GET_ALL		7
 #define JS_SET_ALL		8
 
+#define CHECK_SUM 8
+#define ROLL_AXIS 0
+#define PITCH_AXIS 1
+#define YAW_AXIS 2
+#define THROTTLE_AXIS 3
+
 struct JS_DATA_TYPE {
 	int buttons;
 	int x;

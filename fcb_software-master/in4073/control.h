@@ -3,6 +3,7 @@
 
 #include <inttypes.h>
 #include <stdbool.h>
+#include "communication/PC2D.h"
 
 extern uint16_t motor[4];
 extern int16_t ae[4];
@@ -34,6 +35,5 @@ float Kpr; // controller P gain roll
 float Kir; // controller I gain roll
 float Kdr; // controller D gain roll
 
-void run_filters_and_control();
-
+void run_filters_and_control(pc_msg* mes, uint8_t mode);
 #endif /* CONTROL_H_ */

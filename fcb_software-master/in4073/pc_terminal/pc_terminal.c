@@ -75,6 +75,7 @@ int	term_getchar()
  * 115,200 baud
  *------------------------------------------------------------
  */
+// #include <sys/ioctl.h>
 #include <termios.h>
 #include <ctype.h>
 #include <fcntl.h>
@@ -84,7 +85,7 @@ int	term_getchar()
 #include <sys/time.h>
 #include "../communication/PC2D.h"
 #include "../communication/D2PC.h"
-// #include "../joystick/joystick.h"
+#include "../joystick/joystick.h"
 
 static int fd_serial_port;
 struct timeval start;
@@ -188,9 +189,7 @@ int send_ctrl_msg(pc_msg* msg, controls cont, char c) {
 	msg->cm.control = cont;
 	
 	int bytes = serial_port_putmessage(msg, sizeof(msg->cm));
-	if (bytes > -1) {
-		fprintf(stderr,"Sent Control Message to DRONE!\n");
-	} else {
+	if (bytes == -1) {
 		fprintf(stderr,"Failed to send from PC to DRONE\n");
 	}
 	return bytes;
@@ -201,9 +200,7 @@ int send_mode_msg(pc_msg* msg, uint8_t mode) {
 	msg->mm.mode = mode;
 	
 	int bytes = serial_port_putmessage(msg, sizeof(msg->mm));
-	if (bytes > -1) {
-		fprintf(stderr,"Sent Mode Message to DRONE!\n");
-	} else {
+	if (bytes == -1) {
 		fprintf(stderr,"Failed to send from PC to DRONE\n");
 	}
 	return bytes;
@@ -214,6 +211,13 @@ uint8_t get_mode_change(char key, uint8_t* buttons) {
 	if (key >= '0' && key <= '8') return (uint8_t) key - '0';  //change mode from
 	if (buttons[0] == 1) return 255;
 	return 255;
+}
+
+void set_controls(controls* cont, int* axis) {
+	cont->roll = axis[ROLL_AXIS];
+	cont->pitch = axis[PITCH_AXIS];
+	cont->yaw = axis[YAW_AXIS];
+	cont->throttle = axis[THROTTLE_AXIS];
 }
 
 float time_dif(struct timeval st, struct timeval ed) {
@@ -257,8 +261,9 @@ int main(int argc, char **argv)
 	uint8_t current_mode = MODE_SAFE;
 	uint8_t tmp_mode = -1;
 	controls cont = {500, 20000, 19999, 19998};
-	int buttons[12] = {0};
-	JS_message js_msg;
+	int axis[6] = {0};
+	uint8_t buttons[12] = {0};
+	// JS_message js_msg;
 
 	for (;;) {
 		if (timer_flag == 0) {
@@ -266,28 +271,17 @@ int main(int argc, char **argv)
 			timer_flag = 1;
 		}
 		// read the keyboard command every loop
+		c = -1;
 		if ((tmp_c = term_getchar_nb()) != -1) {
 			c = tmp_c;
 		}
 
-		create_message_js2D(&js_msg, int *axis, u_int8_t *button)
-
-		// --------------------------------------------------
-		/*
-			TODO: read joystick
-
-				get throttle roll pitch yaw controls into:
-					cont = {uint16_t, uint16_t, uint16_t, uint16_t};
-
-				get buttons into:    
-					buttons = [uint8_t * 12];
-				
-		*/
-		// --------------------------------------------------
+		// create_message_js2D(&js_msg, axis, buttons);
+		set_controls(&cont, axis);
 		
 		tmp_mode = get_mode_change(c, buttons);
 		// transmit mode change signal immediately after detection
-		if (tmp_mode != 255 && tmp_mode != current_mode) {
+		if (tmp_mode != 255) {
 			current_mode = tmp_mode;
 			pc_msg  msg;
 			msg.mm = new_mode_msg();

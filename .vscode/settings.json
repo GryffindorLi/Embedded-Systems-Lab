@@ -3,6 +3,12 @@
         "stdbool.h": "c",
         "pc2d.h": "c",
         "joystick.h": "c",
-        "quad_ble.h": "c"
+        "quad_ble.h": "c",
+        "types.h": "c",
+        "input.h": "c",
+        "ioctl.h": "c",
+        "time.h": "c",
+        "bitset": "c",
+        "set": "c"
     }
 }

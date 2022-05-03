@@ -1,3 +1,6 @@
+#ifndef __PC2D__
+#define __PC2D__
+
 #include <inttypes.h>
 #include <stdbool.h>
 
@@ -46,3 +49,5 @@ typedef union {
 // create message from scratch
 CTRL_msg new_ctrl_msg(void);
 MODE_msg new_mode_msg(void);
+
+#endif

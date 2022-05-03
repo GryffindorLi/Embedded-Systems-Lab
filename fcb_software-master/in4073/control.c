@@ -21,7 +21,10 @@
 #include "mpu6050/mpu6050.h"
 #include "uart.h"
 #include "gpio.h"
-#include "PC2D.h"
+#include <math.h>
+
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
 uint16_t motor[4];
 int16_t ae[4];
@@ -43,13 +46,39 @@ void update_motors(void)
 	motor[3] = ae[3];
 }
 
-void run_filters_and_control()
+// ------------- Manual Mode only ----------------
+void controller_manual(pc_msg *msg){
+	ae[0] = MIN(800, MAX(0, msg->cm.control.throttle - msg->cm.control.yaw + msg->cm.control.pitch + msg->cm.control.roll)); 
+	ae[1] = MIN(800, MAX(0, msg->cm.control.throttle + msg->cm.control.yaw + msg->cm.control.pitch - msg->cm.control.roll)); 
+	ae[2] = MIN(800, MAX(0, msg->cm.control.throttle + msg->cm.control.yaw - msg->cm.control.pitch + msg->cm.control.roll)); 
+	ae[3] = MIN(800, MAX(0, msg->cm.control.throttle - msg->cm.control.yaw - msg->cm.control.pitch - msg->cm.control.roll)); 
+}
+
+void run_filters_and_control(pc_msg* msg, uint8_t mode)
 {
+	switch (mode) {
+		case MODE_SAFE:
+			ae[0] = 0; 
+			ae[1] = 0; 
+			ae[2] = 0; 
+			ae[3] = 0;
+			break;
+		
+		case MODE_PANIC:
+			// tune in lab
+			ae[0] = 300; 
+			ae[1] = 300; 
+			ae[2] = 300; 
+			ae[3] = 300;
+			break;
 
-	// fancy stuff here
-	// control loops and/or filters
+		case MODE_MANUAL:
+			controller_manual(msg);
+		
+		default:
+			break;
+	}
 
-	// ae[0] = xxx, ae[1] = yyy etc etc
 	update_motors();
 }
 
@@ -91,14 +120,14 @@ void run_filters_and_control()
 // 	yaw = gyro_rate *(psi+sr*dt) + acc_rate*saz;
 // }
 
-// void get_error(pc_msg *mes){
+// void get_error(pc_msg *msg){
 // 	// convert degree to radian = pi/180 = 0.0174533
 // 	// IMU angles to radians = 1/10430
 
 // 	// find the error between control input and filtered IMU values:
-// 	error[1] = mes->cm.control.yaw*0.0174533 - yaw/10430;
-// 	error[2] = mes->cm.control.pitch*0.0174533 - pitch/10430;
-// 	error[3] = mes->cm.control.roll*0.0174533 - roll/10430;
+// 	error[1] = msg->cm.control.yaw*0.0174533 - yaw/10430;
+// 	error[2] = msg->cm.control.pitch*0.0174533 - pitch/10430;
+// 	error[3] = msg->cm.control.roll*0.0174533 - roll/10430;
 
 // 	// compute the derivative of the error:
 // 	derror[1] = (error[1] - prev_error[1])/dt;
@@ -111,19 +140,18 @@ void run_filters_and_control()
 // 	ierror[3] = ((error[2] + prev_error[2])/2)*dt;
 // }
 
-// void controller(pc_msg *mes){
+// void controller(pc_msg *msg){
 // 	// define all 3 PID controllers
 // 	yaw_command = Kpy*error[1] + Kiy*ierror[1] + Kdy*derror[1];
 // 	pitch_command = Kpp*error[2] + Kip*ierror[2] + Kdp*derror[2];
 // 	roll_command = Kpr*error[3] + Kir*ierror[3] + Kdr*derror[3];
 
 // 	// calculate motor outputs, scale them between 0 and 800:
-// 	ae[0] = min(800, max(0, mes->cm.control.throttle - yaw_command + pitch_command + roll_command)); 
-// 	ae[1] = min(800, max(0, mes->cm.control.throttle + yaw_command + pitch_command - roll_command)); 
-// 	ae[2] = min(800, max(0, mes->cm.control.throttle + yaw_command - pitch_command + roll_command)); 
-// 	ae[3] = min(800, max(0, mes->cm.control.throttle - yaw_command - pitch_command - roll_command)); 
+// 	ae[0] = MIN(800, MAX(0, msg->cm.control.throttle - yaw_command + pitch_command + roll_command)); 
+// 	ae[1] = MIN(800, MAX(0, msg->cm.control.throttle + yaw_command + pitch_command - roll_command)); 
+// 	ae[2] = MIN(800, MAX(0, msg->cm.control.throttle + yaw_command - pitch_command + roll_command)); 
+// 	ae[3] = MIN(800, MAX(0, msg->cm.control.throttle - yaw_command - pitch_command - roll_command)); 
 // }
-
 
 // void run_filters_and_control()
 // {

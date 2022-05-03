@@ -35,6 +35,7 @@
 #include "communication/D2PC.h"
 
 bool demo_done;
+pc_msg rec_msg_default;
 
 /*
  * @Author: Hanyuan Ban
@@ -111,6 +112,7 @@ char on_set_key(pc_msg* msg) {
 /*
  * @Author Hanyuan Ban
  * @Author Zirui Li
+ * @Author Karan
  */
 
 Queue local_receive_q;
@@ -121,6 +123,7 @@ char current_key;
 
 int main(void)
 {
+	
 	uart_init();
 	gpio_init();
 	timers_init();
@@ -134,6 +137,7 @@ int main(void)
 	init_queue(&local_receive_q);
 
 	uint32_t counter = 0;
+	uint32_t panic_to_safe_timer = -1;
 	demo_done = false;
 	wireless_mode = false;
 
@@ -156,34 +160,36 @@ int main(void)
 			current_control = on_set_control(&rec_msg);
 			current_key = on_set_key(&rec_msg);
 		}
-		
-		
-		// --------------------------------------------------------------
-		/*
-			TODO: given current_mode,
-						current_control {throttle, roll, pitch, yaw},
-						current_key
-				  implement control theory and drive the motors 
-		*/
-		// --------------------------------------------------------------
 
-
+		if (current_mode == MODE_PANIC){
+			if (panic_to_safe_timer == -1) {
+				printf("entered PANIC MODE, entering SAFE MODE in 2s\n");
+				panic_to_safe_timer = get_time_us();
+			} else {
+				if (get_time_us() - panic_to_safe_timer > 2000000) {
+					current_mode = MODE_SAFE;
+					panic_to_safe_timer = -1;
+					printf("entered SAFE MODE");
+				}
+			}
+		}
+		
 
 		if (check_timer_flag()) {
 			if (counter++%20 == 0) {
 				nrf_gpio_pin_toggle(BLUE);
 			}
 
-			/*
+			
 			adc_request_sample();
 			read_baro();
 
-			printf("%10ld | ", get_time_us());
-			printf("%3d %3d %3d %3d | ",ae[0], ae[1], ae[2], ae[3]);
-			printf("%6d %6d %6d | ", phi, theta, psi);
-			printf("%6d %6d %6d | ", sp, sq, sr);
-			printf("%4d | %4ld | %6ld \n", bat_volt, temperature, pressure);
-			*/
+			// printf("%10ld | ", get_time_us());
+			// printf("%3d %3d %3d %3d | ",ae[0], ae[1], ae[2], ae[3]);
+			// printf("%6d %6d %6d | ", phi, theta, psi);
+			// printf("%6d %6d %6d | ", sp, sq, sr);
+			// printf("%4d | %4ld | %6ld \n", bat_volt, temperature, pressure);
+			
 
 			// D2PC_message m = init_message();
 			// bytes_array* b = to_bytes_array(&m);
@@ -193,12 +199,12 @@ int main(void)
 			// delete_message(&m);
 			// delete_bytes_array(b);
 
-			// clear_timer_flag();
+			clear_timer_flag();
 		}
 
 		if (check_sensor_int_flag()) {
 			get_sensor_data();
-			run_filters_and_control();
+			run_filters_and_control(&rec_msg, current_mode);
 		}
 	}	
 

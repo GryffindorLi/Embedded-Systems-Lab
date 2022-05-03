@@ -66,7 +66,7 @@ $(abspath ../components/ble/common/ble_srv_common.c) \
 $(abspath ../components/softdevice/common/softdevice_handler/softdevice_handler.c) \
 $(abspath ./communication/D2PC.c) \
 $(abspath ./communication/PC2D.c) \
-$(abspath ./joystick/joystick.c) \
+# $(abspath ./joystick/joystick.c) \
 
 #assembly files common to all targets
 ASM_SOURCE_FILES  = $(abspath ../components/toolchain/gcc/gcc_startup_nrf51.s)
@@ -94,8 +94,7 @@ INC_PATHS += -I$(abspath ../components/ble/ble_advertising)
 INC_PATHS += -I$(abspath ../components/libraries/trace)
 INC_PATHS += -I$(abspath ../components/softdevice/common/softdevice_handler)
 INC_PATHS += -I$(abspath ./communication)
-INC_PATHS += -I$(abspath ./joystick)
-
+# INC_PATHS += -I$(abspath ./joystick)
 
 OBJECT_DIRECTORY = _build
 LISTING_DIRECTORY = $(OBJECT_DIRECTORY)
