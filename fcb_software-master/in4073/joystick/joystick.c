@@ -109,7 +109,7 @@ int main (int argc, char **argv)
 		//free(&message);
 		}
 		
-		if (button[MODE_PANIC])
+		if (button[1])
 		{
 			//Break and send the information to the drone
 			printf("PANIC: DO NOT PANIC!");
@@ -119,7 +119,7 @@ int main (int argc, char **argv)
 		if (errno != EAGAIN) {
 			perror("\njs: error reading (EAGAIN)");//If USB connection of Joystick is lost, 
 													//Enter safe mode
-			button[MODE_SAFE]=1;
+			button[0]=1;
 			exit (1);
 		}
 
