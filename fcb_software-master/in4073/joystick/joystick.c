@@ -1,5 +1,5 @@
 
-#include <linux/ioctl.h>
+#include <sys/ioctl.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <stdlib.h>
@@ -17,10 +17,7 @@
 int	axis[6];
 int button[12];
 
-typedef struct {
-	int axis[6];
-	int button[12];/* data */
-} new_message;
+
 void create_message_js2D(JS_message* message, int* axis, int* button)
 {
 	//message = (new_message*) malloc (sizeof(new_message));
@@ -66,7 +63,7 @@ int main (int argc, char **argv)
 	int timeout = 300;
 	int 		fd;
 	struct js_event js;
-	new_message message;
+	JS_message message;
 	unsigned int	t, i;
 	if ((fd = open(JS_DEV, O_RDONLY)) < 0) {
 		perror("jstest");
@@ -113,7 +110,7 @@ int main (int argc, char **argv)
 		//free(&message);
 		}
 		
-		if (button[MODE_PANIC])
+		if (button[1])
 		{
 			//Break and send the information to the drone
 			printf("PANIC: DO NOT PANIC!");
@@ -123,7 +120,7 @@ int main (int argc, char **argv)
 		if (errno != EAGAIN) {
 			perror("\njs: error reading (EAGAIN)");//If USB connection of Joystick is lost, 
 													//Enter safe mode
-			button[MODE_SAFE]=1;
+			button[0]=1;
 			exit (1);
 		}
 

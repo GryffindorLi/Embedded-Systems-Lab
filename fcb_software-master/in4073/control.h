@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 #include <stdbool.h>
-
+#include "PC2D.h"
 extern uint16_t motor[4];
 extern int16_t ae[4];
 extern bool wireless_mode;
@@ -35,5 +35,5 @@ float Kir; // controller I gain roll
 float Kdr; // controller D gain roll
 
 void run_filters_and_control();
-
+void controller_manual(pc_msg* mes);
 #endif /* CONTROL_H_ */

@@ -35,6 +35,7 @@
 #include "communication/D2PC.h"
 
 bool demo_done;
+pc_msg rec_msg_default;
 
 /*
  * @Author: Hanyuan Ban
@@ -111,6 +112,7 @@ char on_set_key(pc_msg* msg) {
 /*
  * @Author Hanyuan Ban
  * @Author Zirui Li
+ * @Author Karan
  */
 
 Queue local_receive_q;
@@ -121,6 +123,7 @@ char current_key;
 
 int main(void)
 {
+	
 	uart_init();
 	gpio_init();
 	timers_init();
@@ -156,17 +159,22 @@ int main(void)
 			current_control = on_set_control(&rec_msg);
 			current_key = on_set_key(&rec_msg);
 		}
-		
-		
-		// --------------------------------------------------------------
-		/*
-			TODO: given current_mode,
-						current_control {throttle, roll, pitch, yaw},
-						current_key
-				  implement control theory and drive the motors 
-		*/
-		// --------------------------------------------------------------
+		if (current_mode==1){
+			//do it in lab
+				//printf("entered PANIC MODE %d",rec_msg.cm.);
+				
 
+				nrf_delay_ms(2000);
+				current_mode=0;
+		}
+		
+		if (current_mode == 0){
+			controller_manual(&rec_msg_default);
+			printf("entered SAFE MODE: %d",rec_msg_default.mm.mode);
+			printf("entered SAFE MODE: %d",rec_msg_default.cm.control.throttle);
+			printf("\nControl: %d %d %d %d", rec_msg_default.cm.control.throttle, rec_msg_default.cm.control.roll,rec_msg_default.cm.control.pitch,rec_msg_default.cm.control.yaw);
+		}
+		
 
 
 		if (check_timer_flag()) {

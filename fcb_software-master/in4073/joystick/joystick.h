@@ -1,6 +1,6 @@
 #ifndef _LINUX_JOYSTICK_H
 #define _LINUX_JOYSTICK_H
-
+#define CHECK_SUM 8
 /*
  * $Id: joystick.h,v 1.4 2001/04/24 07:06:43 vojtech Exp $
  *
