@@ -14,11 +14,8 @@ extern int16_t phi, theta, psi;
 extern int16_t sp, sq, sr;
 extern int16_t sax, say, saz;
 
-// for filter
-int16_t dt; // loop time period in milliseconds (ms)
-
 // Angle definitions
-int16_t yaw, pitch, roll;
+int32_t yaw, pitch, roll;
 
 void run_filters_and_control();
 void filter_angles();
