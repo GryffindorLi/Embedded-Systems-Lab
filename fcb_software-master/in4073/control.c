@@ -31,16 +31,16 @@ int16_t ae[4];
 bool wireless_mode;
 
 // for IMU:
-int16_t phi, theta, psi;
-int16_t sp, sq, sr;
-int16_t sax, say, saz;
+int16_t phi, theta, psi; // computed angles  (deg to int16), LSB = 182
+int16_t sp, sq, sr; // x,y,z gyro (deg/s to int16), LSB = 16.4
+int16_t sax, say, saz; // x,y,z accel (m/s^2 to int16), LSB = 
 
 // angle definitions:
 int32_t yaw, pitch, roll;
 
 // control variables:
 int32_t error[3];
-int32_t prev_error[3];
+int32_t prev_error[3] = {0, 0, 0}; // initialize to 0
 int32_t derror[3];
 int32_t ierror[3];
 
@@ -59,6 +59,8 @@ int16_t panic_motor = 300; // panic mode motor value
 int8_t freq = 10; // hz
 
 // control input:
+// throttle ranging from 0-65536
+// yaw/pitch/roll ranging from -32767 to 32767
 pc_msg msg;
 
 void update_motors(void)
@@ -71,10 +73,15 @@ void update_motors(void)
 
 // ------------- Manual Mode only ----------------
 void controller_manual(pc_msg *msg){
-	ae[0] = MIN(manual_max_motor, MAX(min_motor, msg->cm.control.throttle - msg->cm.control.yaw + msg->cm.control.pitch)); 
-	ae[1] = MIN(manual_max_motor, MAX(min_motor, msg->cm.control.throttle + msg->cm.control.yaw - msg->cm.control.roll)); 
-	ae[2] = MIN(manual_max_motor, MAX(min_motor, msg->cm.control.throttle - msg->cm.control.yaw - msg->cm.control.pitch)); 
-	ae[3] = MIN(manual_max_motor, MAX(min_motor, msg->cm.control.throttle + msg->cm.control.yaw + msg->cm.control.roll)); 
+	// throttle scalaing: 65535/300 ≈ 220
+	int16_t t_scale = 220;
+	// angle scalaing: 32767/65 ≈ 500
+	int16_t a_scale = 500;
+
+	ae[0] = MIN(manual_max_motor, MAX(min_motor, msg->cm.control.throttle/t_scale + (- msg->cm.control.yaw + msg->cm.control.pitch)/a_scale)); 
+	ae[1] = MIN(manual_max_motor, MAX(min_motor, msg->cm.control.throttle/t_scale + (msg->cm.control.yaw - msg->cm.control.roll)/a_scale)); 
+	ae[2] = MIN(manual_max_motor, MAX(min_motor, msg->cm.control.throttle/t_scale + (- msg->cm.control.yaw - msg->cm.control.pitch)/a_scale)); 
+	ae[3] = MIN(manual_max_motor, MAX(min_motor, msg->cm.control.throttle/t_scale + (msg->cm.control.yaw + msg->cm.control.roll)/a_scale)); 
 }
 
 // ------------- Control Mode only ----------------
@@ -87,9 +94,13 @@ void filter_angles(void){
 	float acc_rate = 0.02;
 	float dt = 0.1;
 
-	pitch = (int32_t) 182*(gyro_rate*(phi/182+(sp*dt)/16.4) + acc_rate*(sax/16384));
-	roll = (int32_t) 182*(gyro_rate*(theta/182+(sq*dt)/16.4) + acc_rate*(say/16384));
-	yaw = (int32_t) 182*(gyro_rate *(psi/182+(sr*dt)/16.4) + acc_rate*(saz/16384));
+	int8_t LSB_a = 182; // LSB angle values (int16 to deg)
+	float LSB_av = 16.4; // LSB anglar velocity (int16 to deg/s)
+	int16_t LSB_ac = 1670; // LSB acceleration (int16 to m/s^2)
+
+	pitch = (int32_t) LSB_a*(gyro_rate*(phi/LSB_a + sp/(LSB_av*freq)) + acc_rate*(sax/LSB_ac));
+	roll = (int32_t) LSB_a*(gyro_rate*(theta/LSB_a + sq/(LSB_av*freq)) + acc_rate*(say/LSB_ac));
+	yaw = (int32_t) LSB_a*(gyro_rate *(psi/LSB_a + sr/(LSB_av*freq)) + acc_rate*(saz/LSB_ac));
 }
 
 void get_error(pc_msg *mes){
@@ -110,6 +121,11 @@ void get_error(pc_msg *mes){
 	ierror[0] = (int32_t) ((float) (error[0] + prev_error[0])/(2*freq));
 	ierror[1] = (int32_t) ((float) (error[1] + prev_error[1])/(2*freq));
 	ierror[2] = (int32_t) ((float) (error[2] + prev_error[2])/(2*freq));
+
+	// update previous error:
+	prev_error[0] = error[0];
+	prev_error[1] = error[1];
+	prev_error[2] = error[2];
 }
 
 void controller(pc_msg *mes){
@@ -142,6 +158,8 @@ int16_t* run_filters_and_control(pc_msg* msg, uint8_t mode)
 			break;
 
 		case MODE_MANUAL:
+			// filter_angles();
+			// get_error(msg);
 			controller_manual(msg);
 			break;
 
