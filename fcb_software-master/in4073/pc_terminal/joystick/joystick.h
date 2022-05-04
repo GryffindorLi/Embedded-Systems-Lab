@@ -136,4 +136,8 @@ typedef struct {
 	int button[12];/* data */
 } JS_message;
 
+void create_message_js2D(JS_message* message, int* axis, int* button);
+unsigned int    mon_time_ms(void);
+void    mon_delay_ms(unsigned int ms);
+
 #endif /* _LINUX_JOYSTICK_H */

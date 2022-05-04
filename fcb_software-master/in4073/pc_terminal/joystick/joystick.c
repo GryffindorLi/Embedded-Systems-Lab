@@ -10,7 +10,7 @@
 #include <string.h>
 
 #include "joystick.h"
-#include "../communication/PC2D.h"
+#include "../../communication/PC2D.h"
 
 /* current axis and button readings
  */
@@ -57,9 +57,9 @@ void    mon_delay_ms(unsigned int ms)
 
 #define JS_DEV	"/dev/input/js0"
 
-int main (int argc, char **argv)
+int main ()
 {
-	int timeout = 300;
+	unsigned int timeout = 300;
 	int 		fd;
 	struct js_event js;
 	JS_message message;

@@ -85,7 +85,7 @@ int	term_getchar()
 #include <sys/time.h>
 #include "../communication/PC2D.h"
 #include "../communication/D2PC.h"
-#include "../joystick/joystick.h"
+#include "./joystick/joystick.h"
 
 static int fd_serial_port;
 struct timeval start;
@@ -206,7 +206,7 @@ int send_mode_msg(pc_msg* msg, uint8_t mode) {
 	return bytes;
 }
 
-uint8_t get_mode_change(char key, uint8_t* buttons) {
+uint8_t get_mode_change(char key, int* buttons) {
 	if (key == 27) return MODE_PANIC;	//escape
 	if (key >= '0' && key <= '8') return (uint8_t) key - '0';  //change mode from
 	if (buttons[0] == 1) return 255;
@@ -234,7 +234,8 @@ float time_dif(struct timeval st, struct timeval ed) {
  * @Author Zirui Li
  */
 int main(int argc, char **argv)
-{
+{	
+	// ----------------------------------INITIALIZATION----------------------------------------
 	term_initio();
 	term_puts("\nTerminal program - Embedded Real-Time Systems\n");
 
@@ -251,9 +252,7 @@ int main(int argc, char **argv)
 
 	term_puts("Type ^C to exit\n");
 
-	/* 
-	 *send & receive
-	 */
+	// ------------------------------------MAIN LOOP------------------------------------------
 
 	char rc = -1;
 	char c = -1;
@@ -262,8 +261,8 @@ int main(int argc, char **argv)
 	uint8_t tmp_mode = -1;
 	controls cont = {500, 20000, 19999, 19998};
 	int axis[6] = {0};
-	uint8_t buttons[12] = {0};
-	// JS_message js_msg;
+	int buttons[12] = {0};
+	JS_message js_msg;
 
 	for (;;) {
 		if (timer_flag == 0) {
@@ -276,7 +275,7 @@ int main(int argc, char **argv)
 			c = tmp_c;
 		}
 
-		// create_message_js2D(&js_msg, axis, buttons);
+		create_message_js2D(&js_msg, axis, buttons);
 		set_controls(&cont, axis);
 		
 		tmp_mode = get_mode_change(c, buttons);
