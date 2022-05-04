@@ -139,8 +139,8 @@ typedef struct {
 } JS_message;
 
 void create_message_js2D(JS_message* message, int* axis, int* button);
-unsigned int    mon_time_ms(void);
-void    mon_delay_ms(unsigned int ms);
+unsigned int mon_time_ms(void);
+void mon_delay_ms(unsigned int ms);
 int js_init();
 void read_file(int fd, struct js_event js, int* axis, int* buttons);
 

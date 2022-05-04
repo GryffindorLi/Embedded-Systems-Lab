@@ -21,7 +21,7 @@
  */
 struct termios 	savetty;
 
-void	term_initio()
+void term_initio()
 {
 	struct termios tty;
 
@@ -35,17 +35,17 @@ void	term_initio()
 	tcsetattr(0, TCSADRAIN, &tty);
 }
 
-void	term_exitio()
+void term_exitio()
 {
 	tcsetattr(0, TCSADRAIN, &savetty);
 }
 
-void	term_puts(char *s)
+void term_puts(char *s)
 {
 	fprintf(stderr,"%s",s);
 }
 
-void	term_putchar(char c)
+void term_putchar(char c)
 {
 	putc(c,stderr);
 }
@@ -214,7 +214,7 @@ void set_controls(controls* cont, int* axis) {
 	cont->roll = axis[ROLL_AXIS];
 	cont->pitch = axis[PITCH_AXIS];
 	cont->yaw = axis[YAW_AXIS];
-	cont->throttle = axis[THROTTLE_AXIS];
+	cont->throttle = -axis[THROTTLE_AXIS] + 32768;
 }
 
 float time_dif(struct timeval st, struct timeval ed) {
