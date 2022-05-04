@@ -22,6 +22,5 @@ uint8_t dequeue(Queue *queue)
 		queue->count -= 1;	
 		return first_item;
 	}
-	
 	return -1;
 }

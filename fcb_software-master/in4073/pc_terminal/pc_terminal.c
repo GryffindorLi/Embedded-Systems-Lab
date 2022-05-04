@@ -13,6 +13,8 @@
 #include <string.h>
 #include <inttypes.h>
 
+#define TRANSMISSION_FREQ 50
+
 /*------------------------------------------------------------
  * console I/O
  *------------------------------------------------------------
@@ -73,21 +75,17 @@ int	term_getchar()
  * 115,200 baud
  *------------------------------------------------------------
  */
+// #include <sys/ioctl.h>
 #include <termios.h>
 #include <ctype.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <assert.h>
-<<<<<<< HEAD
 #include <sys/time.h>
 #include "../communication/PC2D.h"
 #include "../communication/D2PC.h"
 #include "./joystick/joystick.h"
-=======
-#include <time.h>
-#include "PC2D.h"
->>>>>>> 44f5bee0fd596a0d03cded2577400856a9511881
 
 static int fd_serial_port;
 /*
@@ -148,24 +146,40 @@ uint8_t serial_port_getchar()
 	int8_t result;
 	uint8_t c;
 
-	do {
-		result = read(fd_serial_port, &c, 1);
-	} while (result != 1);
-
-	return c;
+	result = read(fd_serial_port, &c, 1);
+	if (result == 1) return c;
+	else return -1;
 }
 
-int serial_port_putmessage(PC2D_message mes)
+/*
+ * @Author Zirui Li
+ * @Param bytes A double pointer to a bytes array. Data read into this array.
+ * @Return A flag indicates fail(-1) or succeed(10)
+ */
+int8_t serial_port_getmessage(uint8_t** bytes){
+	int8_t flag;
+	do {
+		flag = read(fd_serial_port, *bytes, 10);
+	} while (flag != 10 && flag != -1);
+
+	return flag;
+}
+
+/*
+ * @Author: Hanyuan Ban
+ * @Param msg The message that needs to be sent..
+ * @Return A flag indicates fail(-1) or succeed(sizeof(msg))
+ */
+int serial_port_putmessage(pc_msg* msg, int len)
 {
 	int result;
 	do {
-		result = (int) write(fd_serial_port, &mes, sizeof(mes));
+		result = (int) write(fd_serial_port, msg, len);
 	} while (result == 0);
 
 	return result;
 }
 
-<<<<<<< HEAD
 int send_ctrl_msg(pc_msg* msg, controls cont, char c) {
 	msg->cm.checksum = sizeof(msg->cm);
 	msg->cm.key = c;
@@ -192,7 +206,7 @@ int send_mode_msg(pc_msg* msg, uint8_t mode) {
 uint8_t get_mode_change(char key, int* buttons) {
 	if (key == 27) return MODE_PANIC;	//escape
 	if (key >= '0' && key <= '8') return (uint8_t) key - '0';  //change mode from
-	if (buttons[0] == 1) return 255;
+	if (buttons[0] == 1) return MODE_PANIC;
 	return 255;
 }
 
@@ -207,24 +221,27 @@ float time_dif(struct timeval st, struct timeval ed) {
 	return (ed.tv_sec - st.tv_sec) * 1000.0f + (ed.tv_usec - st.tv_usec) / 1000.0f;
 }
 
-=======
->>>>>>> 44f5bee0fd596a0d03cded2577400856a9511881
 
 /*----------------------------------------------------------------
  * main -- execute terminal
  *----------------------------------------------------------------
  */
+ /*
+ * @Author Hanyuan Ban
+ * @Author Zirui Li
+ */
 int main(int argc, char **argv)
-<<<<<<< HEAD
 {	
 	// ----------------------------------INITIALIZATION----------------------------------------
-=======
-{
-	char c;
 
->>>>>>> 44f5bee0fd596a0d03cded2577400856a9511881
 	term_initio();
 	term_puts("\nTerminal program - Embedded Real-Time Systems\n");
+	int fd;
+	if ((fd = js_init()) == 0) {
+		term_puts("\n Joystick unplugged\n");
+	} else {
+		term_puts("\n Joystick plugged\n");
+	}
 
 	// if no argument is given at execution time, /dev/ttyUSB0 is assumed
 	// asserts are in the function
@@ -239,9 +256,10 @@ int main(int argc, char **argv)
 
 	term_puts("Type ^C to exit\n");
 
-<<<<<<< HEAD
 	// ------------------------------------MAIN LOOP------------------------------------------
-
+	struct timeval start;
+	struct timeval end;
+	int timer_flag = 0;
 	char rc = -1;
 	char c = -1;
 	char tmp_c = -1;
@@ -251,32 +269,28 @@ int main(int argc, char **argv)
 	int axis[6] = {0};
 	int buttons[12] = {0};
 	JS_message js_msg;
+	struct js_event js;
+	
 
-=======
-	/* send & receive
-	 */
-	int seq_no = 0;
->>>>>>> 44f5bee0fd596a0d03cded2577400856a9511881
 	for (;;) {
-		if ((c = term_getchar_nb()) != -1) {
-			seq_no++;
-			PC2D_message new_message = create_message();
-
-			set_checksum(&new_message, 10);
-			set_mode(&new_message, MODE_SAFE);
-			controls cont = {20000,19999,19998};
-			set_control(&new_message, cont);
-			set_key(&new_message, c);
-			
-			int bytes = serial_port_putmessage(new_message);
-			fprintf(stderr,"Sent %d bytes to DRONE!", bytes);
+		if (fd < 0) {
+			fprintf(stderr,"\n Joystick unplugged\n");
 		}
-<<<<<<< HEAD
+		if (timer_flag == 0) {
+			gettimeofday(&start, 0);
+			timer_flag = 1;
+		}
 		// read the keyboard command every loop
 		c = -1;
 		if ((tmp_c = term_getchar_nb()) != -1) {
 			c = tmp_c;
 		}
+
+		// js_flag = 1;
+		// if (read_file(fd, js, axis, buttons) == 0) {
+		// 	js_flag = 0;
+		// }
+		read_file(fd, js, axis, buttons);
 
 		create_message_js2D(&js_msg, axis, buttons);
 		set_controls(&cont, axis);
@@ -316,17 +330,11 @@ int main(int argc, char **argv)
 
 		if ((rc = serial_port_getchar()) != -1) {
 			term_putchar(rc);
-=======
-		if ((c = serial_port_getchar()) != -1) {
-			term_putchar(c);
->>>>>>> 44f5bee0fd596a0d03cded2577400856a9511881
 		}
 	}
 
 	term_exitio();
 	serial_port_close();
 	term_puts("\n<exit>\n");
-
-	return 0;
 }
 
