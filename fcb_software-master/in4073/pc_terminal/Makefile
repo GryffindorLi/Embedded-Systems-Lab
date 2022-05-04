@@ -10,11 +10,11 @@ default: pc_terminal.o PC2D.o D2PC.o
 pc_terminal.o: pc_terminal.c
 	$(CC) $(CFLAGS) -c pc_terminal.c -o pc_terminal.o
 
-PC2D.o: ../communication/PC2D.c
-	$(CC) $(CFLAGS) -c ../communication/PC2D.c -o PC2D.o
+PC2D.o: ../PC2D.c
+	$(CC) $(CFLAGS) -c ../PC2D.c -o PC2D.o
 
-D2PC.o: ../communication/D2PC.c
-	$(CC) $(CFLAGS) -c ../communication/D2PC.c -o D2PC.o
+D2PC.o: ../D2PC.c
+	$(CC) $(CFLAGS) -c ../D2PC.c -o D2PC.o
 
 clean:
 	rm $(EXEC)

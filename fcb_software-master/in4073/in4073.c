@@ -29,9 +29,9 @@
 #include "control.h"
 #include "mpu6050/mpu6050.h"
 #include "utils/quad_ble.h"
-#include "communication/PC2D.h"
+#include "PC2D.h"
 #include "queue.h"
-#include "communication/D2PC.h"
+#include "D2PC.h"
 
 bool demo_done;
 

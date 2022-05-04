@@ -81,8 +81,8 @@ int	term_getchar()
 #include <stdio.h>
 #include <assert.h>
 #include <time.h>
-#include "../communication/PC2D.h"
-#include "../communication/D2PC.h"
+#include "../PC2D.h"
+#include "../D2PC.h"
 
 static int fd_serial_port;
 /*
