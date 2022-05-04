@@ -242,6 +242,8 @@ int main(int argc, char **argv)
 			term_putchar(c);
 		}
 		*/
+
+		/*
 		uint8_t* mess;
 		if ((serial_port_getmessage(&mess)) != -1){
 			bytes_array ba;
@@ -253,6 +255,16 @@ int main(int argc, char **argv)
 			printf("Yaw is %d\n", recv_mess->y);
 			printf("Pitch is %d\n", recv_mess->p);
 			printf("Roll is %d\n", recv_mess->r);
+		}
+		*/
+
+		char* mess = (char*)malloc(sizeof(char) * 257);
+		if ((serial_port_getstring(&mess)) != -1){
+			string_bytes_array sba;
+			memcpy((void*)(&(sba.bytes)), (void*)mess, 257);
+
+			D2PC_string_message_p recv_mess = &(sba.sm);
+			printf("Mode is %s\n", recv_mess->string);
 		}
 	}
 
