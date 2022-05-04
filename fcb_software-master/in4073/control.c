@@ -47,10 +47,10 @@ void update_motors(void)
 
 // ------------- Manual Mode only ----------------
 void controller_manual(pc_msg *msg){
-	ae[0] = MIN(800, MAX(0, msg->cm.control.throttle - msg->cm.control.yaw + msg->cm.control.pitch + msg->cm.control.roll)); 
-	ae[1] = MIN(800, MAX(0, msg->cm.control.throttle + msg->cm.control.yaw + msg->cm.control.pitch - msg->cm.control.roll)); 
-	ae[2] = MIN(800, MAX(0, msg->cm.control.throttle + msg->cm.control.yaw - msg->cm.control.pitch + msg->cm.control.roll)); 
-	ae[3] = MIN(800, MAX(0, msg->cm.control.throttle - msg->cm.control.yaw - msg->cm.control.pitch - msg->cm.control.roll)); 
+	ae[0] = MIN(800, MAX(0, msg->cm.control.throttle - msg->cm.control.yaw + msg->cm.control.pitch )); 
+	ae[1] = MIN(800, MAX(0, msg->cm.control.throttle + msg->cm.control.yaw - msg->cm.control.roll)); 
+	ae[2] = MIN(800, MAX(0, msg->cm.control.throttle - msg->cm.control.yaw - msg->cm.control.pitch )); 
+	ae[3] = MIN(800, MAX(0, msg->cm.control.throttle + msg->cm.control.yaw + msg->cm.control.roll)); 
 }
 
 void run_filters_and_control(pc_msg* msg, uint8_t mode)
