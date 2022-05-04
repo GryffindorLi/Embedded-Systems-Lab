@@ -1,5 +1,7 @@
 #include <stdbool.h>
 #include "D2PC.h"
+#include <stdlib.h>
+#include <string.h>
 
 /*
  * @Author Zirui Li
@@ -96,7 +98,9 @@ D2PC_string_message init_string_message(void){
     D2PC_string_message_p sm = 
         (D2PC_string_message_p)malloc(sizeof(D2PC_string_message));
     sm->header = HEADER;
-    sm->string = "This is a debug message, and I will look at it detailly.";
+    //sm->string = 
+    char* tmp = "This is a debug message, and I will look at it detailly.";
+    strcpy(sm->string, tmp);
     sm->tail = TAIL;
     return *sm;
 }
@@ -107,11 +111,11 @@ void delete_string_message(D2PC_string_message_p m){
 
 string_bytes_array* to_string_bytes_array(D2PC_string_message_p m){
     string_bytes_array* sba = (string_bytes_array*)malloc(sizeof(string_bytes_array));
-    sba->sm = m;
+    sba->sm = *m;
     return sba;
 }
 
 void delete_string_bytes_array(string_bytes_array* b){
     //free(b->sm);
-    free(b)
+    free(b);
 }

@@ -179,7 +179,7 @@ int main(void)
 			D2PC_string_message sm = init_string_message();
 			string_bytes_array* sb = to_string_bytes_array(&sm);
 			for (int i = 0; i < 257; ++i){
-				uart_put(b->bytes[i]);
+				uart_put(sb->bytes[i]);
 			}
 			delete_string_message(&sm);
 			delete_string_bytes_array(sb);

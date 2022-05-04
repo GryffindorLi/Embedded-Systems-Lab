@@ -4,8 +4,8 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
-#DEFINE HEADER '@'
-#DEFINE TAIL ';'
+#define HEADER '@'
+#define TAIL ';'
 
 /*
  * @Author: Zirui Li
