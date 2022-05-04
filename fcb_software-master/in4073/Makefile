@@ -76,7 +76,6 @@ INC_PATHS += -I$(abspath ./mpu6050)
 INC_PATHS += -I$(abspath ./utils/config)
 INC_PATHS += -I$(abspath ./utils)
 INC_PATHS += -I$(abspath ./hal)
-INC_PATHS += -I$(abspath ./messages)
 INC_PATHS += -I$(abspath ../components/device)
 INC_PATHS += -I$(abspath ../components/toolchain/gcc)
 INC_PATHS += -I$(abspath ../components/toolchain)
@@ -94,7 +93,6 @@ INC_PATHS += -I$(abspath ../components/ble/ble_advertising)
 INC_PATHS += -I$(abspath ../components/libraries/trace)
 INC_PATHS += -I$(abspath ../components/softdevice/common/softdevice_handler)
 INC_PATHS += -I$(abspath ./communication)
-
 
 OBJECT_DIRECTORY = _build
 LISTING_DIRECTORY = $(OBJECT_DIRECTORY)

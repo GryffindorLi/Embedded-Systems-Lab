@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <inttypes.h>
+#include <stdlib.h>
 
 /*------------------------------------------------------------
  * console I/O
@@ -171,7 +172,7 @@ int8_t serial_port_getmessage(uint8_t** bytes){
 int16_t serial_port_getstring(char** string){
 	int16_t size = 0;
 	int8_t flag;
-	while ((flag = read(fd_serial_port, *string[size], 1)) != -1){
+	while ((flag = read(fd_serial_port, string[size], 1)) != -1){
 		if (*string[size] == TAIL){
 			break;
 		}
