@@ -19,9 +19,9 @@
 // control type define
 typedef struct {
     uint16_t throttle;
-    uint16_t roll;
-    uint16_t pitch;
-    uint16_t yaw;
+    int16_t roll;
+    int16_t pitch;
+    int16_t yaw;
 } controls;
 
 // the message type

@@ -21,6 +21,6 @@ int32_t yaw, pitch, roll;
 void filter_angles();
 void get_error(pc_msg *mes);
 void controller(pc_msg *mes);
-void run_filters_and_control(pc_msg* mes, uint8_t mode);
+int16_t* run_filters_and_control(pc_msg* mes, uint8_t mode);
 
 #endif /* CONTROL_H_ */

@@ -130,7 +130,7 @@ void controller(pc_msg *mes){
 	ae[3] = MIN(max_motor, MAX(min_motor, (int16_t) mes->cm.control.throttle + (yaw_command + roll_command)/10430)); 
 }
 
-void run_filters_and_control(pc_msg* msg, uint8_t mode)
+int16_t* run_filters_and_control(pc_msg* msg, uint8_t mode)
 {
 	switch (mode) {
 		case MODE_SAFE:
@@ -155,4 +155,5 @@ void run_filters_and_control(pc_msg* msg, uint8_t mode)
 			break;
 	}
 	update_motors();
+	return ae;
 }

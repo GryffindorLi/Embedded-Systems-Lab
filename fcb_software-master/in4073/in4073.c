@@ -141,7 +141,7 @@ int main(void)
 	uint32_t idle_timer = -1;
 	demo_done = false;
 	wireless_mode = false;
-
+	int16_t* aes;
 	int parse_result = 0;
 
 	while (!demo_done) {
@@ -162,7 +162,6 @@ int main(void)
 			printf("\nMODE CHANGE: %d\n", rec_msg.mm.mode);
 			current_mode = on_mode_change(&rec_msg);
 		} else if (parse_result > 0) {
-			printf("\nControl: %d %d %d %d", rec_msg.cm.control.throttle, rec_msg.cm.control.roll,rec_msg.cm.control.pitch,rec_msg.cm.control.yaw);
 			current_control = on_set_control(&rec_msg);
 			current_key = on_set_key(&rec_msg);
 		}
@@ -222,7 +221,8 @@ int main(void)
 
 		if (check_sensor_int_flag()) {
 			get_sensor_data();
-			run_filters_and_control(&rec_msg, current_mode);
+			aes = run_filters_and_control(&rec_msg, current_mode);
+			printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
 		}
 	}	
 
