@@ -1,6 +1,6 @@
 #ifndef _LINUX_JOYSTICK_H
 #define _LINUX_JOYSTICK_H
-#define CHECK_SUM 8
+
 /*
  * $Id: joystick.h,v 1.4 2001/04/24 07:06:43 vojtech Exp $
  *
@@ -110,12 +110,6 @@ struct js_corr {
 #define JS_GET_ALL		7
 #define JS_SET_ALL		8
 
-#define CHECK_SUM 8
-#define ROLL_AXIS 0
-#define PITCH_AXIS 1
-#define YAW_AXIS 2
-#define THROTTLE_AXIS 3
-
 struct JS_DATA_TYPE {
 	int buttons;
 	int x;
@@ -131,6 +125,7 @@ struct JS_DATA_SAVE_TYPE {
 	struct JS_DATA_TYPE JS_CORR;
 };
 
+<<<<<<< HEAD:fcb_software-master/in4073/pc_terminal/joystick/joystick.h
 typedef struct {
 	int axis[6];
 	int button[12];/* data */
@@ -140,4 +135,6 @@ void create_message_js2D(JS_message* message, int* axis, int* button);
 unsigned int    mon_time_ms(void);
 void    mon_delay_ms(unsigned int ms);
 
+=======
+>>>>>>> 44f5bee0fd596a0d03cded2577400856a9511881:fcb_software-master/in4073/joystick/joystick.h
 #endif /* _LINUX_JOYSTICK_H */

@@ -13,8 +13,6 @@
 #include <string.h>
 #include <inttypes.h>
 
-#define TRANSMISSION_FREQ 1
-
 /*------------------------------------------------------------
  * console I/O
  *------------------------------------------------------------
@@ -75,22 +73,23 @@ int	term_getchar()
  * 115,200 baud
  *------------------------------------------------------------
  */
-// #include <sys/ioctl.h>
 #include <termios.h>
 #include <ctype.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <assert.h>
+<<<<<<< HEAD
 #include <sys/time.h>
 #include "../communication/PC2D.h"
 #include "../communication/D2PC.h"
 #include "./joystick/joystick.h"
+=======
+#include <time.h>
+#include "PC2D.h"
+>>>>>>> 44f5bee0fd596a0d03cded2577400856a9511881
 
 static int fd_serial_port;
-struct timeval start;
-struct timeval end;
-int timer_flag = 0;
 /*
  * Open the terminal I/O interface to the serial/pseudo serial port.
  *
@@ -149,40 +148,24 @@ uint8_t serial_port_getchar()
 	int8_t result;
 	uint8_t c;
 
-	result = read(fd_serial_port, &c, 1);
-	if (result == 1) return c;
-	else return -1;
-}
-
-/*
- * @Author Zirui Li
- * @Param bytes A double pointer to a bytes array. Data read into this array.
- * @Return A flag indicates fail(-1) or succeed(10)
- */
-int8_t serial_port_getmessage(uint8_t** bytes){
-	int8_t flag;
 	do {
-		flag = read(fd_serial_port, *bytes, 10);
-	} while (flag != 10 && flag != -1);
+		result = read(fd_serial_port, &c, 1);
+	} while (result != 1);
 
-	return flag;
+	return c;
 }
 
-/*
- * @Author: Hanyuan Ban
- * @Param msg The message that needs to be sent..
- * @Return A flag indicates fail(-1) or succeed(sizeof(msg))
- */
-int serial_port_putmessage(pc_msg* msg, int len)
+int serial_port_putmessage(PC2D_message mes)
 {
 	int result;
 	do {
-		result = (int) write(fd_serial_port, msg, len);
+		result = (int) write(fd_serial_port, &mes, sizeof(mes));
 	} while (result == 0);
 
 	return result;
 }
 
+<<<<<<< HEAD
 int send_ctrl_msg(pc_msg* msg, controls cont, char c) {
 	msg->cm.checksum = sizeof(msg->cm);
 	msg->cm.key = c;
@@ -224,18 +207,22 @@ float time_dif(struct timeval st, struct timeval ed) {
 	return (ed.tv_sec - st.tv_sec) * 1000.0f + (ed.tv_usec - st.tv_usec) / 1000.0f;
 }
 
+=======
+>>>>>>> 44f5bee0fd596a0d03cded2577400856a9511881
 
 /*----------------------------------------------------------------
  * main -- execute terminal
  *----------------------------------------------------------------
  */
- /*
- * @Author Hanyuan Ban
- * @Author Zirui Li
- */
 int main(int argc, char **argv)
+<<<<<<< HEAD
 {	
 	// ----------------------------------INITIALIZATION----------------------------------------
+=======
+{
+	char c;
+
+>>>>>>> 44f5bee0fd596a0d03cded2577400856a9511881
 	term_initio();
 	term_puts("\nTerminal program - Embedded Real-Time Systems\n");
 
@@ -252,6 +239,7 @@ int main(int argc, char **argv)
 
 	term_puts("Type ^C to exit\n");
 
+<<<<<<< HEAD
 	// ------------------------------------MAIN LOOP------------------------------------------
 
 	char rc = -1;
@@ -264,11 +252,26 @@ int main(int argc, char **argv)
 	int buttons[12] = {0};
 	JS_message js_msg;
 
+=======
+	/* send & receive
+	 */
+	int seq_no = 0;
+>>>>>>> 44f5bee0fd596a0d03cded2577400856a9511881
 	for (;;) {
-		if (timer_flag == 0) {
-			gettimeofday(&start, 0);
-			timer_flag = 1;
+		if ((c = term_getchar_nb()) != -1) {
+			seq_no++;
+			PC2D_message new_message = create_message();
+
+			set_checksum(&new_message, 10);
+			set_mode(&new_message, MODE_SAFE);
+			controls cont = {20000,19999,19998};
+			set_control(&new_message, cont);
+			set_key(&new_message, c);
+			
+			int bytes = serial_port_putmessage(new_message);
+			fprintf(stderr,"Sent %d bytes to DRONE!", bytes);
 		}
+<<<<<<< HEAD
 		// read the keyboard command every loop
 		c = -1;
 		if ((tmp_c = term_getchar_nb()) != -1) {
@@ -313,11 +316,17 @@ int main(int argc, char **argv)
 
 		if ((rc = serial_port_getchar()) != -1) {
 			term_putchar(rc);
+=======
+		if ((c = serial_port_getchar()) != -1) {
+			term_putchar(c);
+>>>>>>> 44f5bee0fd596a0d03cded2577400856a9511881
 		}
 	}
 
 	term_exitio();
 	serial_port_close();
 	term_puts("\n<exit>\n");
+
+	return 0;
 }
 

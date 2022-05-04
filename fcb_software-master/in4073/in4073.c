@@ -16,7 +16,6 @@
 #include <stdbool.h>
 #include <inttypes.h>
 #include <stdio.h>
-#include <string.h>
 #include "nrf_gpio.h"
 #include "nrf_delay.h"
 #include "app_util_platform.h"
@@ -30,100 +29,92 @@
 #include "control.h"
 #include "mpu6050/mpu6050.h"
 #include "utils/quad_ble.h"
-#include "communication/PC2D.h"
+#include "PC2D.h"
 #include "queue.h"
-#include "communication/D2PC.h"
 
 bool demo_done;
-pc_msg rec_msg_default;
 
-/*
- * @Author: Hanyuan Ban
- * @Param lq The receiving local queue, q The queue handling serial data.
+/*------------------------------------------------------------
+ * parse message
+ *------------------------------------------------------------
  */
-void receive_message(Queue* lq, Queue* q) {
-	for (int i = 0; i < q->count; i++) {
-		enqueue(lq, dequeue(q));
+
+int receive_message(PC2D_message_p mes, Queue* q, int len) {
+	for (int i = 0; i < len; i++) {
+		uint8_t val = dequeue(q);
+		if (val == (uint8_t) -1) {
+			printf("wrong at %d\n", i);
+			return -1;
+		}
+		if (i == 0) {
+			mes->checksum = val;
+			if (val != len) {
+				printf("wrong checksum");
+				return -1;
+			}
+		}
+		if (i == 1) mes->mode = val;
+		if (i == 2) mes->control.x = (uint16_t) val;
+		if (i == 3) mes->control.x |= ((uint16_t) val) << 8;
+		if (i == 4) mes->control.y = (uint16_t) val;
+		if (i == 5) mes->control.y |= ((uint16_t) val) << 8;
+		if (i == 6) mes->control.z = (uint16_t) val;
+		if (i == 7) mes->control.z |= ((uint16_t) val) << 8;
+		if (i == 8) mes->key = (char) val;
+	}
+	return 1;
+}
+
+/*------------------------------------------------------------------
+ * process_key -- process command keys
+ *------------------------------------------------------------------
+ */
+void process_key(uint8_t c)
+{
+	switch (c) {
+	case 'q':
+		ae[0] += 10;
+		break;
+	case 'a':
+		ae[0] -= 10;
+		if (ae[0] < 0) ae[0] = 0;
+		break;
+	case 'w':
+		ae[1] += 10;
+		break;
+	case 's':
+		ae[1] -= 10;
+		if (ae[1] < 0) ae[1] = 0;
+		break;
+	case 'e':
+		ae[2] += 10;
+		break;
+	case 'd':
+		ae[2] -= 10;
+		if (ae[2] < 0) ae[2] = 0;
+		break;
+	case 'r':
+		ae[3] += 10;
+		break;
+	case 'f':
+		ae[3] -= 10;
+		if (ae[3] < 0) ae[3] = 0;
+		break;
+	case 27:
+		demo_done = true;
+		break;
+	default:
+		nrf_gpio_pin_toggle(RED);
 	}
 }
 
-/*
- * @Author: Hanyuan Ban
- * @Param mes The message needed to be filled, q The receiving local queue, len Size of message
- * @Return A flag indicates "parse failure" (-1), "parsed mode message" (0), "parsed n control message" (No. of message).
- */
-int parse_message(pc_msg* msg, Queue* q) {
-	uint16_t header_p = q->first;
-	uint16_t pointer = q->first;
-	uint16_t checksum = 0;
-	uint8_t val;
-	uint16_t iter = q->count;
-	int result = -1;
-	for (uint16_t j = 0; j < iter; j++) {
-		val = q->items[pointer];	// read the data
-		// if it is the header
-		if ((char)val == 'M' || (char)val == 'C') {
-			// remove the unparsed bytes
-			for (int i = q->first; i < pointer; i++) {
-				dequeue(q);
-			}
-			if ((char)val == 'M') checksum = (uint16_t) sizeof(msg->mm);
-			else checksum = (uint16_t) sizeof(msg->cm);
-			pointer = q->first;
-			header_p = pointer; // set the header pointer to here
-		}
-		// if it is a checksum and the length of message is correct
-		if (val == (uint8_t) checksum && pointer - header_p == checksum - 1) {
-			if (checksum == (uint16_t) sizeof(msg->mm)) memcpy(&msg->mm, &(q->items[header_p]), checksum);	// copy the data to message
-			if (checksum == (uint16_t) sizeof(msg->cm)) memcpy(&msg->cm, &(q->items[header_p]), checksum);
-			for(int i = 0; i < checksum; i++) {
-				dequeue(q); // delete the data from queue
-			}
-			if (checksum == (uint16_t) sizeof(msg->mm)) return 0;
-			if (checksum == (uint16_t) sizeof(msg->cm)) {
-				if (result == -1) result = 1;
-				else result++;
-			}
-			pointer = q->first;
-			header_p = pointer; // set the header pointer to here
-		}
-		pointer++;
-	}
-	return result;
-}
-
-uint8_t on_mode_change(pc_msg* msg) {
-	return msg->mm.mode;
-}
-
-controls on_set_control(pc_msg* msg) {
-	return msg->cm.control;
-}
-
-char on_set_key(pc_msg* msg) {
-	return msg->cm.key;
-}
 
 /*------------------------------------------------------------------
  * main -- everything you need is here :)
  *------------------------------------------------------------------
  */
-
-/*
- * @Author Hanyuan Ban
- * @Author Zirui Li
- * @Author Karan
- */
-
-Queue local_receive_q;
-pc_msg rec_msg;
-uint8_t current_mode;
-controls current_control;
-char current_key;
-
 int main(void)
 {
-	
 	uart_init();
 	gpio_init();
 	timers_init();
@@ -134,77 +125,46 @@ int main(void)
 	spi_flash_init();
 	quad_ble_init();
 
-	init_queue(&local_receive_q);
-
 	uint32_t counter = 0;
-	uint32_t panic_to_safe_timer = -1;
 	demo_done = false;
 	wireless_mode = false;
 
-	int parse_result = 0;
+	PC2D_message rec_mes = create_message();
 
 	while (!demo_done) {
-		// receive message when there is message
 		if (rx_queue.count) {
-			receive_message(&local_receive_q, &rx_queue);
-		}
-
-		// parse message every loop
-		parse_result = parse_message(&rec_msg, &local_receive_q);
-		
-		if (parse_result == 0) {
-			printf("\nMODE CHANGE: %d\n", rec_msg.mm.mode);
-			current_mode = on_mode_change(&rec_msg);
-		} else if (parse_result > 0) {
-			printf("\nControl: %d %d %d %d", rec_msg.cm.control.throttle, rec_msg.cm.control.roll,rec_msg.cm.control.pitch,rec_msg.cm.control.yaw);
-			current_control = on_set_control(&rec_msg);
-			current_key = on_set_key(&rec_msg);
-		}
-
-		if (current_mode == MODE_PANIC){
-			if (panic_to_safe_timer == -1) {
-				printf("entered PANIC MODE, entering SAFE MODE in 2s\n");
-				panic_to_safe_timer = get_time_us();
-			} else {
-				if (get_time_us() - panic_to_safe_timer > 2000000) {
-					current_mode = MODE_SAFE;
-					panic_to_safe_timer = -1;
-					printf("entered SAFE MODE");
-				}
+			if (receive_message(&rec_mes, &rx_queue, sizeof(rec_mes)) == 1) {
+				printf("RECEIVED_MESSAGE:\n");
+				printf("checksum: %d\n", rec_mes.checksum);
+				printf("mode: %d\n", rec_mes.mode);
+				printf("controls: %d %d %d\n", rec_mes.control.x, rec_mes.control.y, rec_mes.control.z);
+				printf("key: %c\n", rec_mes.key);
 			}
 		}
-		
+		if (ble_rx_queue.count) {
+			process_key(dequeue(&ble_rx_queue));
+		}
 
 		if (check_timer_flag()) {
 			if (counter++%20 == 0) {
 				nrf_gpio_pin_toggle(BLUE);
 			}
 
-			
 			adc_request_sample();
 			read_baro();
 
-			// printf("%10ld | ", get_time_us());
-			// printf("%3d %3d %3d %3d | ",ae[0], ae[1], ae[2], ae[3]);
-			// printf("%6d %6d %6d | ", phi, theta, psi);
-			// printf("%6d %6d %6d | ", sp, sq, sr);
-			// printf("%4d | %4ld | %6ld \n", bat_volt, temperature, pressure);
-			
-
-			// D2PC_message m = init_message();
-			// bytes_array* b = to_bytes_array(&m);
-			// for (int i = 0; i < 10; ++i){
-			// 	uart_put(b->bytes[i]);
-			// }
-			// delete_message(&m);
-			// delete_bytes_array(b);
+			printf("%10ld | ", get_time_us());
+			printf("%3d %3d %3d %3d | ",ae[0], ae[1], ae[2], ae[3]);
+			printf("%6d %6d %6d | ", phi, theta, psi);
+			printf("%6d %6d %6d | ", sp, sq, sr);
+			printf("%4d | %4ld | %6ld \n", bat_volt, temperature, pressure);
 
 			clear_timer_flag();
 		}
 
 		if (check_sensor_int_flag()) {
 			get_sensor_data();
-			run_filters_and_control(&rec_msg, current_mode);
+			run_filters_and_control();
 		}
 	}	
 
