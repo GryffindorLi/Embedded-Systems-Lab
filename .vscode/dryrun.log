@@ -1,0 +1,6 @@
+make.exe --dry-run --always-make --keep-going --print-directory
+make: Entering directory 'e:/Study/TUD Courses/q4/ES Lab/CS4140ES-Embedded-Systems-Lab'
+make: Leaving directory 'e:/Study/TUD Courses/q4/ES Lab/CS4140ES-Embedded-Systems-Lab'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+

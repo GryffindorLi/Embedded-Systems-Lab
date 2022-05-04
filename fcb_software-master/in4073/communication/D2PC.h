@@ -1,5 +1,11 @@
+#ifndef D2PC_H
+#define D2PC_H
+
 #include <inttypes.h>
 #include <stdbool.h>
+
+#DEFINE HEADER '@'
+#DEFINE TAIL ';'
 
 /*
  * @Author: Zirui Li
@@ -14,6 +20,14 @@ typedef struct {
     uint16_t checksum;  // 2 bytes
 } D2PC_message;  //10 bytes
 
+typedef struct {
+    char header; //1 bytes
+    char string[255];  // 255 bytes
+    char tail;  // 1 bytes
+} D2PC_string_message;   // 257 bytes
+
+typedef D2PC_string_message* D2PC_string_message_p;
+
 typedef D2PC_message* D2PC_message_p;
 
 /*
@@ -24,6 +38,11 @@ typedef union {
     uint8_t bytes[10];
 } bytes_array;
 
+typedef union {
+    D2PC_string_message sm;
+    uint8_t bytes[257];
+} string_bytes_array;
+
 uint16_t cal_checksum(D2PC_message message);
 
 D2PC_message init_message(void);
@@ -33,3 +52,13 @@ void delete_message(D2PC_message_p m);
 bytes_array* to_bytes_array(D2PC_message_p m);
 
 void delete_bytes_array(bytes_array* b);
+
+D2PC_string_message init_string_message(void);
+
+void delete_string_message(D2PC_string_message_p m);
+
+string_bytes_array* to_string_bytes_array(D2PC_string_message_p m);
+
+void delete_string_bytes_array(string_bytes_array* b);
+
+#endif

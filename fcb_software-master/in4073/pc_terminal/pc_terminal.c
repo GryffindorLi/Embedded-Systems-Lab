@@ -163,6 +163,23 @@ int8_t serial_port_getmessage(uint8_t** bytes){
 	return flag;
 }
 
+/*
+ * @Author Zirui Li
+ * @Param bytes A double pointer to a char array. Data read into this array.
+ * @Return The number of 
+ */
+int16_t serial_port_getstring(char** string){
+	int16_t size = 0;
+	int8_t flag;
+	while ((flag = read(fd_serial_port, *string[size], 1)) != -1){
+		if (*string[size] == TAIL){
+			break;
+		}
+		size++;
+	}
+	return (flag == -1)? flag: size;
+}
+
 int serial_port_putmessage(PC2D_message mes)
 {
 	int result;

@@ -88,5 +88,30 @@ bytes_array* to_bytes_array(D2PC_message_p m){
  * @Author Zirui Li
  */
 void delete_bytes_array(bytes_array* b){
+    //free(b->m);
     free(b);
+}
+
+D2PC_string_message init_string_message(void){
+    D2PC_string_message_p sm = 
+        (D2PC_string_message_p)malloc(sizeof(D2PC_string_message));
+    sm->header = HEADER;
+    sm->string = "This is a debug message, and I will look at it detailly.";
+    sm->tail = TAIL;
+    return *sm;
+}
+
+void delete_string_message(D2PC_string_message_p m){
+    free(m);
+}
+
+string_bytes_array* to_string_bytes_array(D2PC_string_message_p m){
+    string_bytes_array* sba = (string_bytes_array*)malloc(sizeof(string_bytes_array));
+    sba->sm = m;
+    return sba;
+}
+
+void delete_string_bytes_array(string_bytes_array* b){
+    //free(b->sm);
+    free(b)
 }
