@@ -286,10 +286,6 @@ int main(int argc, char **argv)
 			c = tmp_c;
 		}
 
-		// js_flag = 1;
-		// if (read_file(fd, js, axis, buttons) == 0) {
-		// 	js_flag = 0;
-		// }
 		read_file(fd, js, axis, buttons);
 
 		create_message_js2D(&js_msg, axis, buttons);
