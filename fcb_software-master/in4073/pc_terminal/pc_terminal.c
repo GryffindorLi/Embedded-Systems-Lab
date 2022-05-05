@@ -156,12 +156,15 @@ uint8_t serial_port_getchar()
  * @Return A flag indicates fail(-1) or succeed(10)
  */
 int8_t serial_port_getmessage(uint8_t** bytes){
+	int16_t size = 0;
 	int8_t flag;
-	do {
-		flag = read(fd_serial_port, *bytes, 10);
-	} while (flag != 10 && flag != -1);
-
-	return flag;
+	while ((flag = read(fd_serial_port, bytes[size], 1)) != -1){
+		if (*bytes[size] == TAIL){
+			break;
+		}
+		size++;
+	}
+	return (flag == -1)? flag: size;
 }
 
 /*
@@ -244,11 +247,11 @@ int main(int argc, char **argv)
 		}
 		*/
 
-		/*
-		uint8_t* mess;
+		
+		uint8_t* mess = (uint8_t*)malloc(sizeof(uint8_t) * sizeof(D2PC_message));
 		if ((serial_port_getmessage(&mess)) != -1){
 			bytes_array ba;
-			memcpy((void*)(&ba.bytes), (void*)mess, 10);
+			memcpy((void*)(&(ba.bytes)), (void*)mess, sizeof(D2PC_message));
 
 			D2PC_message_p recv_mess = &ba.m;
 			printf("Mode is %d\n", recv_mess->mode);
@@ -256,17 +259,19 @@ int main(int argc, char **argv)
 			printf("Yaw is %d\n", recv_mess->y);
 			printf("Pitch is %d\n", recv_mess->p);
 			printf("Roll is %d\n", recv_mess->r);
+			printf("Motor is %d\n", recv_mess->motor);
 		}
-		*/
 
-		char* mess = (char*)malloc(sizeof(char) * 257);
-		if ((serial_port_getstring(&mess)) != -1){
+		char* mes = (char*)malloc(sizeof(char) * sizeof(D2PC_string_message));
+		if ((serial_port_getstring(&mes)) != -1){
 			string_bytes_array sba;
-			memcpy((void*)(&(sba.bytes)), (void*)mess, 257);
+			memcpy((void*)(&(sba.bytes)), (void*)mes, sizeof(D2PC_string_message));
 
 			D2PC_string_message_p recv_mess = &(sba.sm);
-			printf("Mode is %s\n", recv_mess->string);
+			printf("String is %s\n", recv_mess->string);
 		}
+		free(mess);
+		free(mes);
 	}
 
 	term_exitio();

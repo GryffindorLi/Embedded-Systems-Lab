@@ -36,6 +36,11 @@ uint16_t cal_checksum(D2PC_message message){
         message.r >>= 1;
     }
 
+    while (message.motor != 0){
+        sum += (message.motor) & 1;
+        message.motor >>= 1;
+    }
+
     return sum;    
 }
 
@@ -55,15 +60,18 @@ D2PC_message init_message(void){
     m->y = get_yaw();
     m->r = get_roll();
     m->p = get_pitch();
+    m->motor = get_motor();
     */
-
+    m->head = HEADER;
     m->mode = 0;
     m->battery = 1;
     m->y = 2;
     m->r = 3;
     m->p = 4;
+    m->motor = 400;
 
     m->checksum = cal_checksum(*m);
+    m->tail = TAIL;
 
     return *m;
 }

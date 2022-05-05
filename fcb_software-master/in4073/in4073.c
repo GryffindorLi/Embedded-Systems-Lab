@@ -166,19 +166,19 @@ int main(void)
 			printf("%4d | %4ld | %6ld \n", bat_volt, temperature, pressure);
 			*/
 
-			/* // Here is the code
+			 // Here is the code
 			D2PC_message m = init_message();
 			bytes_array* b = to_bytes_array(&m);
-			for (int i = 0; i < 10; ++i){
+			for (int i = 0; i < sizeof(D2PC_message); ++i){
 				uart_put(b->bytes[i]);
 			}
 			delete_message(&m);
 			delete_bytes_array(b);
-			*/
+			
 
 			D2PC_string_message sm = init_string_message();
 			string_bytes_array* sb = to_string_bytes_array(&sm);
-			for (int i = 0; i < 257; ++i){
+			for (int i = 0; i < sizeof(D2PC_string_message); ++i){
 				uart_put(sb->bytes[i]);
 			}
 			delete_string_message(&sm);

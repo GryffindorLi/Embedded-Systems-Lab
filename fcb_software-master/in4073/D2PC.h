@@ -11,14 +11,17 @@
  * @Author: Zirui Li
  */
 typedef struct {
+    char head;  // 1 byte
     uint8_t mode; // 1 byte
     uint8_t battery; // 1 byte
-    uint16_t y;  // 2 bytes
-    uint16_t p;  // 2 bytes
-    uint16_t r;  // 2 bytes
+    int16_t y;  // 2 bytes
+    int16_t p;  // 2 bytes
+    int16_t r;  // 2 bytes
+    uint16_t motor;  // 2 bytes
 
     uint16_t checksum;  // 2 bytes
-} D2PC_message;  //10 bytes
+    char tail;  // 1 byte
+} D2PC_message;  //12 bytes
 
 typedef struct {
     char header; //1 bytes
@@ -35,7 +38,7 @@ typedef D2PC_message* D2PC_message_p;
  */
 typedef union {
     D2PC_message m;
-    uint8_t bytes[10];
+    uint8_t bytes[16];
 } bytes_array;
 
 typedef union {
