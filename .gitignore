@@ -55,4 +55,5 @@ Mkfile.old
 dkms.conf
 
 # Executable in Linux
-./fcb_software-master/in4073/pc_terminal/pc-terminal
+*/pc-terminal
+*.bin

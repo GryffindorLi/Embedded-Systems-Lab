@@ -109,6 +109,30 @@ void process_key(uint8_t c)
 	}
 }
 
+/*
+ * @Author Zirui Li
+ * @Param m A pointer to a D2PC_message
+ * Sending each field byte by byte. This is because C pad the struct, 
+ * making the memory layout unreliable and thus cannot directly mapping 
+ * from bytes array to struct.
+ */
+void send_data(D2PC_message_p m) {
+    uart_put((uint8_t)(m->head));
+	uart_put(m->mode);
+	uart_put(m->battery);
+	uart_put((uint8_t)(m->y >> 8));
+	uart_put((uint8_t)(m->y & 0xff));
+	uart_put((uint8_t)(m->p >> 8));
+	uart_put((uint8_t)(m->p & 0xff));
+	uart_put((uint8_t)(m->r>> 8));
+	uart_put((uint8_t)(m->r & 0xff));
+	uart_put((uint8_t)(m->motor >> 8));
+	uart_put((uint8_t)(m->motor & 0xff));
+	uart_put((uint8_t)(m->checksum >> 8));
+	uart_put((uint8_t)(m->checksum & 0xff));
+	uart_put((uint8_t)(m->tail));
+}
+
 
 /*------------------------------------------------------------------
  * main -- everything you need is here :)
@@ -168,22 +192,24 @@ int main(void)
 
 			 // Here is the code
 			D2PC_message m = init_message();
-			bytes_array* b = to_bytes_array(&m);
+
+			send_data(&m);
+
+			/*
+			bytes_array b = to_bytes_array(&m);
 			for (int i = 0; i < sizeof(D2PC_message); ++i){
-				uart_put(b->bytes[i]);
+				uart_put(b.bytes[i]);
 			}
-			delete_message(&m);
-			delete_bytes_array(b);
-			
-
+			//delete_message(&m);
+			*/
+			/*
 			D2PC_string_message sm = init_string_message();
-			string_bytes_array* sb = to_string_bytes_array(&sm);
+			string_bytes_array sb = to_string_bytes_array(&sm);
 			for (int i = 0; i < sizeof(D2PC_string_message); ++i){
-				uart_put(sb->bytes[i]);
+				uart_put(sb.bytes[i]);
 			}
-			delete_string_message(&sm);
-			delete_string_bytes_array(sb);
-
+			//delete_string_message(&sm);
+			*/
 			clear_timer_flag();
 		}
 
