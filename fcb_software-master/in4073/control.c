@@ -21,7 +21,7 @@
 #include "mpu6050/mpu6050.h"
 #include "uart.h"
 #include "gpio.h"
-#include "communication/PC2D.h"
+#include "PC2D.h"
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
@@ -92,7 +92,7 @@ void filter_angles(void){
 
 	float gyro_rate = 0.98;
 	float acc_rate = 0.02;
-	float dt = 0.1;
+	// float dt = 0.1;
 
 	int8_t LSB_a = 182; // LSB angle values (int16 to deg)
 	float LSB_av = 16.4; // LSB anglar velocity (int16 to deg/s)

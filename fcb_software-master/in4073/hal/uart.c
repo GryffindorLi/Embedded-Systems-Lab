@@ -22,6 +22,7 @@
 
 Queue rx_queue;
 Queue tx_queue;
+int UART_watch_dog = 1000;
 
 static bool txd_available = true;
 
@@ -58,6 +59,7 @@ int _write(int file, const char * p_char, int len)
 // Set UART interrupt function
 void UART0_IRQHandler(void)
 {
+	UART_watch_dog = 1000;
 	if (NRF_UART0->EVENTS_RXDRDY != 0) {
 		NRF_UART0->EVENTS_RXDRDY  = 0;
 		enqueue(&rx_queue, NRF_UART0->RXD);

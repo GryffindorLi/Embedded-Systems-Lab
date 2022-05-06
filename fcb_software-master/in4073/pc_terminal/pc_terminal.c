@@ -13,8 +13,6 @@
 #include <string.h>
 #include <inttypes.h>
 
-#define TRANSMISSION_FREQ 50
-
 /*------------------------------------------------------------
  * console I/O
  *------------------------------------------------------------
@@ -75,7 +73,6 @@ int	term_getchar()
  * 115,200 baud
  *------------------------------------------------------------
  */
-// #include <sys/ioctl.h>
 #include <termios.h>
 #include <ctype.h>
 #include <fcntl.h>
@@ -83,9 +80,9 @@ int	term_getchar()
 #include <stdio.h>
 #include <assert.h>
 #include <sys/time.h>
-#include "../communication/PC2D.h"
-#include "../communication/D2PC.h"
-#include "./joystick/joystick.h"
+#include "../PC2D.h"
+#include "../D2PC.h"
+#include "joystick.h"
 
 static int fd_serial_port;
 /*
@@ -221,6 +218,7 @@ float time_dif(struct timeval st, struct timeval ed) {
 	return (ed.tv_sec - st.tv_sec) * 1000.0f + (ed.tv_usec - st.tv_usec) / 1000.0f;
 }
 
+#define TRANSMISSION_FREQ 50
 
 /*----------------------------------------------------------------
  * main -- execute terminal
@@ -273,9 +271,6 @@ int main(int argc, char **argv)
 	
 
 	for (;;) {
-		if (fd < 0) {
-			fprintf(stderr,"\n Joystick unplugged\n");
-		}
 		if (timer_flag == 0) {
 			gettimeofday(&start, 0);
 			timer_flag = 1;
@@ -286,9 +281,13 @@ int main(int argc, char **argv)
 			c = tmp_c;
 		}
 
-		read_file(fd, js, axis, buttons);
+		// read controls and detect connection of joystick
+		if (read_file(fd, js, axis, buttons) == -1) {
+			term_puts("\nJOYSTICK UNPLUGGED\n");
+			new_JS2PC_msg(&js_msg, axis, buttons);
+		}
 
-		create_message_js2D(&js_msg, axis, buttons);
+		// update controls
 		set_controls(&cont, axis);
 		
 		tmp_mode = get_mode_change(c, buttons);

@@ -1,6 +1,5 @@
 #ifndef _LINUX_JOYSTICK_H
 #define _LINUX_JOYSTICK_H
-#define CHECK_SUM 8
 
 #define JS_DEV	"/dev/input/js0"
 /*
@@ -133,15 +132,17 @@ struct JS_DATA_SAVE_TYPE {
 	struct JS_DATA_TYPE JS_CORR;
 };
 
+// =====================================================================
+
 typedef struct {
 	int axis[6];
 	int button[12];/* data */
 } JS_message;
 
-void create_message_js2D(JS_message* message, int* axis, int* button);
+void new_JS2PC_msg(JS_message* message, int* axis, int* button);
 unsigned int mon_time_ms(void);
 void mon_delay_ms(unsigned int ms);
 int js_init();
-void read_file(int fd, struct js_event js, int* axis, int* buttons);
+int read_file(int fd, struct js_event js, int* axis, int* buttons);
 
 #endif /* _LINUX_JOYSTICK_H */

@@ -30,9 +30,9 @@
 #include "control.h"
 #include "mpu6050/mpu6050.h"
 #include "utils/quad_ble.h"
-#include "communication/PC2D.h"
+#include "PC2D.h"
 #include "queue.h"
-#include "communication/D2PC.h"
+#include "D2PC.h"
 
 bool demo_done;
 pc_msg rec_msg_default;
@@ -123,7 +123,7 @@ char current_key;
 
 int main(void)
 {
-	
+	// --------------------------------INITIALIZATION------------------------------------
 	uart_init();
 	gpio_init();
 	timers_init();
@@ -138,21 +138,19 @@ int main(void)
 
 	uint32_t counter = 0;
 	uint32_t panic_to_safe_timer = -1;
-	uint32_t idle_timer = -1;
+	uint32_t idle_timer = get_time_us();
+	uint32_t report_timer = get_time_us();
 	demo_done = false;
 	wireless_mode = false;
-	int16_t* aes;
+	int16_t* aes = {0};
 	int parse_result = 0;
+
+	// --------------------------------MAIN LOOP------------------------------------
 
 	while (!demo_done) {
 		// receive message when there is message
 		if (rx_queue.count) {
 			receive_message(&local_receive_q, &rx_queue);
-			idle_timer = -1;
-		} else {
-			if (idle_timer == -1) {
-				idle_timer = get_time_us();
-			}
 		}
 
 		// parse message every loop
@@ -166,31 +164,30 @@ int main(void)
 			current_key = on_set_key(&rec_msg);
 		}
 
+		// PANIC to SAFE
 		if (current_mode == MODE_PANIC){
 			if (panic_to_safe_timer == -1) {
-				printf("entered PANIC MODE, entering SAFE MODE in 2s\n");
+				printf("\nentered PANIC MODE, entering SAFE MODE in 2s\n");
 				panic_to_safe_timer = get_time_us();
 			} else {
 				if (get_time_us() - panic_to_safe_timer > 2000000) {
 					current_mode = MODE_SAFE;
 					panic_to_safe_timer = -1;
-					printf("entered SAFE MODE");
+					printf("\nentered SAFE MODE\n");
 				}
 			}
 		}
 
-		if (idle_timer != -1) {
-			if (get_time_us() - idle_timer > 1500000) {
-				if (current_mode == MODE_SAFE || current_mode == MODE_PANIC) {
-					printf("\ndisconnection from PC\n");
-				} else {
-					current_mode = MODE_PANIC;
-					printf("\nentering PANIC_MODE due to disconnection\n");
-				}
-				idle_timer = -1;
+		// Check Disconnection
+		if (get_time_us() - idle_timer > 1000) {
+			UART_watch_dog -= 1;
+			idle_timer = get_time_us();
+			if (UART_watch_dog < 1) {
+				if (current_mode > MODE_PANIC) current_mode = MODE_PANIC;
+				printf("\nDISCONNECTION!!\n");
+				nrf_gpio_pin_toggle(RED);
 			}
-		}
-		
+		}		
 
 		if (check_timer_flag()) {
 			if (counter++%20 == 0) {
@@ -222,7 +219,13 @@ int main(void)
 		if (check_sensor_int_flag()) {
 			get_sensor_data();
 			aes = run_filters_and_control(&rec_msg, current_mode);
+		}
+
+		// Report Motors
+		if (get_time_us() - report_timer > 1000000) {
 			printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
+			nrf_gpio_pin_toggle(GREEN);
+			report_timer = get_time_us();
 		}
 	}	
 

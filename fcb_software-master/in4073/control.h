@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 #include <stdbool.h>
-#include "communication/PC2D.h"
+#include "PC2D.h"
 
 extern uint16_t motor[4];
 extern int16_t ae[4];
