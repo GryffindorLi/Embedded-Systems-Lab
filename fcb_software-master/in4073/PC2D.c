@@ -12,4 +12,3 @@ MODE_msg new_mode_msg() {
     new_message.checksum = sizeof(new_message);
     return new_message;
 }
-

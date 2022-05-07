@@ -153,13 +153,48 @@ uint8_t serial_port_getchar()
  * @Param bytes A double pointer to a bytes array. Data read into this array.
  * @Return A flag indicates fail(-1) or succeed(10)
  */
-int8_t serial_port_getmessage(uint8_t** bytes){
+int8_t serial_port_getmessage(uint8_t bytes[]){
+	int16_t size = 0;
 	int8_t flag;
-	do {
-		flag = read(fd_serial_port, *bytes, 10);
-	} while (flag != 10 && flag != -1);
+	while ((flag = read(fd_serial_port, &bytes[size], 1)) != -1){
+		if (bytes[size] == TAIL){
+			break;
+		}
+		size++;
+	}
+	return (flag == -1)? flag: size;
+}
 
-	return flag;
+/*
+ * @Author Zirui Li
+ * @Param bytes A double pointer to a char array. Data read into this array.
+ * @Return The number of 
+ */
+int16_t serial_port_getstring(char string[]){
+	int16_t size = 0;
+	int8_t flag;
+	while ((flag = read(fd_serial_port, &string[size], 1)) != -1){
+		if (string[size] == TAIL){
+			break;
+		}
+		size++;
+	}
+	return (flag == -1)? flag: size;
+}
+
+/*
+ * @Author Zirui Li
+ * @Param mess A byte array holding bytes received from drone.
+ * @Param recv_mess A pointer to a D2PC_message struct
+ */
+void decode(uint8_t mess[], D2PC_message_p recv_mess) {
+	recv_mess->mode = mess[1];
+	recv_mess->battery = mess[2];
+	recv_mess->y = ((int16_t)(mess[3]) << 8) + (int16_t)mess[4];
+	recv_mess->p = ((int16_t)(mess[5]) << 8) + (int16_t)mess[6];
+	recv_mess->r = ((int16_t)(mess[7]) << 8) + (int16_t)mess[8];
+	recv_mess->motor = ((uint16_t)(mess[9]) << 8) + (uint16_t)mess[10];
+	recv_mess->checksum = ((uint16_t)(mess[11]) << 8) + (uint16_t)mess[12];
 }
 
 /*

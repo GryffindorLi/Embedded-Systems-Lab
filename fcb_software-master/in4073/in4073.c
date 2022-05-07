@@ -36,6 +36,24 @@
 
 bool demo_done;
 pc_msg rec_msg_default;
+uint32_t panic_to_safe_timer = -1;
+
+void send_data(D2PC_message_p m) {
+    uart_put((uint8_t)(m->head));
+	uart_put(m->mode);
+	uart_put(m->battery);
+	uart_put((uint8_t)(m->y >> 8));
+	uart_put((uint8_t)(m->y & 0xff));
+	uart_put((uint8_t)(m->p >> 8));
+	uart_put((uint8_t)(m->p & 0xff));
+	uart_put((uint8_t)(m->r>> 8));
+	uart_put((uint8_t)(m->r & 0xff));
+	uart_put((uint8_t)(m->motor >> 8));
+	uart_put((uint8_t)(m->motor & 0xff));
+	uart_put((uint8_t)(m->checksum >> 8));
+	uart_put((uint8_t)(m->checksum & 0xff));
+	uart_put((uint8_t)(m->tail));
+}
 
 /*
  * @Author: Hanyuan Ban
@@ -92,8 +110,41 @@ int parse_message(pc_msg* msg, Queue* q) {
 	return result;
 }
 
-uint8_t on_mode_change(pc_msg* msg) {
-	return msg->mm.mode;
+uint8_t on_mode_change(pc_msg* msg, uint8_t current_mode, int16_t* aes) {
+	uint8_t mode = msg->mm.mode;
+	switch (mode) {
+		case MODE_SAFE:
+			if (current_mode == MODE_SAFE) return mode;
+			else {
+				printf("\nMotors still running! Going to PANIC mode!\n");
+				return MODE_PANIC;
+			}
+			break;
+
+		case MODE_PANIC:
+			if (current_mode == MODE_SAFE) {
+				printf("\nIn SAFE mode, don't PANIC!\n");
+				return MODE_SAFE;
+			} else if (current_mode == MODE_PANIC) {
+				return mode; 
+			} else {
+				panic_to_safe_timer = get_time_us();
+				printf("\nEntering PANIC mode!\n");
+				return mode; 
+			}
+			break;
+		case MODE_MANUAL:
+			if (aes[0] + aes[1] + aes[2] + aes[3] != 0) {
+				printf("\nStop motors first to enter MANUAL mode!\n");
+				return current_mode;
+			} else {
+				printf("\nEntering MANUAL mode!\n");
+				return mode;
+			}
+			break;
+		default:
+			return current_mode;
+	}
 }
 
 controls on_set_control(pc_msg* msg) {
@@ -137,9 +188,8 @@ int main(void)
 	init_queue(&local_receive_q);
 
 	uint32_t counter = 0;
-	uint32_t panic_to_safe_timer = -1;
 	uint32_t idle_timer = get_time_us();
-	uint32_t report_timer = get_time_us();
+	int unplugged = 0;
 	demo_done = false;
 	wireless_mode = false;
 	int16_t* aes = {0};
@@ -157,46 +207,43 @@ int main(void)
 		parse_result = parse_message(&rec_msg, &local_receive_q);
 		
 		if (parse_result == 0) {
-			printf("\nMODE CHANGE: %d\n", rec_msg.mm.mode);
-			current_mode = on_mode_change(&rec_msg);
+			current_mode = on_mode_change(&rec_msg, current_mode, aes);
 		} else if (parse_result > 0) {
 			current_control = on_set_control(&rec_msg);
 			current_key = on_set_key(&rec_msg);
 		}
 
 		// PANIC to SAFE
-		if (current_mode == MODE_PANIC){
-			if (panic_to_safe_timer == -1) {
-				printf("\nentered PANIC MODE, entering SAFE MODE in 2s\n");
-				panic_to_safe_timer = get_time_us();
-			} else {
-				if (get_time_us() - panic_to_safe_timer > 2000000) {
-					current_mode = MODE_SAFE;
-					panic_to_safe_timer = -1;
-					printf("\nentered SAFE MODE\n");
-				}
+		if (panic_to_safe_timer != -1) {
+			if (get_time_us() - panic_to_safe_timer > 2000000) {
+				current_mode = MODE_SAFE;
+				panic_to_safe_timer = -1;
+				printf("\nentered SAFE MODE\n");
 			}
 		}
 
 		// Check Disconnection
-		if (get_time_us() - idle_timer > 1000) {
+		if (get_time_us() - idle_timer > 1000 && !unplugged) {
 			UART_watch_dog -= 1;
 			idle_timer = get_time_us();
 			if (UART_watch_dog < 1) {
 				if (current_mode > MODE_PANIC) current_mode = MODE_PANIC;
 				printf("\nDISCONNECTION!!\n");
 				nrf_gpio_pin_toggle(RED);
+				unplugged = 1;
 			}
 		}		
 
 		if (check_timer_flag()) {
+			// every one second
 			if (counter++%20 == 0) {
 				nrf_gpio_pin_toggle(BLUE);
+				printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
 			}
 
-			
 			adc_request_sample();
 			read_baro();
+
 
 			// printf("%10ld | ", get_time_us());
 			// printf("%3d %3d %3d %3d | ",ae[0], ae[1], ae[2], ae[3]);
@@ -206,12 +253,17 @@ int main(void)
 			
 
 			// D2PC_message m = init_message();
-			// bytes_array* b = to_bytes_array(&m);
-			// for (int i = 0; i < 10; ++i){
-			// 	uart_put(b->bytes[i]);
+
+			// send_data(&m);
+
+			
+			// D2PC_string_message sm = init_string_message();
+			// string_bytes_array sb = to_string_bytes_array(&sm);
+			// for (int i = 0; i < sizeof(D2PC_string_message); ++i){
+			// 	uart_put(sb.bytes[i]);
 			// }
-			// delete_message(&m);
-			// delete_bytes_array(b);
+			//delete_string_message(&sm);
+			
 
 			clear_timer_flag();
 		}
@@ -220,13 +272,6 @@ int main(void)
 			get_sensor_data();
 			aes = run_filters_and_control(&rec_msg, current_mode);
 		}
-
-		// Report Motors
-		if (get_time_us() - report_timer > 1000000) {
-			printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
-			nrf_gpio_pin_toggle(GREEN);
-			report_timer = get_time_us();
-		}
 	}	
 
 	printf("\n\t Goodbye \n\n");
@@ -234,3 +279,4 @@ int main(void)
 
 	NVIC_SystemReset();
 }
+
