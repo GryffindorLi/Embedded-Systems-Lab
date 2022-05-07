@@ -36,9 +36,39 @@ uint16_t cal_checksum(D2PC_message message){
         message.r >>= 1;
     }
 
-    while (message.motor != 0){
-        sum += (message.motor) & 1;
-        message.motor >>= 1;
+    while (message.motor1 != 0){
+        sum += (message.motor1) & 1;
+        message.motor1 >>= 1;
+    }
+
+    while (message.motor2 != 0){
+        sum += (message.motor2) & 1;
+        message.motor2 >>= 1;
+    }
+
+    while (message.motor3 != 0){
+        sum += (message.motor3) & 1;
+        message.motor3 >>= 1;
+    }
+
+    while (message.motor4 != 0){
+        sum += (message.motor4) & 1;
+        message.motor4 >>= 1;
+    }
+
+    while (message.filtered_y != 0){
+        sum += (message.filtered_y) & 1;
+        message.filtered_y >>= 1;
+    }
+
+    while (message.filtered_p != 0){
+        sum += (message.filtered_p) & 1;
+        message.filtered_p >>= 1;
+    }
+
+    while (message.filtered_r != 0){
+        sum += (message.filtered_r) & 1;
+        message.filtered_r >>= 1;
     }
 
     return sum;    
@@ -50,8 +80,20 @@ uint16_t cal_checksum(D2PC_message message){
  * fill in all field and return the message.
  */
 D2PC_message init_message(void){
-    D2PC_message m = {.head=HEADER, .mode=0, .battery=19, .y=2, 
-                      .r=3, .p=4, .motor=400, .tail=TAIL};
+    D2PC_message m = {.head=DATA_HEADER, 
+                      .mode=0,
+                      .battery=19, 
+                      .y=2, 
+                      .r=3, 
+                      .p=4, 
+                      .filtered_y=1,
+                      .filtered_r=4,
+                      .filtered_p=5,
+                      .motor1=400, 
+                      .motor2=450,
+                      .motor3=500,
+                      .motor4=550,
+                      .tail=TAIL};
 
     /* A conceputual implementation
     adc_request_sample();
@@ -98,7 +140,7 @@ void delete_bytes_array(bytes_array* b){
  * @Author Zirui Li
  */
 D2PC_string_message init_string_message(void){
-    D2PC_string_message sm = {.header=HEADER, .tail=TAIL};
+    D2PC_string_message sm = {.header=STRING_HEADER, .tail=TAIL};
     //sm->string = 
     char* tmp = "This is a debug message, and I will look at it detailly.";
     strcpy(sm.string, tmp);

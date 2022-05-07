@@ -126,8 +126,20 @@ void send_data(D2PC_message_p m) {
 	uart_put((uint8_t)(m->p & 0xff));
 	uart_put((uint8_t)(m->r>> 8));
 	uart_put((uint8_t)(m->r & 0xff));
-	uart_put((uint8_t)(m->motor >> 8));
-	uart_put((uint8_t)(m->motor & 0xff));
+	uart_put((uint8_t)(m->filtered_y >> 8));
+	uart_put((uint8_t)(m->filtered_y & 0xff));
+	uart_put((uint8_t)(m->filtered_p >> 8));
+	uart_put((uint8_t)(m->filtered_p & 0xff));
+	uart_put((uint8_t)(m->filtered_r>> 8));
+	uart_put((uint8_t)(m->filtered_r & 0xff));
+	uart_put((uint8_t)(m->motor1 >> 8));
+	uart_put((uint8_t)(m->motor1 & 0xff));
+	uart_put((uint8_t)(m->motor2 >> 8));
+	uart_put((uint8_t)(m->motor2 & 0xff));
+	uart_put((uint8_t)(m->motor3 >> 8));
+	uart_put((uint8_t)(m->motor3 & 0xff));
+	uart_put((uint8_t)(m->motor4 >> 8));
+	uart_put((uint8_t)(m->motor4 & 0xff));
 	uart_put((uint8_t)(m->checksum >> 8));
 	uart_put((uint8_t)(m->checksum & 0xff));
 	uart_put((uint8_t)(m->tail));
@@ -202,14 +214,13 @@ int main(void)
 			}
 			//delete_message(&m);
 			*/
-			/*
+			
 			D2PC_string_message sm = init_string_message();
 			string_bytes_array sb = to_string_bytes_array(&sm);
 			for (int i = 0; i < sizeof(D2PC_string_message); ++i){
 				uart_put(sb.bytes[i]);
 			}
-			//delete_string_message(&sm);
-			*/
+			
 			clear_timer_flag();
 		}
 
