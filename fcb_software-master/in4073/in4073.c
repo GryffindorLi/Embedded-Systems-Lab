@@ -114,32 +114,36 @@ uint8_t on_mode_change(pc_msg* msg, uint8_t current_mode, int16_t* aes) {
 	uint8_t mode = msg->mm.mode;
 	switch (mode) {
 		case MODE_SAFE:
-			if (current_mode == MODE_SAFE) return mode;
+			if (current_mode == MODE_SAFE) return current_mode;
 			else {
-				printf("\nMotors still running! Going to PANIC mode!\n");
+				printf("\n---===Motors still running! Going to PANIC mode!===---\n");
 				return MODE_PANIC;
 			}
 			break;
 
 		case MODE_PANIC:
 			if (current_mode == MODE_SAFE) {
-				printf("\nIn SAFE mode, don't PANIC!\n");
+				printf("\n---===In SAFE mode, don't PANIC!===---\n");
 				return MODE_SAFE;
 			} else if (current_mode == MODE_PANIC) {
-				return mode; 
+				return current_mode; 
 			} else {
 				panic_to_safe_timer = get_time_us();
-				printf("\nEntering PANIC mode!\n");
+				printf("\n---===Entering PANIC mode!===---\n");
 				return mode; 
 			}
 			break;
 		case MODE_MANUAL:
-			if (aes[0] + aes[1] + aes[2] + aes[3] != 0) {
-				printf("\nStop motors first to enter MANUAL mode!\n");
+			if (current_mode == MODE_MANUAL) {
 				return current_mode;
 			} else {
-				printf("\nEntering MANUAL mode!\n");
-				return mode;
+				if (aes[0] + aes[1] + aes[2] + aes[3] != 0) {
+					printf("\n---===Stop motors first to enter MANUAL mode!===---\n");
+					return current_mode;
+				} else {
+					printf("\n---===Entering MANUAL mode!===---\n");
+					return mode;
+				}
 			}
 			break;
 		default:
