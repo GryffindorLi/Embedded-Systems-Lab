@@ -294,9 +294,9 @@ int main(int argc, char **argv)
 		uint8_t mess[257];
 		if ((serial_port_getmessage(mess)) != -1){
 			if (is_string){
-				D2PC_string_message_p mess = (D2PC_string_message_p)decode(mess);
-				printf("String is %s\n", mess->string);
-				free(mess);
+				D2PC_string_message_p recv_mess = (D2PC_string_message_p)decode(mess);
+				printf("String is %s\n", recv_mess->string);
+				free(recv_mess);
 			} else {
 				D2PC_message_p recv_mess = (D2PC_message_p)decode(mess);
 				printf("Mode is %u\n", recv_mess->mode);
