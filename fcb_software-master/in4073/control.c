@@ -29,6 +29,7 @@
 uint16_t motor[4];
 int16_t ae[4];
 bool wireless_mode;
+bool yaw_control_mode;
 
 // for IMU:
 int16_t phi, theta, psi; // computed angles  (deg to int16), LSB = 182
@@ -36,7 +37,7 @@ int16_t sp, sq, sr; // x,y,z gyro (deg/s to int16), LSB = 16.4
 int16_t sax, say, saz; // x,y,z accel (m/s^2 to int16), LSB = 
 
 // angle definitions:
-int32_t yaw, pitch, roll;
+int32_t yaw, pitch, roll = 0;
 
 // control variables:
 int32_t error[3];
@@ -92,21 +93,20 @@ void filter_angles(void){
 
 	float gyro_rate = 0.98;
 	float acc_rate = 0.02;
-	// float dt = 0.1;
 
-	int8_t LSB_a = 182; // LSB angle values (int16 to deg)
+	float gyro_rate_yaw = 0.99;
+	float acc_rate_yaw = 0.01;
+
+	int16_t LSB_a = 182; // LSB angle values (int16 to deg)
 	float LSB_av = 16.4; // LSB anglar velocity (int16 to deg/s)
 	int16_t LSB_ac = 1670; // LSB acceleration (int16 to m/s^2)
 
 	pitch = (int32_t) LSB_a*(gyro_rate*(phi/LSB_a + sp/(LSB_av*freq)) + acc_rate*(sax/LSB_ac));
 	roll = (int32_t) LSB_a*(gyro_rate*(theta/LSB_a + sq/(LSB_av*freq)) + acc_rate*(say/LSB_ac));
-	yaw = (int32_t) LSB_a*(gyro_rate *(psi/LSB_a + sr/(LSB_av*freq)) + acc_rate*(saz/LSB_ac));
+	yaw = (int32_t) LSB_av*(gyro_rate_yaw*(sr/LSB_av) + acc_rate_yaw*(saz/LSB_ac)); // this is a rate
 }
 
 void get_error(pc_msg *mes){
-	// convert degree to radian = pi/180 = 0.0174533
-	// IMU angles to radians = 1/10430
-
 	// find the error between control input and filtered IMU values:
 	error[0] = (int32_t) mes->cm.control.yaw - yaw;
 	error[1] = (int32_t) mes->cm.control.pitch - pitch;
@@ -128,22 +128,38 @@ void get_error(pc_msg *mes){
 	prev_error[2] = error[2];
 }
 
-void controller(pc_msg *mes){
-	// set control gains:
-	float Kpy = 72.4; float Kiy = 4.19; float Kdy = 313.0; // yaw
-	float Kpp = 1.31; float Kip = 0.0756; float Kdp = 5.65; // pitch
-	float Kpr = 1.31; float Kir = 0.0756; float Kdr = 5.65; // roll
+void controller(pc_msg *mes, bool yaw_control_mode){
+	// IMU angles to radians = 1/10430
+	int16_t LSB_rad = 10430;
+	// yaw rate to radians/s = 1/940
+	int16_t LSB_drad = 940;
+
+	// throttle scalaing: 65535/800 ≈ 82
+	int8_t t_scale = 82;
+
+	// yaw control gains:
+	int16_t Kpy = 311, Kiy = 61, Kdy = 10; // yaw
+	// pitcha nd roll control gains * 1000:
+	int16_t Kpp = 1310, Kip = 75, Kdp = 5650; // pitch
+	int16_t Kpr = 1310, Kir = 75, Kdr = 5650; // roll
 
 	// define all 3 PID controllers
-	yaw_command = (int32_t) ((float) Kpy*error[0]) + ((float) Kiy*ierror[0]) + ((float) Kdy*derror[0]);
-	pitch_command = (int32_t) ((float) Kpp*error[1]) + ((float) Kip*ierror[1]) + ((float) Kdp*derror[1]);
-	roll_command = (int32_t) ((float) Kpr*error[2]) + ((float) Kir*ierror[2]) + ((float) Kdr*derror[2]);
+	yaw_command = (int32_t) (Kpy*error[0] + Kiy*ierror[0] + Kdy*derror[0])/LSB_drad; // note: we do not devide by 1000
+
+	// check if we are in yaw control mode:
+	if( yaw_control_mode ) {
+		pitch_command = 0;
+		roll_command = 0;
+	} else {
+		pitch_command = (int32_t) (Kpp*error[1] + Kip*ierror[1] + Kdp*derror[1])/(1000*LSB_rad);
+		roll_command = (int32_t) (Kpr*error[2] + Kir*ierror[2] + Kdr*derror[2])/(1000*LSB_rad);
+	}
 
 	// calculate motor outputs, scale them between 0 and 800:
-	ae[0] = MIN(max_motor, MAX(min_motor, (int16_t) mes->cm.control.throttle + (- yaw_command + pitch_command)/10430)); 
-	ae[1] = MIN(max_motor, MAX(min_motor, (int16_t) mes->cm.control.throttle + (yaw_command - roll_command)/10430)); 
-	ae[2] = MIN(max_motor, MAX(min_motor, (int16_t) mes->cm.control.throttle + (- yaw_command - pitch_command)/10430)); 
-	ae[3] = MIN(max_motor, MAX(min_motor, (int16_t) mes->cm.control.throttle + (yaw_command + roll_command)/10430)); 
+	ae[0] = MIN(max_motor, MAX(min_motor, (int16_t) mes->cm.control.throttle/t_scale + (-yaw_command + pitch_command))); 
+	ae[1] = MIN(max_motor, MAX(min_motor, (int16_t) mes->cm.control.throttle/t_scale + (yaw_command - roll_command))); 
+	ae[2] = MIN(max_motor, MAX(min_motor, (int16_t) mes->cm.control.throttle/t_scale + (-yaw_command - pitch_command))); 
+	ae[3] = MIN(max_motor, MAX(min_motor, (int16_t) mes->cm.control.throttle/t_scale + (yaw_command + roll_command))); 
 }
 
 int16_t* run_filters_and_control(pc_msg* msg, uint8_t mode)
@@ -162,11 +178,19 @@ int16_t* run_filters_and_control(pc_msg* msg, uint8_t mode)
 			// get_error(msg);
 			controller_manual(msg);
 			break;
-
-		case MODE_FULL_CONTROL:
+		
+		case MODE_YAW_CONTROL:
+			yaw_control_mode = true;
 			// filter_angles();
 			// get_error(msg);
-			// controller(msg);
+			// controller(msg, yaw_control_mode);
+			break;
+
+		case MODE_FULL_CONTROL:
+			yaw_control_mode = false;
+			// filter_angles();
+			// get_error(msg);
+			// controller(msg, yaw_control_mode);
 			break;
 		
 		default:

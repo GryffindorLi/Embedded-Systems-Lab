@@ -14,7 +14,7 @@
 #include <stdbool.h>
 
 extern bool demo_done;
-
+int32_t yaw, pitch, roll;
 
 
 #endif // IN4073_H__

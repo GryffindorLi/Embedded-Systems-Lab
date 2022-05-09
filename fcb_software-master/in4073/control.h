@@ -15,12 +15,12 @@ extern int16_t sp, sq, sr;
 extern int16_t sax, say, saz;
 
 // Angle definitions
-int32_t yaw, pitch, roll;
+extern int32_t yaw, pitch, roll;
 
 
 void filter_angles();
 void get_error(pc_msg *mes);
-void controller(pc_msg *mes);
+void controller(pc_msg *mes, bool yaw_control_mode);
 int16_t* run_filters_and_control(pc_msg* mes, uint8_t mode);
 
 #endif /* CONTROL_H_ */
