@@ -276,7 +276,7 @@ int main(void)
 
 		if (check_sensor_int_flag()) {
 			get_sensor_data();
-			aes = run_filters_and_control(&rec_msg, current_mode);
+			aes = run_filters_and_control(rec_msg.cm.control, current_mode);
 		}
 	}	
 
