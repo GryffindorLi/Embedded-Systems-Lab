@@ -299,18 +299,23 @@ int main(int argc, char **argv)
 				free(recv_mess);
 			} else {
 				D2PC_message_p recv_mess = (D2PC_message_p)decode(mess);
-				printf("Mode is %u\n", recv_mess->mode);
-				printf("Battery is %u\n", recv_mess->battery);
-				printf("Yaw is %d\n", recv_mess->y);
-				printf("Pitch is %d\n", recv_mess->p);
-				printf("Roll is %d\n", recv_mess->r);
-				printf("Motor1 is %u\n", recv_mess->motor1);
-				printf("Motor2 is %u\n", recv_mess->motor2);
-				printf("Motor3 is %u\n", recv_mess->motor3);
-				printf("Motor4 is %u\n", recv_mess->motor4);
-				printf("Filtered yaw is %d\n", recv_mess->filtered_y);
-				printf("Filtered pitch is %d\n", recv_mess->filtered_p);
-				printf("Filtered roll is %d\n", recv_mess->filtered_r);
+				uint16_t recv_cs = cal_checksum(*recv_mess);
+				if (recv_cs == recv_mess->checksum){
+					printf("Mode is %u\n", recv_mess->mode);
+					printf("Battery is %u\n", recv_mess->battery);
+					printf("Yaw is %d\n", recv_mess->y);
+					printf("Pitch is %d\n", recv_mess->p);
+					printf("Roll is %d\n", recv_mess->r);
+					printf("Motor1 is %u\n", recv_mess->motor1);
+					printf("Motor2 is %u\n", recv_mess->motor2);
+					printf("Motor3 is %u\n", recv_mess->motor3);
+					printf("Motor4 is %u\n", recv_mess->motor4);
+					printf("Filtered yaw is %d\n", recv_mess->filtered_y);
+					printf("Filtered pitch is %d\n", recv_mess->filtered_p);
+					printf("Filtered roll is %d\n", recv_mess->filtered_r);
+				} else {
+					perror("Message disrupted during transmission!");
+				}
 				free(recv_mess);
 			}
 			
