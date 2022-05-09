@@ -154,7 +154,7 @@ int16_t* run_filters_and_control(pc_msg* msg, uint8_t mode)
 			break;
 		
 		case MODE_PANIC:
-			ae[0] = panic_motor; ae[1] = panic_motor; ae[2] = panic_motor; ae[3] = panic_motor;
+			ae[0] += panic_motor; ae[1] = panic_motor; ae[2] = panic_motor; ae[3] = panic_motor;
 			break;
 
 		case MODE_MANUAL:

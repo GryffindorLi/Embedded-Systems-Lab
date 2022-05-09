@@ -110,6 +110,7 @@ int parse_message(pc_msg* msg, Queue* q) {
 	return result;
 }
 
+
 uint8_t on_mode_change(pc_msg* msg, uint8_t current_mode, int16_t* aes) {
 	uint8_t mode = msg->mm.mode;
 	switch (mode) {
