@@ -22,6 +22,7 @@
 #include "uart.h"
 #include "gpio.h"
 #include "PC2D.h"
+#include <stdio.h>
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
@@ -49,6 +50,12 @@ int32_t yaw_command;
 int32_t pitch_command;
 int32_t roll_command;
 
+// yaw control gains:
+int16_t Kpy = 311, Kiy = 61, Kdy = 10; // yaw
+// pitcha nd roll control gains * 1000:
+int16_t Kpp = 1310, Kip = 75, Kdp = 5650; // pitch
+int16_t Kpr = 1310, Kir = 75, Kdr = 5650; // roll
+
 // throttle scalaing: 65535/800 ≈ 82
 int16_t t_scale = 82;
 // throttle scalaing: 65535/300 ≈ 220
@@ -69,7 +76,15 @@ int8_t freq = 10; // hz
 // control input:
 // throttle ranging from 0-65536
 // yaw/pitch/roll ranging from -32767 to 32767
-pc_msg msg;
+
+// keyboard control offsets
+int16_t throttle_offset = 0;
+int16_t yaw_offset = 0;
+int16_t pitch_offset = 0;
+int16_t roll_offset = 0;
+int16_t yaw_p_offset = 0;
+int16_t pitch_p_offset = 0;
+int16_t roll_p_offset = 0;
 
 void update_motors(void)
 {
@@ -139,12 +154,6 @@ void controller(controls cont){
 	// throttle scalaing: 65535/800 ≈ 82
 	int16_t t_scale = 82;
 
-	// yaw control gains:
-	int16_t Kpy = 311, Kiy = 61, Kdy = 10; // yaw
-	// pitcha nd roll control gains * 1000:
-	int16_t Kpp = 1310, Kip = 75, Kdp = 5650; // pitch
-	int16_t Kpr = 1310, Kir = 75, Kdr = 5650; // roll
-
 	// define all 3 PID controllers
 	yaw_command = (int32_t) (Kpy*error[0] + Kiy*ierror[0] + Kdy*derror[0]) / LSB_drad; // note: we do not devide by 1000
 	if (yaw_control_mode) {
@@ -162,12 +171,13 @@ void controller(controls cont){
 	ae[3] = MIN(max_motor, MAX(min_motor, (int16_t) cont.throttle/t_scale + (yaw_command + roll_command))); 
 }
 
-int16_t* run_filters_and_control(controls cont, uint8_t mode)
+int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 {
-	// controls actuate_cont;
+	controls actuate_cont;
 	switch (mode) {
 		case MODE_SAFE:
 			ae[0] = safe_motor; ae[1] = safe_motor; ae[2] = safe_motor; ae[3] = safe_motor;
+			reset_offset();
 			break;
 		
 		case MODE_PANIC:
@@ -182,23 +192,29 @@ int16_t* run_filters_and_control(controls cont, uint8_t mode)
 			break;
 
 		case MODE_MANUAL:
+			handle_keys(key);
 			// filter_angles();
 			// get_error(msg);
-			controller_manual(cont);
+			actuate_cont = offset_controls(cont);
+			controller_manual(actuate_cont);
 			break;
 		
 		case MODE_YAW_CONTROL:
 			yaw_control_mode = true;
+			handle_keys(key);
+			actuate_cont = offset_controls(cont);
 			filter_angles();
-			get_error(cont);
-			controller(cont);
+			get_error(actuate_cont);
+			controller(actuate_cont);
 			yaw_control_mode = false;
 			break;
 
 		case MODE_FULL_CONTROL:
+			handle_keys(key);
+			actuate_cont = offset_controls(cont);
 			filter_angles();
-			get_error(cont);
-			controller(cont);
+			get_error(actuate_cont);
+			controller(actuate_cont);
 			break;
 		
 		default:
@@ -206,4 +222,107 @@ int16_t* run_filters_and_control(controls cont, uint8_t mode)
 	}
 	update_motors();
 	return ae;
+}
+
+
+void handle_keys(uint8_t key) {
+	switch (key) {
+		case 'a':
+			throttle_offset += 10;
+			break;
+		case 'z':
+			throttle_offset -= 10;
+			break;
+		case 'q':
+			yaw_offset -= 10;
+			break;
+		case 'w':
+			yaw_offset += 10;
+			break;
+		case 72: //up
+			pitch_offset += 10;
+			break;
+		case 80: //down
+			pitch_offset -= 10;
+			break;
+		case 75: //left
+			roll_offset += 10;
+			break;
+		case 77: //right
+			roll_offset -= 10;
+			break;
+		case 'u':
+			yaw_p_offset += 1;
+			break;
+		case 'j':
+			yaw_p_offset -= 1;
+			break;
+		case 'i':
+			roll_p_offset += 1;
+			pitch_p_offset += 1;
+			break;
+		case 'k':
+			roll_p_offset -= 1;
+			pitch_p_offset -= 1;
+			break;
+		default:
+			break;
+	}
+	throttle_offset = MIN(20000, MAX(-20000, throttle_offset));
+	yaw_offset = MIN(20000, MAX(-20000, yaw_offset));
+	pitch_offset = MIN(20000, MAX(-20000, pitch_offset));
+	roll_offset = MIN(20000, MAX(-20000, roll_offset));
+	yaw_p_offset = MIN(500, MAX(-500, yaw_p_offset));
+	pitch_p_offset = MIN(500, MAX(-500, pitch_p_offset));
+	roll_p_offset = MIN(500, MAX(-500, roll_p_offset));
+}
+
+
+uint16_t safeuint16pint16(uint16_t a, int16_t b) {
+	if (b < 0) {
+		if (a < (uint16_t) (-b)) return 0;
+		else return a - (uint16_t) (-b);
+	} else {
+		if ((uint16_t) b > 65535 - a) return 65535;
+		else return a + (uint16_t) b;
+	}
+}
+
+int16_t safeint16pint16(int16_t a, int16_t b) {
+	if (b > 0) {
+		if (a > 0 && b > 32767 - a) return 32767;
+		else return a + b;
+	} else {
+		if (a < 0 && b < -32768 - a) return -32768;
+		else return a + b;
+	}
+}
+
+controls offset_controls(controls cont) {
+	controls offset_control;
+	// throttle (uint16 + int16)
+	offset_control.throttle = safeuint16pint16(cont.throttle, throttle_offset);
+	// yaw (int16 + int16)
+	offset_control.yaw = safeint16pint16(cont.yaw, yaw_offset);
+	// pitch (int16 + int16)
+	offset_control.pitch = safeint16pint16(cont.pitch, pitch_offset);
+	// roll (int16 + int16)
+	offset_control.roll = safeint16pint16(cont.roll, roll_offset);
+	// yaw_p (int16 + int16)
+	Kpy = safeint16pint16(Kpy, yaw_p_offset);
+	// pitch_p (int16 + int16)
+	Kpp = safeint16pint16(Kpp, pitch_p_offset);
+	// roll_p (int16 + int16)
+	Kpr = safeint16pint16(Kpr, roll_p_offset);
+	return offset_control;
+}
+
+void reset_offset() {
+	throttle_offset = 0;
+	yaw_offset = 0;
+	pitch_offset = 0;
+	roll_offset = 0;
+	yaw_p_offset = 0;
+	roll_p_offset = 0;
+	pitch_p_offset = 0;
 }

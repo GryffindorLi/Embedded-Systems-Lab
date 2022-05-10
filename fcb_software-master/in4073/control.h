@@ -18,10 +18,15 @@ extern int16_t sax, say, saz;
 extern int32_t yaw, pitch, roll;
 
 
+
 void filter_angles();
-void handle_keys(controls cont, uint8_t key);
+void handle_keys(uint8_t key);
+controls offset_controls(controls cont);
+void reset_offset();
 void get_error(controls cont);
 void controller(controls cont);
-int16_t* run_filters_and_control(controls cont, uint8_t mode);
+uint16_t safeuint16pint16(uint16_t a, int16_t b);
+int16_t safeint16pint16(int16_t a, int16_t b);
+int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode);
 
 #endif /* CONTROL_H_ */

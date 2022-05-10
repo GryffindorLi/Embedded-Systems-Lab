@@ -311,7 +311,6 @@ int main(int argc, char **argv)
 			timer_flag = 1;
 		}
 		// read the keyboard command every loop
-		c = -1;
 		if ((tmp_c = term_getchar_nb()) != -1) {
 			c = tmp_c;
 		}
@@ -342,6 +341,7 @@ int main(int argc, char **argv)
 			pc_msg msg;
 			msg.cm = new_ctrl_msg();
 			send_ctrl_msg(&msg, cont, c);
+			c = -1; // reset key
 		}
 		
 		// receive bytes from drone

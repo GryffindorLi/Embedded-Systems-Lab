@@ -148,6 +148,19 @@ uint8_t on_mode_change(pc_msg* msg, uint8_t current_mode, int16_t* aes) {
 				}
 			}
 			break;
+		case MODE_YAW_CONTROL:
+			if (current_mode == MODE_YAW_CONTROL) {
+				return current_mode;
+			} else {
+				if (aes[0] + aes[1] + aes[2] + aes[3] != 0) {
+					printf("\n---===Stop motors first to enter MANUAL mode!===---\n");
+					return current_mode;
+				} else {
+					printf("\n---===Entering MANUAL mode!===---\n");
+					return mode;
+				}
+			}
+			break;
 		default:
 			return current_mode;
 	}
@@ -276,7 +289,7 @@ int main(void)
 
 		if (check_sensor_int_flag()) {
 			get_sensor_data();
-			aes = run_filters_and_control(rec_msg.cm.control, current_mode);
+			aes = run_filters_and_control(rec_msg.cm.control, current_key, current_mode);
 		}
 	}	
 
