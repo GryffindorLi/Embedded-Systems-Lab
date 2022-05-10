@@ -103,59 +103,77 @@ void calibration (controls cont)
 	if (FLAG ==0)
 	{
 		printf("Place upside");
-		C_pitch_offset[1] = pitch;
-		C_roll_offset[1]= roll;
+		
 		idle_timer = get_time_us();
 		while (get_time_us() - idle_timer<5000000)
 		{
 		}
+		C_pitch_offset[1] = pitch;
+		C_roll_offset[1]= roll;
+		FLAG =1;
 	}
 	
 	if (FLAG ==1)
 	{
 		printf("Place upside down");
-		C_pitch_offset[2] = pitch-90;
-		C_roll_offset[2]= roll;
+		
 		idle_timer = get_time_us();
 		while (get_time_us() - idle_timer<5000000)
 		{
 		}
+		C_pitch_offset[2] = pitch-90;
+		C_roll_offset[2]= roll;
+		FLAG=2;
+
 	}
 	if (FLAG ==2)
 	{
-		C_pitch_offset[3] = pitch-90;
-		C_roll_offset[3]= roll;
+		printf("Place rocket up");
+		
 		idle_timer = get_time_us();
 		while (get_time_us() - idle_timer<5000000)
 		{
 		}
+		C_pitch_offset[3] = pitch-90;
+		C_roll_offset[3]= roll;
+		FLAG=3;
 	}
 	if (FLAG ==3)
 	{
-		C_pitch_offset[4] = pitch-90;
-		C_roll_offset[4]= roll;
+		printf("Place rocket down");
+		
 		idle_timer = get_time_us();
 		while (get_time_us() - idle_timer<5000000)
 		{
 		}
+		C_pitch_offset[4] = pitch-90;
+		C_roll_offset[4]= roll;
+		FLAG=4;
 	}
 	if (FLAG ==4)
 	{
-		C_pitch_offset[4] = pitch-90;
-		C_roll_offset[4]= roll;
+		printf("Place sideways Left");
+		
 		idle_timer = get_time_us();
 		while (get_time_us() - idle_timer<5000000)
 		{
 		}
+		C_pitch_offset[4] = pitch-90;
+		C_roll_offset[4]= roll;
+		FLAG=5;
 	}
 	if (FLAG ==5)
 	{
-		C_pitch_offset[5] = pitch-90;
-		C_roll_offset[5]= roll;
+		printf("Place sideways Right");
+		
 		idle_timer = get_time_us();
 		while (get_time_us() - idle_timer<5000000)
 		{
 		}
+		C_pitch_offset[5] = pitch-90;
+		C_roll_offset[5]= roll;
+		FLAG = 6;
+
 	}
 
 }
