@@ -27,6 +27,13 @@
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
+int32_t C_pitch_offset[6], C_roll_offset[6];
+int8_t counter = 0xFF;
+int32_t Mean_pitch_offset, Mean_roll_offset;
+
+
+
+
 uint16_t motor[4];
 int16_t ae[4];
 bool wireless_mode;
@@ -85,7 +92,89 @@ int16_t roll_offset = 0;
 int16_t yaw_p_offset = 0;
 int16_t pitch_p_offset = 0;
 int16_t roll_p_offset = 0;
+//////////////////Calibration Mode only
+void calibration_mode_tummy(controls cont)
+{
+	//place flat
+	printf("Start the Calibration, Place flat on tummy");
+	
+	//wait for few seconds
+	while (counter)
+	{
+		counter--;
+	}
+	C_pitch_offset[0] = pitch;
+	C_roll_offset[0]= roll;
+	
 
+
+}
+void calibration_mode_back(controls cont)
+{
+	//place upside down
+	printf("Start the Calibration, Place upside down");
+	
+	//wait for few seconds
+	while (counter)
+	{
+		counter--;
+	}
+	C_pitch_offset[1] = pitch;
+	C_roll_offset[1]= roll;
+}
+
+void calibration_mode_rocket_up(controls cont)
+{
+	//place flat
+	printf("Start the Calibration, Place in rocket mode up");
+	
+	//wait for few seconds
+	while (counter)
+	{
+		counter--;
+	}
+	C_pitch_offset[2] = pitch-90;
+	C_roll_offset[2]= roll;
+}
+void calibration_mode_rocket_down(controls cont)
+{
+	//place flat
+	printf("Start the Calibration, Place in rocket mode down");
+	
+	//wait for few seconds
+	while (counter)
+	{
+		counter--;
+	}
+	C_pitch_offset[3] = pitch + 90;
+	C_roll_offset[3]= roll;
+}
+void calibration_mode_sideways_R(controls cont)
+{
+	//place flat
+	printf("Start the Calibration, Place sideway Right");
+	
+	//wait for few seconds
+	while (counter)
+	{
+		counter--;
+	}
+	C_pitch_offset[4] = pitch;
+	C_roll_offset[4]= roll + 90;
+}
+void calibration_mode_sideways_L(controls cont)
+{
+	//place flat
+	printf("Start the Calibration, Place sideway Left");
+	
+	//wait for few seconds
+	while (counter)
+	{
+		counter--;
+	}
+	C_pitch_offset[5] = pitch;
+	C_roll_offset[5]= roll- 90;
+}
 void update_motors(void)
 {
 	motor[0] = ae[0];
@@ -216,7 +305,25 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			get_error(actuate_cont);
 			controller(actuate_cont);
 			break;
-		
+		case MODE_CALIBRATION:	
+			ae[0] = safe_motor; ae[1] = safe_motor; ae[2] = safe_motor; ae[3] = safe_motor;//motors off
+			filter_angles();
+			calibration_mode_tummy(cont);
+			calibration_mode_back(cont);
+			calibration_mode_rocket_up(cont);
+			calibration_mode_rocket_down(cont);
+			calibration_mode_sideways_R (cont);
+			calibration_mode_sideways_L(cont);			
+			int32_t temp1 =0;
+			int32_t temp2 =0;
+			for (int i=0;i<6;i++)
+			{
+				temp1 += C_pitch_offset[i];
+				temp2 += C_roll_offset[i];
+			}
+			Mean_pitch_offset= temp1;
+			Mean_roll_offset = temp2;
+			break;
 		default:
 			break;
 	}
