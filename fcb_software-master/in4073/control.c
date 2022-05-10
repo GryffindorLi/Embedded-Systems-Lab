@@ -273,7 +273,7 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			break;
 		
 		case MODE_PANIC:
-			ae[0] += panic_motor; ae[1] = panic_motor; ae[2] = panic_motor; ae[3] = panic_motor;
+			ae[0] = panic_motor; ae[1] = panic_motor; ae[2] = panic_motor; ae[3] = panic_motor;
 			// actuate_cont.throttle = panic_motor * t_scale_manual; 
 			// actuate_cont.yaw = 0;
 			// actuate_cont.pitch = 0;
