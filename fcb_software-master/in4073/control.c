@@ -28,7 +28,7 @@
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
 int32_t C_pitch_offset[6], C_roll_offset[6];
-int8_t counter = 0xFF;
+int32_t counter = 0xFFFF;
 int32_t Mean_pitch_offset, Mean_roll_offset;
 
 

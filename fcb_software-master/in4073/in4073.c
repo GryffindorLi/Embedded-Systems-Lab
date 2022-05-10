@@ -148,6 +148,19 @@ uint8_t on_mode_change(pc_msg* msg, uint8_t current_mode, int16_t* aes) {
 				}
 			}
 			break;
+		case MODE_CALIBRATION:
+			if (current_mode == MODE_CALIBRATION) {
+				return current_mode;
+			} else {
+				if (aes[0] + aes[1] + aes[2] + aes[3] != 0) {
+					printf("\n---===Stop motors first to enter CALIBRATION mode!===---\n");
+					return current_mode;
+				} else {
+					printf("\n---===Entering CALIBRATION mode!===---\n");
+					return mode;
+				}
+			}
+			break;
 		case MODE_YAW_CONTROL:
 			if (current_mode == MODE_YAW_CONTROL) {
 				return current_mode;
