@@ -295,10 +295,11 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 		case MODE_CALIBRATION:	
 			ae[0] = safe_motor; ae[1] = safe_motor; ae[2] = safe_motor; ae[3] = safe_motor;//motors off
 			filter_angles();
-			if (get_time_us() - idle_timer > 50000000)
-				{
-					idle_timer = get_time_us();
-				}
+			// idle_timer = get_time_us();
+			// if (get_time_us() - idle_timer > 5000000)
+			// 	{
+			// 		idle_timer = get_time_us();
+			// 	}
 			calibration(cont);		
 			int32_t temp1 =0;
 			int32_t temp2 =0;
