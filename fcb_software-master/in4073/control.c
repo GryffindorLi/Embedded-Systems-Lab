@@ -29,14 +29,9 @@
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
 int32_t C_pitch_offset[6], C_roll_offset[6];
-<<<<<<< HEAD
 int32_t counter = 0xFFFF;
-=======
 int32_t idle_timer;
->>>>>>> e4a10a045a3222e3cd0d9eb7833529240cc913f4
 int32_t Mean_pitch_offset, Mean_roll_offset;
-
-
 
 
 uint16_t motor[4];
@@ -110,9 +105,6 @@ void calibration_mode_tummy(controls cont)
 	}
 	C_pitch_offset[0] = pitch;
 	C_roll_offset[0]= roll;
-	
-
-
 }
 void calibration_mode_back(controls cont)
 {
