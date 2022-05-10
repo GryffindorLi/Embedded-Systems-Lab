@@ -50,11 +50,25 @@ void term_putchar(char c)
 
 int	term_getchar_nb()
 {
-	static unsigned char 	line [2];
+	static unsigned char line[2];
+	static unsigned char c2[2];
+	static unsigned char c3[2];
 
-	if (read(0,line,1)) // note: destructive read
-		return (int) line[0];
-
+	if (read(0,line,1)) {
+		if (line[0] == 27) {
+			if (read(0,c2,1)) {
+				if (c2[0] == 91) {
+					if (read(0,c3,1)) {
+						if (c3[0] == 65) return '!'; //up
+						else if (c3[0] == 66) return '@'; //down
+						else if (c3[0] == 67) return '#'; //right
+						else if (c3[0] == 68) return '$'; //left
+					} else return -1;
+				} else return -1;
+			}
+		}
+		return line[0];
+	}
 	return -1;
 }
 
