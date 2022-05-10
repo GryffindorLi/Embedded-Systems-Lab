@@ -94,25 +94,8 @@ int16_t yaw_p_offset = 0;
 int16_t pitch_p_offset = 0;
 int16_t roll_p_offset = 0;
 //////////////////Calibration Mode only
-<<<<<<< HEAD
-void calibration_mode_tummy(controls cont)
-{
-	//place flat
-	printf("Start the Calibration, Place flat on tummy");
-	
-	//wait for few seconds
-	if (get_time_us() - idle_timer > 5000000)
-	{
-		idle_timer = get_time_us();
-	}
-	C_pitch_offset[0] = pitch;
-	C_roll_offset[0]= roll;
-}
-void calibration_mode_back(controls cont)
-=======
 
 void calibration (controls cont)
->>>>>>> 586909fec02cd4e43ee9fa64360d4576c10612e4
 {
 	//place upside down
 	printf("Start the Calibration, Place upside down");
