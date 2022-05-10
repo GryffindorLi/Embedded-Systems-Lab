@@ -95,18 +95,16 @@ int16_t pitch_p_offset = 0;
 int16_t roll_p_offset = 0;
 //////////////////Calibration Mode only
 
-void calibration (controls cont)
+void calibration (void)
 {
-	//place upside down
-	printf("Start the Calibration, Place upside down");
-	
 	if (FLAG ==0)
 	{
-		printf("Place upside");
+		printf("Place upside/n");
 		
 		idle_timer = get_time_us();
 		while (get_time_us() - idle_timer<5000000)
 		{
+			printf("do nothing");
 		}
 		C_pitch_offset[1] = pitch;
 		C_roll_offset[1]= roll;
@@ -115,20 +113,20 @@ void calibration (controls cont)
 	
 	if (FLAG ==1)
 	{
-		printf("Place upside down");
+		printf("Place upside down/n");
 		
 		idle_timer = get_time_us();
 		while (get_time_us() - idle_timer<5000000)
 		{
 		}
-		C_pitch_offset[2] = pitch-90;
+		C_pitch_offset[2] = pitch;
 		C_roll_offset[2]= roll;
 		FLAG=2;
 
 	}
 	if (FLAG ==2)
 	{
-		printf("Place rocket up");
+		printf("Place rocket up/n");
 		
 		idle_timer = get_time_us();
 		while (get_time_us() - idle_timer<5000000)
@@ -140,38 +138,38 @@ void calibration (controls cont)
 	}
 	if (FLAG ==3)
 	{
-		printf("Place rocket down");
+		printf("Place rocket down/n");
 		
 		idle_timer = get_time_us();
 		while (get_time_us() - idle_timer<5000000)
 		{
 		}
-		C_pitch_offset[4] = pitch-90;
+		C_pitch_offset[4] = pitch + 90;
 		C_roll_offset[4]= roll;
 		FLAG=4;
 	}
 	if (FLAG ==4)
 	{
-		printf("Place sideways Left");
+		printf("Place sideways Left/n");
 		
 		idle_timer = get_time_us();
 		while (get_time_us() - idle_timer<5000000)
 		{
 		}
-		C_pitch_offset[4] = pitch-90;
-		C_roll_offset[4]= roll;
+		C_pitch_offset[4] = pitch;
+		C_roll_offset[4]= roll + 90;
 		FLAG=5;
 	}
 	if (FLAG ==5)
 	{
-		printf("Place sideways Right");
+		printf("Place sideways Right/n");
 		
 		idle_timer = get_time_us();
 		while (get_time_us() - idle_timer<5000000)
 		{
 		}
-		C_pitch_offset[5] = pitch-90;
-		C_roll_offset[5]= roll;
+		C_pitch_offset[5] = pitch;
+		C_roll_offset[5]= roll-90;
 		FLAG = 6;
 
 	}
@@ -311,12 +309,7 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 		case MODE_CALIBRATION:	
 			ae[0] = safe_motor; ae[1] = safe_motor; ae[2] = safe_motor; ae[3] = safe_motor;//motors off
 			filter_angles();
-			// idle_timer = get_time_us();
-			// if (get_time_us() - idle_timer > 5000000)
-			// 	{
-			// 		idle_timer = get_time_us();
-			// 	}
-			calibration(cont);		
+			calibration();		
 			int32_t temp1 =0;
 			int32_t temp2 =0;
 			for (int i=0;i<6;i++)
