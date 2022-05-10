@@ -342,16 +342,16 @@ void handle_keys(uint8_t key) {
 		case 'w':
 			yaw_offset += 10;
 			break;
-		case 72: //up
+		case '!': //up
 			pitch_offset += 10;
 			break;
-		case 80: //down
+		case '@': //down
 			pitch_offset -= 10;
 			break;
-		case 75: //left
+		case '#': //left
 			roll_offset += 10;
 			break;
-		case 77: //right
+		case '$': //right
 			roll_offset -= 10;
 			break;
 		case 'u':

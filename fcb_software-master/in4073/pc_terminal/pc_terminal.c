@@ -63,8 +63,8 @@ int	term_getchar_nb()
 						else if (c3[0] == 66) return '@'; //down
 						else if (c3[0] == 67) return '#'; //right
 						else if (c3[0] == 68) return '$'; //left
-					} else return -1;
-				} else return -1;
+					}
+				}
 			}
 		}
 		return line[0];
