@@ -97,7 +97,7 @@ int16_t pitch_p_offset = 0;
 int16_t roll_p_offset = 0;
 //////////////////Calibration Mode only
 
-void calibration (controls cont)
+void calibration (void)
 {
 	if (FLAG ==0)
 	{
@@ -311,7 +311,7 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 		case MODE_CALIBRATION:	
 			ae[0] = safe_motor; ae[1] = safe_motor; ae[2] = safe_motor; ae[3] = safe_motor;//motors off
 			filter_angles();
-			calibration(cont);		
+			calibration();		
 			int32_t temp1 =0;
 			int32_t temp2 =0;
 			for (int i=0;i<6;i++)

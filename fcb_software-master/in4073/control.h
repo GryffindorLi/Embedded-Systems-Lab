@@ -18,12 +18,7 @@ extern int16_t sax, say, saz;
 extern int32_t yaw, pitch, roll;
 
 //calibration mode
-void calibration_mode_tummy(controls cont);
-void calibration_mode_back(controls cont);
-void calibration_mode_rocket_up(controls cont);
-void calibration_mode_rocket_down(controls cont);
-void calibration_mode_sideways_R(controls cont);
-void calibration_mode_sideways_L(controls cont);
+void calibration (void);
 
 void filter_angles();
 void handle_keys(uint8_t key);
