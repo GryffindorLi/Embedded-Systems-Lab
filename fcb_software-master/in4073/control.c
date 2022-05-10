@@ -23,12 +23,13 @@
 #include "gpio.h"
 #include "PC2D.h"
 #include <stdio.h>
+#include "timers.h"
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
 int32_t C_pitch_offset[6], C_roll_offset[6];
-int8_t counter = 0xFF;
+int32_t idle_timer;
 int32_t Mean_pitch_offset, Mean_roll_offset;
 
 
@@ -99,9 +100,9 @@ void calibration_mode_tummy(controls cont)
 	printf("Start the Calibration, Place flat on tummy");
 	
 	//wait for few seconds
-	while (counter)
+	if (get_time_us() - idle_timer > 5000000)
 	{
-		counter--;
+		idle_timer = get_time_us();
 	}
 	C_pitch_offset[0] = pitch;
 	C_roll_offset[0]= roll;
@@ -115,9 +116,9 @@ void calibration_mode_back(controls cont)
 	printf("Start the Calibration, Place upside down");
 	
 	//wait for few seconds
-	while (counter)
+	if (get_time_us() - idle_timer > 5000000)
 	{
-		counter--;
+		idle_timer = get_time_us();
 	}
 	C_pitch_offset[1] = pitch;
 	C_roll_offset[1]= roll;
@@ -129,9 +130,9 @@ void calibration_mode_rocket_up(controls cont)
 	printf("Start the Calibration, Place in rocket mode up");
 	
 	//wait for few seconds
-	while (counter)
+	if (get_time_us() - idle_timer > 5000000)
 	{
-		counter--;
+		idle_timer = get_time_us();
 	}
 	C_pitch_offset[2] = pitch-90;
 	C_roll_offset[2]= roll;
@@ -142,9 +143,9 @@ void calibration_mode_rocket_down(controls cont)
 	printf("Start the Calibration, Place in rocket mode down");
 	
 	//wait for few seconds
-	while (counter)
+	if (get_time_us() - idle_timer > 5000000)
 	{
-		counter--;
+		idle_timer = get_time_us();
 	}
 	C_pitch_offset[3] = pitch + 90;
 	C_roll_offset[3]= roll;
@@ -155,9 +156,9 @@ void calibration_mode_sideways_R(controls cont)
 	printf("Start the Calibration, Place sideway Right");
 	
 	//wait for few seconds
-	while (counter)
+	if (get_time_us() - idle_timer > 5000000)
 	{
-		counter--;
+		idle_timer = get_time_us();
 	}
 	C_pitch_offset[4] = pitch;
 	C_roll_offset[4]= roll + 90;
@@ -168,9 +169,9 @@ void calibration_mode_sideways_L(controls cont)
 	printf("Start the Calibration, Place sideway Left");
 	
 	//wait for few seconds
-	while (counter)
+	if (get_time_us() - idle_timer > 5000000)
 	{
-		counter--;
+		idle_timer = get_time_us();
 	}
 	C_pitch_offset[5] = pitch;
 	C_roll_offset[5]= roll- 90;
