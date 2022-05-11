@@ -39,8 +39,8 @@ int start_calibration;
 
 uint16_t motor[4];
 int16_t ae[4];
-bool wireless_mode;
-bool yaw_control_mode;
+int wireless_mode;
+int yaw_control_mode;
 
 // for IMU:
 int16_t phi, theta, psi; // computed angles  (deg to int16), LSB = 182
@@ -301,17 +301,17 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode, int p
 				break;
 			
 			case MODE_YAW_CONTROL:
-				yaw_control_mode = true;
+				yaw_control_mode = 1;
 				handle_keys(key);
 				actuate_cont = offset_controls(cont);
 				filter_angles();
 				get_error(actuate_cont);
 				controller(actuate_cont);
-				yaw_control_mode = false;
 				printf("\n%ld\n", yaw);
 				break;
 
 			case MODE_FULL_CONTROL:
+				yaw_control_mode = 0;
 				handle_keys(key);
 				actuate_cont = offset_controls(cont);
 				filter_angles();
