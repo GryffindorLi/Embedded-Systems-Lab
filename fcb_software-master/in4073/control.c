@@ -297,10 +297,10 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 void handle_keys(uint8_t key) {
 	switch (key) {
 		case 'a':
-			throttle_offset += 10;
+			throttle_offset += 20;
 			break;
 		case 'z':
-			throttle_offset -= 10;
+			throttle_offset -= 20;
 			break;
 		case 'q':
 			yaw_offset -= 10;
