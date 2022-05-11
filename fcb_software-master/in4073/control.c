@@ -276,8 +276,8 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 				}
 				Mean_pitch_offset = temp1;
 				Mean_roll_offset = temp2;
-				break;
 			}
+			break;
 		
 		case MODE_YAW_CONTROL:
 			yaw_control_mode = true;

@@ -4,7 +4,8 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
-#define HEADER '@'
+#define DATA_HEADER '@'
+#define STRING_HEADER '#'
 #define TAIL ';'
 
 /*
@@ -12,16 +13,21 @@
  */
 typedef struct {
     char head;  // 1 byte
-    uint8_t mode; // 1 byte
-    uint8_t battery; // 1 byte
-    int16_t y;  // 2 bytes
-    int16_t p;  // 2 bytes
-    int16_t r;  // 2 bytes
-    uint16_t motor;  // 2 bytes
-
-    uint16_t checksum;  // 2 bytes
+    uint8_t mode; // 1 byte 1
+    uint8_t battery; // 1 byte 2
+    int16_t y;  // 2 bytes 34
+    int16_t p;  // 2 bytes 56
+    int16_t r;  // 2 bytes 78
+    int16_t filtered_y;  // 2 bytes 9 10
+    int16_t filtered_p;  // 2 bytes 11 12
+    int16_t filtered_r;  // 2 bytes 13 14
+    uint16_t motor1;  // 2 bytes 15 16
+    uint16_t motor2; // 17 18
+    uint16_t motor3;  // 19 20
+    uint16_t motor4;  // 21 22
+    uint16_t checksum;  // 2 bytes 23 24
     char tail;  // 1 byte
-} D2PC_message;  //12 bytes
+} D2PC_message;  //26 bytes
 
 /*
  * @Author: Zirui Li
