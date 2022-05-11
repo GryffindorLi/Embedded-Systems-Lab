@@ -134,12 +134,12 @@ struct JS_DATA_SAVE_TYPE {
 
 // =====================================================================
 
-typedef struct {
-	int axis[6];
-	int button[12];/* data */
-} JS_message;
+// typedef struct {
+// 	int axis[6];
+// 	int button[12];/* data */
+// } JS_message;
 
-void new_JS2PC_msg(JS_message* message, int* axis, int* button);
+// void new_JS2PC_msg(JS_message* message, int* axis, int* button);
 unsigned int mon_time_ms(void);
 void mon_delay_ms(unsigned int ms);
 int js_init();

@@ -149,6 +149,7 @@ uint8_t on_mode_change(pc_msg* msg, uint8_t current_mode, int16_t* aes) {
 				return mode; 
 			}
 			break;
+
 		case MODE_MANUAL:
 			if (current_mode == MODE_MANUAL) {
 				return current_mode;
@@ -163,6 +164,7 @@ uint8_t on_mode_change(pc_msg* msg, uint8_t current_mode, int16_t* aes) {
 				}
 			}
 			break;
+
 		case MODE_CALIBRATION:
 			if (current_mode == MODE_CALIBRATION) {
 				return current_mode;
@@ -177,6 +179,7 @@ uint8_t on_mode_change(pc_msg* msg, uint8_t current_mode, int16_t* aes) {
 				}
 			}
 			break;
+
 		case MODE_YAW_CONTROL:
 			if (current_mode == MODE_YAW_CONTROL) {
 				return current_mode;
@@ -191,6 +194,7 @@ uint8_t on_mode_change(pc_msg* msg, uint8_t current_mode, int16_t* aes) {
 				}
 			}
 			break;
+
 		default:
 			return current_mode;
 	}
@@ -204,6 +208,22 @@ char on_set_key(pc_msg* msg) {
 	return msg->cm.key;
 }
 
+void led_indicator(uint8_t current_mode) {
+	// change lights, set clear is reversed due to hardware
+	if (current_mode == MODE_PANIC) {
+		nrf_gpio_pin_clear(RED);
+		nrf_gpio_pin_set(YELLOW);
+		nrf_gpio_pin_set(GREEN);
+	} else if (current_mode == MODE_SAFE) {
+		nrf_gpio_pin_set(RED);
+		nrf_gpio_pin_clear(YELLOW);
+		nrf_gpio_pin_set(GREEN);
+	} else {
+		nrf_gpio_pin_set(RED);
+		nrf_gpio_pin_set(YELLOW);
+		nrf_gpio_pin_clear(GREEN);
+	}
+}
 /*------------------------------------------------------------------
  * main -- everything you need is here :)
  *------------------------------------------------------------------
@@ -218,7 +238,6 @@ char on_set_key(pc_msg* msg) {
 Queue local_receive_q;
 pc_msg rec_msg;
 uint8_t current_mode = 0;
-uint8_t previous_mode = 0;
 controls current_control;
 char current_key;
 
@@ -239,11 +258,11 @@ int main(void)
 
 	uint32_t counter = 0;
 	uint32_t idle_timer = get_time_us();
-	int plugged = 1;
 	demo_done = false;
 	wireless_mode = false;
 	int16_t* aes = {0};
 	int parse_result = 0;
+	// uint32_t loop_monitor_start = 0;
 
 	// --------------------------------MAIN LOOP------------------------------------
 
@@ -252,33 +271,14 @@ int main(void)
 		if (rx_queue.count) {
 			receive_message(&local_receive_q, &rx_queue);
 		}
-
 		// parse message every loop
 		parse_result = parse_message(&rec_msg, &local_receive_q);
 		
 		if (parse_result == 0) {
-			previous_mode = current_mode;
 			current_mode = on_mode_change(&rec_msg, current_mode, aes);
 		} else if (parse_result > 0) {
 			current_control = on_set_control(&rec_msg);
 			current_key = on_set_key(&rec_msg);
-		}
-
-		if (current_mode == MODE_PANIC) {
-			if (previous_mode != MODE_PANIC) {
-				nrf_gpio_pin_toggle(GREEN);
-			}
-			nrf_gpio_pin_toggle(RED);
-		} else if (current_mode == MODE_SAFE) {
-			if (previous_mode == MODE_PANIC) {
-				nrf_gpio_pin_toggle(RED);
-			}
-			nrf_gpio_pin_toggle(YELLOW);
-		} else if (current_mode != MODE_SAFE && current_mode != MODE_PANIC) {
-			if (previous_mode == MODE_SAFE) {
-				nrf_gpio_pin_toggle(YELLOW);
-			}
-			nrf_gpio_pin_toggle(GREEN);
 		}
 
 		// PANIC to SAFE
@@ -290,56 +290,37 @@ int main(void)
 			}
 		}
 
+		// Change lights
+		led_indicator(current_mode);
+
 		// Check Disconnection
-		if (get_time_us() - idle_timer > 1000 && plugged) {
-			// if(UART_watch_dog == 1000) {nrf_gpio_pin_toggle(RED);}
-			UART_watch_dog -= 4;
+		if (get_time_us() - idle_timer > 1000) {
+			UART_watch_dog -= 3;
 			idle_timer = get_time_us();
 			if (UART_watch_dog < 1) {
 				if (current_mode > MODE_PANIC) current_mode = MODE_PANIC;
 				printf("\nDISCONNECTION!!\n");
-				nrf_gpio_pin_toggle(RED);
-				plugged = 0;
 			}
-		}		
+		}	
 
 		if (check_timer_flag()) {
-			// every one second
+			// 20HZ
 			if (counter++%20 == 0) {
+				// 1HZ
 				nrf_gpio_pin_toggle(BLUE);
-				// printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
+				printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
 			}
 
 			adc_request_sample();
-			read_baro();
-
-
-			// printf("%10ld | ", get_time_us());
-			// printf("%3d %3d %3d %3d | ",ae[0], ae[1], ae[2], ae[3]);
-			// printf("%6d %6d %6d | ", phi, theta, psi);
-			// printf("%6d %6d %6d | ", sp, sq, sr);
-			// printf("%4d | %4ld | %6ld \n", bat_volt, temperature, pressure);
-			
-
-			// D2PC_message m = init_message();
-
-			// send_data(&m);
-
-			
-			// D2PC_string_message sm = init_string_message();
-			// string_bytes_array sb = to_string_bytes_array(&sm);
-			// for (int i = 0; i < sizeof(D2PC_string_message); ++i){
-			// 	uart_put(sb.bytes[i]);
-			// }
-			//delete_string_message(&sm);
-			
+			read_baro();		
 
 			clear_timer_flag();
 		}
 
 		if (check_sensor_int_flag()) {
+			//100Hz
 			get_sensor_data();
-			aes = run_filters_and_control(rec_msg.cm.control, current_key, current_mode, plugged);
+			aes = run_filters_and_control(current_control, current_key, current_mode);
 		}
 	}	
 

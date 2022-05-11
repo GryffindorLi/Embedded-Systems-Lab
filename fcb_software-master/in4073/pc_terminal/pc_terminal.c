@@ -276,11 +276,10 @@ int send_mode_msg(pc_msg* msg, uint8_t mode) {
 uint8_t get_mode_change(char key, controls cont, int* buttons) {
 	if (key == 27) return MODE_PANIC;	//escape
 	if (key == '0') return 0;
-	if (key == '1') return 1;
+	if (key == '1' || buttons[0] == 1) return MODE_PANIC;
 	if (cont.pitch == 0 && cont.roll == 0 && cont.yaw == 0 && cont.throttle == 0 ) {
 		if (key >= '2' && key <= '8') return (uint8_t) key - '0';  //change mode from
 	}
-	if (buttons[0] == 1) return MODE_PANIC;
 	return 255;
 }
 
@@ -288,23 +287,22 @@ void set_controls(controls* cont, int* axis) {
 	cont->roll = axis[ROLL_AXIS];
 	cont->pitch = axis[PITCH_AXIS];
 	cont->yaw = axis[YAW_AXIS];
-	cont->throttle = -axis[THROTTLE_AXIS] + 32767;
+	// cont->throttle = -axis[THROTTLE_AXIS] + 32767;
+	cont->throttle = axis[THROTTLE_AXIS];
 }
 
 float time_dif(struct timeval st, struct timeval ed) {
 	return (ed.tv_sec - st.tv_sec) * 1000.0f + (ed.tv_usec - st.tv_usec) / 1000.0f;
 }
 
-#define TRANSMISSION_FREQ 50
+#define TRANSMISSION_FREQ 20
+#define JOYSTICK_WATCHDOG_LIFETIME 200
 
 /*----------------------------------------------------------------
  * main -- execute terminal
  *----------------------------------------------------------------
  */
- /*
- * @Author Hanyuan Ban
- * @Author Zirui Li
- */
+
 int main(int argc, char **argv)
 {	
 	// ----------------------------------INITIALIZATION----------------------------------------
@@ -312,10 +310,10 @@ int main(int argc, char **argv)
 	term_initio();
 	term_puts("\nTerminal program - Embedded Real-Time Systems\n");
 	int fd;
-	if ((fd = js_init()) == 0) {
-		term_puts("\n Joystick unplugged\n");
+	if ((fd = js_init()) == -1) {
+		term_puts("\nJoystick unplugged\n");
 	} else {
-		term_puts("\n Joystick plugged\n");
+		term_puts("\nJoystick plugged\n");
 	}
 
 	// if no argument is given at execution time, /dev/ttyUSB0 is assumed
@@ -332,9 +330,11 @@ int main(int argc, char **argv)
 	term_puts("Type ^C to exit\n");
 
 	// ------------------------------------MAIN LOOP------------------------------------------
-	struct timeval start;
-	struct timeval end;
-	int timer_flag = 0;
+	struct timeval ctrl_trans_start;
+	struct timeval ctrl_trans_end;
+	// struct timeval loop_monitor_start;
+	// struct timeval loop_monitor_end;
+	int joystick_watchdog = JOYSTICK_WATCHDOG_LIFETIME;
 	char rc = -1;
 	char c = -1;
 	char tmp_c = -1;
@@ -343,15 +343,10 @@ int main(int argc, char **argv)
 	controls cont = {0, 0, 0, 0};
 	int axis[6] = {0};
 	int buttons[12] = {0};
-	JS_message js_msg;
 	struct js_event js;
 	
-
+	gettimeofday(&ctrl_trans_start, 0);
 	for (;;) {
-		if (timer_flag == 0) {
-			gettimeofday(&start, 0);
-			timer_flag = 1;
-		}
 		// read the keyboard command every loop
 		if ((tmp_c = term_getchar_nb()) != -1) {
 			c = tmp_c;
@@ -359,9 +354,12 @@ int main(int argc, char **argv)
 
 		// read controls and detect connection of joystick
 		if (read_file(fd, js, axis, buttons) == -1) {
-			// term_puts("\nJOYSTICK UNPLUGGED\n");
-			new_JS2PC_msg(&js_msg, axis, buttons);
-		}
+			joystick_watchdog -= 1;
+			if (joystick_watchdog < 0) {
+				term_puts("\nJOYSTICK UNPLUGGED\n");
+				joystick_watchdog = JOYSTICK_WATCHDOG_LIFETIME;
+			}
+		} 
 
 		// update controls
 		set_controls(&cont, axis);
@@ -374,12 +372,12 @@ int main(int argc, char **argv)
 			msg.mm = new_mode_msg();
 			send_mode_msg(&msg, current_mode);
 		}
+		
 
 		// transmit control signal at transmission frequency (50Hz)
-
-		gettimeofday(&end, 0);
-		if (time_dif(start, end) > (float) (1000 / TRANSMISSION_FREQ)) {
-			timer_flag = 0;
+		gettimeofday(&ctrl_trans_end, 0);
+		if (time_dif(ctrl_trans_start, ctrl_trans_end) > (float) (1000 / TRANSMISSION_FREQ)) {
+			gettimeofday(&ctrl_trans_start, 0);
 			pc_msg msg;
 			msg.cm = new_ctrl_msg();
 			send_ctrl_msg(&msg, cont, c);
