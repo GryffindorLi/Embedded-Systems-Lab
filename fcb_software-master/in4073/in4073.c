@@ -146,6 +146,11 @@ void send_data(D2PC_message_p m) {
 	uart_put((uint8_t)(m->tail));
 }
 
+/*
+ * @Author Zirui Li
+ * @Param sm A pointer to a D2PC_string_message
+ * Sending the string by bytes
+ */
 void send_string(D2PC_string_message_p sm) {
 	string_bytes_array sb = to_string_bytes_array(sm);
 	for (int i = 0; i < sizeof(D2PC_string_message); ++i){

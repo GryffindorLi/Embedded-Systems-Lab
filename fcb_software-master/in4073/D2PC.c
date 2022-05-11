@@ -138,6 +138,9 @@ void delete_bytes_array(bytes_array* b){
 
 /*
  * @Author Zirui Li
+ * @Param s A pointer to a char array
+ * @Param len The length of the string
+ * Init the message using string s.
  */
 D2PC_string_message init_string_message(char* s, uint8_t len){
     D2PC_string_message sm = {.header=STRING_HEADER, .tail=TAIL};
