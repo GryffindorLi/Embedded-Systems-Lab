@@ -137,10 +137,10 @@ void update_motors(void)
 
 // ------------- Manual Mode only ----------------
 void controller_manual(controls cont){
-	ae[0] = MIN(manual_max_motor, MAX(min_motor, cont.throttle / t_scale_manual + (- cont.yaw + cont.pitch) / a_scale)); 
-	ae[1] = MIN(manual_max_motor, MAX(min_motor, cont.throttle / t_scale_manual + (cont.yaw - cont.roll) / a_scale)); 
-	ae[2] = MIN(manual_max_motor, MAX(min_motor, cont.throttle / t_scale_manual + (- cont.yaw - cont.pitch) / a_scale)); 
-	ae[3] = MIN(manual_max_motor, MAX(min_motor, cont.throttle / t_scale_manual + (cont.yaw + cont.roll) / a_scale)); 
+	ae[0] = MIN(manual_max_motor, MAX(min_motor, cont.throttle / (uint16_t) t_scale_manual + (- cont.yaw + cont.pitch) / a_scale)); 
+	ae[1] = MIN(manual_max_motor, MAX(min_motor, cont.throttle / (uint16_t) t_scale_manual + (cont.yaw - cont.roll) / a_scale)); 
+	ae[2] = MIN(manual_max_motor, MAX(min_motor, cont.throttle / (uint16_t) t_scale_manual + (- cont.yaw - cont.pitch) / a_scale)); 
+	ae[3] = MIN(manual_max_motor, MAX(min_motor, cont.throttle / (uint16_t) t_scale_manual + (cont.yaw + cont.roll) / a_scale));
 }
 
 // ------------- Control Mode only ----------------
@@ -244,30 +244,39 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			ae[0] = safe_motor; ae[1] = safe_motor; ae[2] = safe_motor; ae[3] = safe_motor;//motors off
 			reset_offset();
 			filter_angles();
-			if (calib_timer == -1) {
-				calib_phase = 0;
-				calib_notice = 1;
-				calib_timer = get_time_us();
-			} else {
-				if (get_time_us() - calib_timer > 5000000) {
+			if (start_calibration > 0){
+				if (start_calibration == 1) {
+					calib_phase = 0;
+					calib_notice = 1;
+					calib_timer = get_time_us();
+					start_calibration = 2; // during calibration
+				}
+				if (calib_timer != -1 && get_time_us() - calib_timer > 5000000) {
 					calib_phase += 1;
 					calib_notice = 1;
 					calib_timer = get_time_us();
 				}
-			}
-			calibration();
+				if (calib_phase < 6) {
+					calibration();
+				} else {
+					printf("\n---===CALIBRATION FINISHED===---\n");
+					calib_phase = 0;
+					calib_timer = -1;
+					start_calibration = 0;
+				}
 
-			// Don't know how to change the logic down below
-			int32_t temp1 = 0;
-			int32_t temp2 = 0;
-			for (int i = 0; i < 6; i++)
-			{
-				temp1 += C_pitch_offset[i];
-				temp2 += C_roll_offset[i];
+				// Don't know how to change the logic down below
+				int32_t temp1 = 0;
+				int32_t temp2 = 0;
+				for (int i = 0; i < 6; i++)
+				{
+					temp1 += C_pitch_offset[i];
+					temp2 += C_roll_offset[i];
+				}
+				Mean_pitch_offset = temp1;
+				Mean_roll_offset = temp2;
+				break;
 			}
-			Mean_pitch_offset = temp1;
-			Mean_roll_offset = temp2;
-			break;
 		
 		case MODE_YAW_CONTROL:
 			yaw_control_mode = true;

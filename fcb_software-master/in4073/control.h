@@ -18,6 +18,7 @@ extern int16_t sax, say, saz;
 extern int32_t yaw, pitch, roll;
 
 //calibration mode
+extern int start_calibration;
 void calibration (void);
 
 void filter_angles();

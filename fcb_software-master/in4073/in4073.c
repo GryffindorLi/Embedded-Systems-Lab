@@ -118,6 +118,7 @@ uint8_t on_mode_change(pc_msg* msg, uint8_t current_mode, int16_t* aes) {
 		case MODE_SAFE:
 			if (current_mode == MODE_SAFE) return current_mode;
 			else {
+				start_calibration = 0;
 				printf("\n---===Motors still running! Going to PANIC mode!===---\n");
 				return MODE_PANIC;
 			}
@@ -129,6 +130,7 @@ uint8_t on_mode_change(pc_msg* msg, uint8_t current_mode, int16_t* aes) {
 			} else if (current_mode == MODE_PANIC) {
 				return current_mode; 
 			} else {
+				start_calibration = 0;
 				panic_to_safe_timer = get_time_us();
 				printf("\n---===Entering PANIC mode!===---\n");
 				return mode; 
@@ -142,6 +144,7 @@ uint8_t on_mode_change(pc_msg* msg, uint8_t current_mode, int16_t* aes) {
 					printf("\n---===Stop motors first to enter MANUAL mode!===---\n");
 					return current_mode;
 				} else {
+					start_calibration = 0;
 					printf("\n---===Entering MANUAL mode!===---\n");
 					return mode;
 				}
@@ -155,6 +158,7 @@ uint8_t on_mode_change(pc_msg* msg, uint8_t current_mode, int16_t* aes) {
 					printf("\n---===Stop motors first to enter CALIBRATION mode!===---\n");
 					return current_mode;
 				} else {
+					start_calibration = 1;
 					printf("\n---===Entering CALIBRATION mode!===---\n");
 					return mode;
 				}
@@ -165,10 +169,11 @@ uint8_t on_mode_change(pc_msg* msg, uint8_t current_mode, int16_t* aes) {
 				return current_mode;
 			} else {
 				if (aes[0] + aes[1] + aes[2] + aes[3] != 0) {
-					printf("\n---===Stop motors first to enter MANUAL mode!===---\n");
+					printf("\n---===Stop motors first to enter YAW CONTROL mode!===---\n");
 					return current_mode;
 				} else {
-					printf("\n---===Entering MANUAL mode!===---\n");
+					start_calibration = 0;
+					printf("\n---===Entering YAW CONTROL mode!===---\n");
 					return mode;
 				}
 			}
