@@ -68,7 +68,7 @@ bytes_array to_bytes_array(D2PC_message_p m);
 
 void delete_bytes_array(bytes_array* b);
 
-D2PC_string_message init_string_message(void);
+D2PC_string_message init_string_message(char s[], uint8_t len);
 
 void delete_string_message(D2PC_string_message_p m);
 

@@ -139,11 +139,11 @@ void delete_bytes_array(bytes_array* b){
 /*
  * @Author Zirui Li
  */
-D2PC_string_message init_string_message(void){
+D2PC_string_message init_string_message(char* s, uint8_t len){
     D2PC_string_message sm = {.header=STRING_HEADER, .tail=TAIL};
-    //sm->string = 
-    char* tmp = "This is a debug message, and I will look at it detailly.";
-    strcpy(sm.string, tmp);
+    len -= 1;
+    //char* tmp = "This is a debug message, and I will look at it detailly.";
+    strcpy(sm.string, s);
     return sm;
 }
 

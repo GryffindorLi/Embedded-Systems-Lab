@@ -16,6 +16,7 @@
 #include <stdbool.h>
 #include <inttypes.h>
 #include <stdio.h>
+#include <string.h>
 #include "nrf_gpio.h"
 #include "nrf_delay.h"
 #include "app_util_platform.h"
@@ -145,6 +146,13 @@ void send_data(D2PC_message_p m) {
 	uart_put((uint8_t)(m->tail));
 }
 
+void send_string(D2PC_string_message_p sm) {
+	string_bytes_array sb = to_string_bytes_array(sm);
+	for (int i = 0; i < sizeof(D2PC_string_message); ++i){
+		uart_put(sb.bytes[i]);
+	}
+}
+
 
 /*------------------------------------------------------------------
  * main -- everything you need is here :)
@@ -214,12 +222,16 @@ int main(void)
 			}
 			//delete_message(&m);
 			*/
-			
-			D2PC_string_message sm = init_string_message();
+			char* s = "Hello, this is new message.";
+			D2PC_string_message sm = 
+				init_string_message(s, (uint8_t)strlen(s));
+			/*
 			string_bytes_array sb = to_string_bytes_array(&sm);
 			for (int i = 0; i < sizeof(D2PC_string_message); ++i){
 				uart_put(sb.bytes[i]);
 			}
+			*/
+			send_string(&sm);
 			
 			clear_timer_flag();
 		}
