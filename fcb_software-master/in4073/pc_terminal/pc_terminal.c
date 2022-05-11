@@ -226,8 +226,10 @@ void* decode(uint8_t mess[]) {
 
 	} else if (is_string) {
 		string_bytes_array sba;
-		memcpy((void*)(&(sba.bytes)), (void*)(&mess), sizeof(D2PC_string_message));
-		D2PC_string_message_p recv_mess = &(sba.sm);
+		memcpy((void*)(&(sba.bytes)), (void*)(&mess[1]), sizeof(D2PC_string_message));
+		D2PC_string_message_p recv_mess = 
+			(D2PC_string_message_p)malloc(sizeof(D2PC_string_message));
+		memcpy((void*)recv_mess, (void*)(&(sba.sm)), sizeof(D2PC_string_message));
 
 		return (void*)recv_mess;
 
