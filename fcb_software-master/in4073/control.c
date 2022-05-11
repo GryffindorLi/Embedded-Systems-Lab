@@ -35,6 +35,7 @@ int32_t calib_timer = -1;
 int32_t Mean_pitch_offset, Mean_roll_offset;
 int8_t calib_phase = 0;
 int8_t calib_notice = 0;
+int start_calibration;
 
 uint16_t motor[4];
 int16_t ae[4];

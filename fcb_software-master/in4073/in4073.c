@@ -38,6 +38,7 @@ bool demo_done;
 pc_msg rec_msg_default;
 uint32_t panic_to_safe_timer = -1;
 int32_t yaw, pitch, roll;
+int start_calibration;
 
 void send_data(D2PC_message_p m) {
     uart_put((uint8_t)(m->head));
