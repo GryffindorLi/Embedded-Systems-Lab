@@ -356,7 +356,7 @@ int main(int argc, char **argv)
 		if (read_file(fd, js, axis, buttons) == -1) {
 			joystick_watchdog -= 1;
 			if (joystick_watchdog < 0) {
-				term_puts("\nJOYSTICK UNPLUGGED\n");
+				// term_puts("\nJOYSTICK UNPLUGGED\n");
 				joystick_watchdog = JOYSTICK_WATCHDOG_LIFETIME;
 			}
 		} 

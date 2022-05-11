@@ -7,7 +7,7 @@
 
 extern uint16_t motor[4];
 extern int16_t ae[4];
-extern bool wireless_mode;
+extern int wireless_mode;
 
 // for IMU:
 extern int16_t phi, theta, psi;

@@ -308,7 +308,7 @@ int main(void)
 			if (counter++%20 == 0) {
 				// 1HZ
 				nrf_gpio_pin_toggle(BLUE);
-				printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
+				// printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
 			}
 
 			adc_request_sample();
