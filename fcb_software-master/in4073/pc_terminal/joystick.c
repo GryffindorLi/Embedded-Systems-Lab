@@ -16,22 +16,22 @@
 int	axis[6];
 int button[12];
 
-void new_JS2PC_msg(JS_message* message, int* axis, int* button)
-{
-	for (int i = 0; i < 6; i++)
-	{
-		message->axis[i] = axis[i];
-	}
-	for (int j = 0; j < 12; j++)
-	{
-		message->button[j] = button[j];
-	}
-}
+// void new_JS2PC_msg(JS_message* message, int* axis, int* button)
+// {
+// 	for (int i = 0; i < 6; i++)
+// 	{
+// 		message->axis[i] = axis[i];
+// 	}
+// 	for (int j = 0; j < 12; j++)
+// 	{
+// 		message->button[j] = button[j];
+// 	}
+// }
 
 int js_init() {
 	int fd;
 	if ((fd = open(JS_DEV, O_RDONLY)) < 0) {
-		return 0;
+		return -1;
 	}
 	fcntl(fd, F_SETFL, O_NONBLOCK);
 	return fd;
