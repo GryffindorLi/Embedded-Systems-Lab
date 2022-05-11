@@ -217,7 +217,8 @@ char on_set_key(pc_msg* msg) {
 
 Queue local_receive_q;
 pc_msg rec_msg;
-uint8_t current_mode;
+uint8_t current_mode = 0;
+uint8_t previous_mode = 0;
 controls current_control;
 char current_key;
 
@@ -256,10 +257,28 @@ int main(void)
 		parse_result = parse_message(&rec_msg, &local_receive_q);
 		
 		if (parse_result == 0) {
+			previous_mode = current_mode;
 			current_mode = on_mode_change(&rec_msg, current_mode, aes);
 		} else if (parse_result > 0) {
 			current_control = on_set_control(&rec_msg);
 			current_key = on_set_key(&rec_msg);
+		}
+
+		if (current_mode == MODE_PANIC) {
+			if (previous_mode != MODE_PANIC) {
+				nrf_gpio_pin_toggle(GREEN);
+			}
+			nrf_gpio_pin_toggle(RED);
+		} else if (current_mode == MODE_SAFE) {
+			if (previous_mode == MODE_PANIC) {
+				nrf_gpio_pin_toggle(RED);
+			}
+			nrf_gpio_pin_toggle(YELLOW);
+		} else if (current_mode != MODE_SAFE && current_mode != MODE_PANIC) {
+			if (previous_mode == MODE_SAFE) {
+				nrf_gpio_pin_toggle(YELLOW);
+			}
+			nrf_gpio_pin_toggle(GREEN);
 		}
 
 		// PANIC to SAFE

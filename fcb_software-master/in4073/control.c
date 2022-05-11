@@ -139,10 +139,10 @@ void update_motors(void)
 int16_t set_throttle(controls cont){
 	int16_t throttle;
 
-	if( cont.throttle < 2 ){
+	if( cont.throttle < 100 ){
 		throttle = 0;
 	} else {
-		throttle = 150 + cont.throttle / (uint16_t) t_scale_manual;
+		throttle = 120 + cont.throttle / (uint16_t) t_scale_manual;
 	}
 	return throttle;
 }
