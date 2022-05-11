@@ -39,8 +39,8 @@ int start_calibration;
 
 uint16_t motor[4];
 int16_t ae[4];
-bool wireless_mode;
-bool yaw_control_mode;
+int wireless_mode;
+int yaw_control_mode;
 
 // for IMU:
 int16_t phi, theta, psi; // computed angles  (deg to int16), LSB = 182
@@ -280,6 +280,7 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 					temp1 += C_pitch_offset[i];
 					temp2 += C_roll_offset[i];
 				}
+<<<<<<< HEAD
 				Mean_pitch_offset = temp1;
 				Mean_roll_offset = temp2;
 			}
@@ -306,6 +307,31 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			
 		default:
 			break;
+=======
+				break;
+			
+			case MODE_YAW_CONTROL:
+				yaw_control_mode = 1;
+				handle_keys(key);
+				actuate_cont = offset_controls(cont);
+				filter_angles();
+				get_error(actuate_cont);
+				controller(actuate_cont);
+				printf("\n%ld\n", yaw);
+				break;
+
+			case MODE_FULL_CONTROL:
+				yaw_control_mode = 0;
+				handle_keys(key);
+				actuate_cont = offset_controls(cont);
+				filter_angles();
+				get_error(actuate_cont);
+				controller(actuate_cont);
+				break;
+			default:
+				break;
+		}
+>>>>>>> da0b7d66ab73be63e5f3b36a26befea9ff92f125
 	}
 	update_motors();
 	return ae;
