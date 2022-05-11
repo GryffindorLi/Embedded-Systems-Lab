@@ -29,6 +29,6 @@ void get_error(controls cont);
 void controller(controls cont);
 uint16_t safeuint16pint16(uint16_t a, int16_t b);
 int16_t safeint16pint16(int16_t a, int16_t b);
-int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode);
+int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode, int plugged);
 
 #endif /* CONTROL_H_ */

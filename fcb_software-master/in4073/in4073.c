@@ -238,7 +238,7 @@ int main(void)
 
 	uint32_t counter = 0;
 	uint32_t idle_timer = get_time_us();
-	int unplugged = 0;
+	int plugged = 1;
 	demo_done = false;
 	wireless_mode = false;
 	int16_t* aes = {0};
@@ -264,7 +264,7 @@ int main(void)
 
 		// PANIC to SAFE
 		if (panic_to_safe_timer != -1) {
-			if (get_time_us() - panic_to_safe_timer > 2000000) {
+			if (get_time_us() - panic_to_safe_timer > 500000) {
 				current_mode = MODE_SAFE;
 				panic_to_safe_timer = -1;
 				printf("\nentered SAFE MODE\n");
@@ -272,14 +272,15 @@ int main(void)
 		}
 
 		// Check Disconnection
-		if (get_time_us() - idle_timer > 1000 && !unplugged) {
-			UART_watch_dog -= 1;
+		if (get_time_us() - idle_timer > 1000 && plugged) {
+			// if(UART_watch_dog == 1000) {nrf_gpio_pin_toggle(RED);}
+			UART_watch_dog -= 4;
 			idle_timer = get_time_us();
 			if (UART_watch_dog < 1) {
 				if (current_mode > MODE_PANIC) current_mode = MODE_PANIC;
 				printf("\nDISCONNECTION!!\n");
 				nrf_gpio_pin_toggle(RED);
-				unplugged = 1;
+				plugged = 0;
 			}
 		}		
 
@@ -287,7 +288,7 @@ int main(void)
 			// every one second
 			if (counter++%20 == 0) {
 				nrf_gpio_pin_toggle(BLUE);
-				printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
+				// printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
 			}
 
 			adc_request_sample();
@@ -319,7 +320,7 @@ int main(void)
 
 		if (check_sensor_int_flag()) {
 			get_sensor_data();
-			aes = run_filters_and_control(rec_msg.cm.control, current_key, current_mode);
+			aes = run_filters_and_control(rec_msg.cm.control, current_key, current_mode, plugged);
 		}
 	}	
 

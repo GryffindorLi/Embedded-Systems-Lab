@@ -74,11 +74,11 @@ int16_t t_scale_manual = 220;
 int16_t a_scale = 500;
 
 // motor range
-int16_t min_motor = 10; // minimum motor value where it starts turning
+int16_t min_motor = 150; // minimum motor value where it starts turning
 int16_t manual_max_motor = 400; // max motor value in manual mode
 int16_t max_motor = 1000; // max motor value in full control mode
 int16_t safe_motor = 0; // safe mode motor value
-int16_t panic_motor = 300; // panic mode motor value
+int16_t panic_motor = 200; // panic mode motor value
 
 // frequency control loop - 1/looptime
 int8_t freq = 10; // hz
@@ -136,12 +136,23 @@ void update_motors(void)
 	motor[3] = ae[3];
 }
 
+int16_t set_throttle(controls cont){
+	int16_t throttle;
+
+	if( cont.throttle < 2 ){
+		throttle = 0;
+	} else {
+		throttle = 150 + cont.throttle / (uint16_t) t_scale_manual;
+	}
+	return throttle;
+}
+
 // ------------- Manual Mode only ----------------
 void controller_manual(controls cont){
-	ae[0] = MIN(manual_max_motor, MAX(min_motor, cont.throttle / (uint16_t) t_scale_manual + (- cont.yaw + cont.pitch) / a_scale)); 
-	ae[1] = MIN(manual_max_motor, MAX(min_motor, cont.throttle / (uint16_t) t_scale_manual + (cont.yaw - cont.roll) / a_scale)); 
-	ae[2] = MIN(manual_max_motor, MAX(min_motor, cont.throttle / (uint16_t) t_scale_manual + (- cont.yaw - cont.pitch) / a_scale)); 
-	ae[3] = MIN(manual_max_motor, MAX(min_motor, cont.throttle / (uint16_t) t_scale_manual + (cont.yaw + cont.roll) / a_scale));
+	ae[0] = MIN(manual_max_motor, MAX(0, set_throttle(cont) + (- cont.yaw + cont.pitch) / a_scale)); 
+	ae[1] = MIN(manual_max_motor, MAX(0, set_throttle(cont) + (cont.yaw - cont.roll) / a_scale)); 
+	ae[2] = MIN(manual_max_motor, MAX(0, set_throttle(cont) + (- cont.yaw - cont.pitch) / a_scale)); 
+	ae[3] = MIN(manual_max_motor, MAX(0, set_throttle(cont) + (cont.yaw + cont.roll) / a_scale));
 }
 
 // ------------- Control Mode only ----------------
@@ -213,91 +224,103 @@ void controller(controls cont){
 	ae[3] = MIN(max_motor, MAX(min_motor, (int16_t) cont.throttle/t_scale + (yaw_command + roll_command))); 
 }
 
-int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
+int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode, int plugged)
 {
 	controls actuate_cont;
-	switch (mode) {
-		case MODE_SAFE:
-			ae[0] = safe_motor; ae[1] = safe_motor; ae[2] = safe_motor; ae[3] = safe_motor;
-			reset_offset();
-			break;
-		
-		case MODE_PANIC:
-			ae[0] = panic_motor; ae[1] = panic_motor; ae[2] = panic_motor; ae[3] = panic_motor;
-			// actuate_cont.throttle = panic_motor * t_scale_manual; 
-			// actuate_cont.yaw = 0;
-			// actuate_cont.pitch = 0;
-			// actuate_cont.roll = 0;
-			// filter_angles();
-			// get_error(cont);
-			// controller(cont);
-			break;
 
-		case MODE_MANUAL:
-			handle_keys(key);
-			// filter_angles();
-			// get_error(msg);
-			actuate_cont = offset_controls(cont);
-			controller_manual(actuate_cont);
-			break;
+	if ( !plugged ){
+		ae[0] = 0; 
+		ae[1] = 0; 
+		ae[2] = 0; 
+		ae[3] = 0; 
+	} else {
+		switch (mode) {
+			case MODE_SAFE:
+				ae[0] = safe_motor; ae[1] = safe_motor; ae[2] = safe_motor; ae[3] = safe_motor;
+				reset_offset();
+				break;
+			
+			case MODE_PANIC:
+				ae[0] = MIN(panic_motor, ae[0]); 
+				ae[1] = MIN(panic_motor, ae[1]);  
+				ae[2] = MIN(panic_motor, ae[2]); 
+				ae[3] = MIN(panic_motor, ae[3]); 
+				// actuate_cont.throttle = panic_motor * t_scale_manual; 
+				// actuate_cont.yaw = 0;
+				// actuate_cont.pitch = 0;
+				// actuate_cont.roll = 0;
+				// filter_angles();
+				// get_error(cont);
+				// controller(cont);
+				break;
 
-		case MODE_CALIBRATION:	
-			ae[0] = safe_motor; ae[1] = safe_motor; ae[2] = safe_motor; ae[3] = safe_motor;//motors off
-			reset_offset();
-			filter_angles();
-			if (start_calibration > 0){
-				if (start_calibration == 1) {
-					calib_phase = 0;
-					calib_notice = 1;
-					calib_timer = get_time_us();
-					start_calibration = 2; // during calibration
-				}
-				if (calib_timer != -1 && get_time_us() - calib_timer > 5000000) {
-					calib_phase += 1;
-					calib_notice = 1;
-					calib_timer = get_time_us();
-				}
-				if (calib_phase < 6) {
-					calibration();
-				} else {
-					printf("\n---===CALIBRATION FINISHED===---\n");
-					calib_phase = 0;
-					calib_timer = -1;
-					start_calibration = 0;
-				}
+			case MODE_MANUAL:
+				handle_keys(key);
+				// filter_angles();
+				// get_error(msg);
+				actuate_cont = offset_controls(cont);
+				controller_manual(actuate_cont);
+				break;
 
-				// Don't know how to change the logic down below
-				int32_t temp1 = 0;
-				int32_t temp2 = 0;
-				for (int i = 0; i < 6; i++)
-				{
-					temp1 += C_pitch_offset[i];
-					temp2 += C_roll_offset[i];
-				}
-				Mean_pitch_offset = temp1;
-				Mean_roll_offset = temp2;
-			}
-			break;
-		
-		case MODE_YAW_CONTROL:
-			yaw_control_mode = true;
-			handle_keys(key);
-			actuate_cont = offset_controls(cont);
-			filter_angles();
-			get_error(actuate_cont);
-			controller(actuate_cont);
-			yaw_control_mode = false;
-			break;
+			case MODE_CALIBRATION:	
+				ae[0] = safe_motor; ae[1] = safe_motor; ae[2] = safe_motor; ae[3] = safe_motor;//motors off
+				reset_offset();
+				filter_angles();
+				if (start_calibration > 0){
+					if (start_calibration == 1) {
+						calib_phase = 0;
+						calib_notice = 1;
+						calib_timer = get_time_us();
+						start_calibration = 2; // during calibration
+					}
+					if (calib_timer != -1 && get_time_us() - calib_timer > 5000000) {
+						calib_phase += 1;
+						calib_notice = 1;
+						calib_timer = get_time_us();
+					}
+					if (calib_phase < 6) {
+						calibration();
+					} else {
+						printf("\n---===CALIBRATION FINISHED===---\n");
+						calib_phase = 0;
+						calib_timer = -1;
+						start_calibration = 0;
+					}
 
-		case MODE_FULL_CONTROL:
-			handle_keys(key);
-			actuate_cont = offset_controls(cont);
-			filter_angles();
-			get_error(actuate_cont);
-			controller(actuate_cont);
-			break;
-		default:
-			break;
+					// Don't know how to change the logic down below
+					int32_t temp1 = 0;
+					int32_t temp2 = 0;
+					for (int i = 0; i < 6; i++)
+					{
+						temp1 += C_pitch_offset[i];
+						temp2 += C_roll_offset[i];
+					}
+					Mean_pitch_offset = temp1;
+					Mean_roll_offset = temp2;
+				}
+				break;
+			
+			case MODE_YAW_CONTROL:
+				yaw_control_mode = true;
+				handle_keys(key);
+				actuate_cont = offset_controls(cont);
+				filter_angles();
+				get_error(actuate_cont);
+				controller(actuate_cont);
+				yaw_control_mode = false;
+				printf("\n%ld\n", yaw);
+				break;
+
+			case MODE_FULL_CONTROL:
+				handle_keys(key);
+				actuate_cont = offset_controls(cont);
+				filter_angles();
+				get_error(actuate_cont);
+				controller(actuate_cont);
+				break;
+			default:
+				break;
+		}
 	}
 	update_motors();
 	return ae;

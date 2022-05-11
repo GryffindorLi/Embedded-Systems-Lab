@@ -94,10 +94,10 @@ int	term_getchar()
 #include <stdio.h>
 #include <assert.h>
 #include <sys/time.h>
-#include "../PC2D.h"
 #include "../D2PC.h"
 #include "joystick.h"
 #include <stdlib.h>
+#include "../PC2D.h"
 
 static int fd_serial_port;
 static int is_string = 0;
@@ -273,9 +273,13 @@ int send_mode_msg(pc_msg* msg, uint8_t mode) {
 	return bytes;
 }
 
-uint8_t get_mode_change(char key, int* buttons) {
+uint8_t get_mode_change(char key, controls cont, int* buttons) {
 	if (key == 27) return MODE_PANIC;	//escape
-	if (key >= '0' && key <= '8') return (uint8_t) key - '0';  //change mode from
+	if (key == '0') return 0;
+	if (key == '1') return 1;
+	if (cont.pitch == 0 && cont.roll == 0 && cont.yaw == 0 && cont.throttle == 0 ) {
+		if (key >= '2' && key <= '8') return (uint8_t) key - '0';  //change mode from
+	}
 	if (buttons[0] == 1) return MODE_PANIC;
 	return 255;
 }
@@ -284,7 +288,7 @@ void set_controls(controls* cont, int* axis) {
 	cont->roll = axis[ROLL_AXIS];
 	cont->pitch = axis[PITCH_AXIS];
 	cont->yaw = axis[YAW_AXIS];
-	cont->throttle = -axis[THROTTLE_AXIS] + 32768;
+	cont->throttle = -axis[THROTTLE_AXIS] + 32767;
 }
 
 float time_dif(struct timeval st, struct timeval ed) {
@@ -355,14 +359,14 @@ int main(int argc, char **argv)
 
 		// read controls and detect connection of joystick
 		if (read_file(fd, js, axis, buttons) == -1) {
-			term_puts("\nJOYSTICK UNPLUGGED\n");
+			// term_puts("\nJOYSTICK UNPLUGGED\n");
 			new_JS2PC_msg(&js_msg, axis, buttons);
 		}
 
 		// update controls
 		set_controls(&cont, axis);
 		
-		tmp_mode = get_mode_change(c, buttons);
+		tmp_mode = get_mode_change(c, cont, buttons);
 		// transmit mode change signal immediately after detection
 		if (tmp_mode != 255) {
 			current_mode = tmp_mode;
@@ -381,20 +385,6 @@ int main(int argc, char **argv)
 			send_ctrl_msg(&msg, cont, c);
 			c = -1; // reset key
 		}
-		
-		// receive bytes from drone
-		// uint8_t* mess;
-		// if ((serial_port_getmessage(&mess)) != -1){
-		// 	bytes_array ba;
-		// 	memcpy((void*)(&ba.bytes), (void*)mess, 10);
-
-		// 	D2PC_message_p recv_mess = &ba.m;
-		// 	printf("Mode is %d\n", recv_mess->mode);
-		// 	printf("Battery is %d\n", recv_mess->battery);
-		// 	printf("Yaw is %d\n", recv_mess->y);
-		// 	printf("Pitch is %d\n", recv_mess->p);
-		// 	printf("Roll is %d\n", recv_mess->r);
-		// }
 
 		if ((rc = serial_port_getchar()) != -1) {
 			term_putchar(rc);
