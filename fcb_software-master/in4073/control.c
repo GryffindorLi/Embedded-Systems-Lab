@@ -28,14 +28,13 @@
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
+// Calibration Mode
 int32_t C_pitch_offset[6], C_roll_offset[6];
 int32_t counter = 0xFFFF;
-int32_t idle_timer;
+int32_t calib_timer = -1;
 int32_t Mean_pitch_offset, Mean_roll_offset;
-int8_t FLAG;
-
-
-
+int8_t calib_phase = 0;
+int8_t calib_notice = 0;
 
 uint16_t motor[4];
 int16_t ae[4];
@@ -95,72 +94,38 @@ int16_t roll_offset = 0;
 int16_t yaw_p_offset = 0;
 int16_t pitch_p_offset = 0;
 int16_t roll_p_offset = 0;
-//////////////////Calibration Mode only
 
-void calibration (controls cont)
-{
-	//place upside down
-	printf("Start the Calibration, Place upside down");
-	
-	if (FLAG ==0)
-	{
-		printf("Place upside");
-		C_pitch_offset[1] = pitch;
-		C_roll_offset[1]= roll;
-		idle_timer = get_time_us();
-		while (get_time_us() - idle_timer<5000000)
-		{
+void calibration (void)
+{	
+	C_pitch_offset[calib_phase] = pitch;
+	C_roll_offset[calib_phase]= roll;
+	if (calib_notice) {
+		switch (calib_phase) {
+			case 0:
+				printf("\nPlace upside\n");
+				break;
+			case 1:
+				printf("\nPlace upside down\n");
+				break;
+			case 2:
+				printf("\nPlace rocket up\n");
+				break;
+			case 3:
+				printf("\nPlace rocket down\n");
+				break;
+			case 4:
+				printf("\nPlace sideways Left\n");
+				break;
+			case 5:
+				printf("\nPlace sideways Right\n");
+				break;
+			default:
+				break;
 		}
+		calib_notice = 0;
 	}
-	
-	if (FLAG ==1)
-	{
-		printf("Place upside down");
-		C_pitch_offset[2] = pitch-90;
-		C_roll_offset[2]= roll;
-		idle_timer = get_time_us();
-		while (get_time_us() - idle_timer<5000000)
-		{
-		}
-	}
-	if (FLAG ==2)
-	{
-		C_pitch_offset[3] = pitch-90;
-		C_roll_offset[3]= roll;
-		idle_timer = get_time_us();
-		while (get_time_us() - idle_timer<5000000)
-		{
-		}
-	}
-	if (FLAG ==3)
-	{
-		C_pitch_offset[4] = pitch-90;
-		C_roll_offset[4]= roll;
-		idle_timer = get_time_us();
-		while (get_time_us() - idle_timer<5000000)
-		{
-		}
-	}
-	if (FLAG ==4)
-	{
-		C_pitch_offset[4] = pitch-90;
-		C_roll_offset[4]= roll;
-		idle_timer = get_time_us();
-		while (get_time_us() - idle_timer<5000000)
-		{
-		}
-	}
-	if (FLAG ==5)
-	{
-		C_pitch_offset[5] = pitch-90;
-		C_roll_offset[5]= roll;
-		idle_timer = get_time_us();
-		while (get_time_us() - idle_timer<5000000)
-		{
-		}
-	}
-
 }
+	
 
 void update_motors(void)
 {
@@ -257,7 +222,7 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			break;
 		
 		case MODE_PANIC:
-			ae[0] += panic_motor; ae[1] = panic_motor; ae[2] = panic_motor; ae[3] = panic_motor;
+			ae[0] = panic_motor; ae[1] = panic_motor; ae[2] = panic_motor; ae[3] = panic_motor;
 			// actuate_cont.throttle = panic_motor * t_scale_manual; 
 			// actuate_cont.yaw = 0;
 			// actuate_cont.pitch = 0;
@@ -273,6 +238,35 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			// get_error(msg);
 			actuate_cont = offset_controls(cont);
 			controller_manual(actuate_cont);
+			break;
+
+		case MODE_CALIBRATION:	
+			ae[0] = safe_motor; ae[1] = safe_motor; ae[2] = safe_motor; ae[3] = safe_motor;//motors off
+			reset_offset();
+			filter_angles();
+			if (calib_timer == -1) {
+				calib_phase = 0;
+				calib_notice = 1;
+				calib_timer = get_time_us();
+			} else {
+				if (get_time_us() - calib_timer > 5000000) {
+					calib_phase += 1;
+					calib_notice = 1;
+					calib_timer = get_time_us();
+				}
+			}
+			calibration();
+
+			// Don't know how to change the logic down below
+			int32_t temp1 = 0;
+			int32_t temp2 = 0;
+			for (int i = 0; i < 6; i++)
+			{
+				temp1 += C_pitch_offset[i];
+				temp2 += C_roll_offset[i];
+			}
+			Mean_pitch_offset = temp1;
+			Mean_roll_offset = temp2;
 			break;
 		
 		case MODE_YAW_CONTROL:
@@ -292,24 +286,6 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			get_error(actuate_cont);
 			controller(actuate_cont);
 			break;
-		case MODE_CALIBRATION:	
-			ae[0] = safe_motor; ae[1] = safe_motor; ae[2] = safe_motor; ae[3] = safe_motor;//motors off
-			filter_angles();
-			if (get_time_us() - idle_timer > 50000000)
-				{
-					idle_timer = get_time_us();
-				}
-			calibration(cont);		
-			int32_t temp1 =0;
-			int32_t temp2 =0;
-			for (int i=0;i<6;i++)
-			{
-				temp1 += C_pitch_offset[i];
-				temp2 += C_roll_offset[i];
-			}
-			Mean_pitch_offset= temp1;
-			Mean_roll_offset = temp2;
-			break;
 		default:
 			break;
 	}
@@ -321,10 +297,10 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 void handle_keys(uint8_t key) {
 	switch (key) {
 		case 'a':
-			throttle_offset += 10;
+			throttle_offset += 20;
 			break;
 		case 'z':
-			throttle_offset -= 10;
+			throttle_offset -= 20;
 			break;
 		case 'q':
 			yaw_offset -= 10;
@@ -332,16 +308,16 @@ void handle_keys(uint8_t key) {
 		case 'w':
 			yaw_offset += 10;
 			break;
-		case 72: //up
+		case '!': //up
 			pitch_offset += 10;
 			break;
-		case 80: //down
+		case '@': //down
 			pitch_offset -= 10;
 			break;
-		case 75: //left
+		case '#': //left
 			roll_offset += 10;
 			break;
-		case 77: //right
+		case '$': //right
 			roll_offset -= 10;
 			break;
 		case 'u':

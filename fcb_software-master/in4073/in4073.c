@@ -125,8 +125,7 @@ uint8_t on_mode_change(pc_msg* msg, uint8_t current_mode, int16_t* aes) {
 
 		case MODE_PANIC:
 			if (current_mode == MODE_SAFE) {
-				printf("\n---===In SAFE mode, don't PANIC!===---\n");
-				return MODE_SAFE;
+				return current_mode;
 			} else if (current_mode == MODE_PANIC) {
 				return current_mode; 
 			} else {

@@ -50,11 +50,25 @@ void term_putchar(char c)
 
 int	term_getchar_nb()
 {
-	static unsigned char 	line [2];
+	static unsigned char c1[2];
+	static unsigned char c2[2];
+	static unsigned char c3[2];
 
-	if (read(0,line,1)) // note: destructive read
-		return (int) line[0];
-
+	if (read(0,c1,1)) {
+		if (c1[0] == 27) {
+			if (read(0,c2,1)) {
+				if (c2[0] == 91) {
+					if (read(0,c3,1)) {
+						if (c3[0] == 65) return '!'; //up
+						else if (c3[0] == 66) return '@'; //down
+						else if (c3[0] == 67) return '#'; //right
+						else if (c3[0] == 68) return '$'; //left
+					}
+				}
+			}
+		}
+		return c1[0];
+	}
 	return -1;
 }
 
@@ -298,7 +312,7 @@ int main(int argc, char **argv)
 	char tmp_c = -1;
 	uint8_t current_mode = MODE_SAFE;
 	uint8_t tmp_mode = -1;
-	controls cont = {500, 20000, 19999, 19998};
+	controls cont = {0, 0, 0, 0};
 	int axis[6] = {0};
 	int buttons[12] = {0};
 	JS_message js_msg;
