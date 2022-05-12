@@ -39,7 +39,7 @@ int start_calibration;
 
 uint16_t motor[4];
 int16_t ae[4];
-bool wireless_mode;
+int wireless_mode;
 int yaw_control_mode;
 
 // for IMU:
