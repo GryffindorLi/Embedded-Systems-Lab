@@ -291,10 +291,10 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			get_error(actuate_cont);
 			controller(actuate_cont);
 			printf("\n%ld\n", yaw);
+			yaw_control_mode = 0;
 			break;
 
 		case MODE_FULL_CONTROL:
-			yaw_control_mode = 0;
 			handle_keys(key);
 			actuate_cont = offset_controls(cont);
 			filter_angles();

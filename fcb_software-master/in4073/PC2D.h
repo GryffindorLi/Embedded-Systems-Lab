@@ -26,25 +26,21 @@ typedef struct {
 
 // the message type
 typedef struct {
-    char type;      // 1 byte
+    char h1;      // 1 byte
+    char h2;
     controls control; // 2 * 4 byte
     char key;         // 1 byte
     uint8_t checksum; // 1 byte
 } CTRL_msg;
 
 typedef struct {
-    char type;      // 1 byte
+    char h1;      // 1 byte
+    char h2;
     uint8_t mode;   // 1 byte
-    uint8_t checksum; // 1 byte
 } MODE_msg;
 
 typedef CTRL_msg* CTRL_msg_p;
 typedef MODE_msg* MODE_msg_p;
-
-typedef union {
-    CTRL_msg cm;
-    MODE_msg mm;
-} pc_msg; 
 
 // create message from scratch
 CTRL_msg new_ctrl_msg(void);

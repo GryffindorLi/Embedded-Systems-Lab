@@ -234,39 +234,28 @@ void* decode(uint8_t mess[]) {
 	}
 }
 
-
-/*
- * @Author: Hanyuan Ban
- * @Param msg The message that needs to be sent..
- * @Return A flag indicates fail(-1) or succeed(sizeof(msg))
- */
-int serial_port_putmessage(pc_msg* msg, int len)
-{
-	int result;
+int send_ctrl_msg(controls cont, char c) {
+	CTRL_msg msg = new_ctrl_msg();
+	msg.checksum = sizeof(CTRL_msg);
+	msg.key = c;
+	msg.control = cont;
+	int bytes;
 	do {
-		result = (int) write(fd_serial_port, msg, len);
-	} while (result == 0);
-
-	return result;
-}
-
-int send_ctrl_msg(pc_msg* msg, controls cont, char c) {
-	msg->cm.checksum = sizeof(msg->cm);
-	msg->cm.key = c;
-	msg->cm.control = cont;
-	
-	int bytes = serial_port_putmessage(msg, sizeof(msg->cm));
+		bytes = (int) write(fd_serial_port, &msg, sizeof(CTRL_msg));
+	} while (bytes == 0);
 	if (bytes == -1) {
 		fprintf(stderr,"Failed to send from PC to DRONE\n");
 	}
 	return bytes;
 }
 
-int send_mode_msg(pc_msg* msg, uint8_t mode) {
-	msg->mm.checksum = sizeof(msg->mm);
-	msg->mm.mode = mode;
-	
-	int bytes = serial_port_putmessage(msg, sizeof(msg->mm));
+int send_mode_msg(uint8_t mode) {
+	MODE_msg msg = new_mode_msg();
+	msg.mode = mode;
+	int bytes;
+	do {
+		bytes = (int) write(fd_serial_port, &msg, sizeof(MODE_msg));
+	} while (bytes == 0);
 	if (bytes == -1) {
 		fprintf(stderr,"Failed to send from PC to DRONE\n");
 	}
@@ -279,6 +268,8 @@ uint8_t get_mode_change(char key, controls cont, int* buttons) {
 	if (key == '1' || buttons[0] == 1) return MODE_PANIC;
 	if (cont.pitch == 0 && cont.roll == 0 && cont.yaw == 0 && cont.throttle == 0 ) {
 		if (key >= '2' && key <= '8') return (uint8_t) key - '0';  //change mode from
+	} else {
+		fprintf(stderr,"Keep Controls Neutral!!\n");
 	}
 	return 255;
 }
@@ -362,26 +353,22 @@ int main(int argc, char **argv)
 		} 
 
 		// update controls
-		set_controls(&cont, axis);
+		// set_controls(&cont, axis);
 		
 		tmp_mode = get_mode_change(c, cont, buttons);
 		// transmit mode change signal immediately after detection
 		if (tmp_mode != 255) {
 			current_mode = tmp_mode;
-			pc_msg  msg;
-			msg.mm = new_mode_msg();
-			send_mode_msg(&msg, current_mode);
+			send_mode_msg(current_mode);
+			c = -1;
 		}
 		
-
 		// transmit control signal at transmission frequency (50Hz)
 		gettimeofday(&ctrl_trans_end, 0);
 		if (time_dif(ctrl_trans_start, ctrl_trans_end) > (float) (1000 / TRANSMISSION_FREQ)) {
 			gettimeofday(&ctrl_trans_start, 0);
-			pc_msg msg;
-			msg.cm = new_ctrl_msg();
-			send_ctrl_msg(&msg, cont, c);
-			c = -1; // reset key
+			send_ctrl_msg(cont, c);
+			// c = -1; // reset key
 		}
 
 		if ((rc = serial_port_getchar()) != -1) {
