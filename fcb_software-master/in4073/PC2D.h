@@ -45,5 +45,7 @@ typedef MODE_msg* MODE_msg_p;
 // create message from scratch
 CTRL_msg new_ctrl_msg(void);
 MODE_msg new_mode_msg(void);
+uint16_t safeuint16pint16(uint16_t a, int16_t b);
+int16_t safeint16pint16(int16_t a, int16_t b);
 
 #endif

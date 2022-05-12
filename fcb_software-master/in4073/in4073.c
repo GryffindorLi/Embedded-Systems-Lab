@@ -38,6 +38,7 @@ bool demo_done;
 uint32_t panic_to_safe_timer = -1;
 int32_t yaw, pitch, roll;
 int start_calibration;
+int16_t* aes;
 
 int r_state = 0;
 int c_state = 0;
@@ -205,6 +206,14 @@ uint8_t on_mode_change(uint8_t current_mode, int16_t* aes) {
 }
 
 controls on_set_control(CTRL_msg* msg) {
+	if (aes[0] / 4 + aes[1] / 4 + aes[2] / 4 + aes[3] / 4 < 125) {
+		if (msg->control.roll != 0 || msg->control.pitch != 0 || msg->control.yaw != 0 ) {
+			msg->control.roll = 0;
+			msg->control.pitch = 0;
+			msg->control.yaw = 0;
+			printf("\n Throttle up before Acrobats!\n");
+		}
+	}
 	return msg->control;
 }
 
@@ -262,7 +271,6 @@ int main(void)
 	uint32_t idle_timer = get_time_us();
 	demo_done = false;
 	wireless_mode = false;
-	int16_t* aes = {0};
 	// uint32_t loop_monitor_start = 0;
 
 	// --------------------------------MAIN LOOP------------------------------------

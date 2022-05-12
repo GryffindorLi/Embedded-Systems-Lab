@@ -98,6 +98,7 @@ int	term_getchar()
 #include "joystick.h"
 #include <stdlib.h>
 #include "../PC2D.h"
+#include "../control.h"
 
 static int fd_serial_port;
 static int is_string = 0;
@@ -266,21 +267,58 @@ uint8_t get_mode_change(char key, controls cont, int* buttons) {
 	if (key == 27) return MODE_PANIC;	//escape
 	if (key == '0') return 0;
 	if (key == '1' || buttons[0] == 1) return MODE_PANIC;
-	if (cont.pitch == 0 && cont.roll == 0 && cont.yaw == 0 && cont.throttle == 0 ) {
-		if (key >= '2' && key <= '8') return (uint8_t) key - '0';  //change mode from
-	} else {
-		fprintf(stderr,"Keep Controls Neutral!!\n");
+	if (key >= '2' && key <= '8') {
+		if (cont.pitch == 0 && cont.roll == 0 && cont.yaw == 0 && cont.throttle == 0 ) return (uint8_t) key - '0';
+		else fprintf(stderr,"Keep Controls Neutral!!\n");
 	}
 	return 255;
 }
 
-void set_controls(controls* cont, int* axis) {
+void joystick_control(controls* cont, int* axis) {
 	cont->roll = axis[ROLL_AXIS];
 	cont->pitch = axis[PITCH_AXIS];
 	cont->yaw = axis[YAW_AXIS];
-	// cont->throttle = -axis[THROTTLE_AXIS] + 32767;
-	cont->throttle = axis[THROTTLE_AXIS];
+	cont->throttle = -axis[THROTTLE_AXIS] + 32767;
 }
+
+void keyboard_control(controls* cont, char c) {
+	switch (c) {
+		case 32:	// space
+			cont->throttle = safeuint16pint16(cont->throttle, 100);
+			break;
+		case 'x':
+			cont->throttle = safeuint16pint16(cont->throttle, -100);
+
+			break;
+		case 't':
+			cont->pitch = safeint16pint16(cont->pitch, 100);
+			break;
+		case 'g':
+			cont->pitch = safeint16pint16(cont->pitch, -100);
+			break;
+		case 'f':
+			cont->roll = safeint16pint16(cont->roll, 100);
+			break;
+		case 'h':
+			cont->roll = safeint16pint16(cont->roll, -100);
+			break;
+		case 'r':
+			cont->yaw = safeint16pint16(cont->yaw, 100);
+			break;
+		case 'y':
+			cont->yaw = safeint16pint16(cont->yaw, -100);
+			break;
+		case 'c':	// clear
+			cont->throttle = 0;
+			cont->pitch = 0;
+			cont->roll = 0;
+			cont->yaw = 0;
+			break;
+		default:
+			break;
+	}
+}
+
 
 float time_dif(struct timeval st, struct timeval ed) {
 	return (ed.tv_sec - st.tv_sec) * 1000.0f + (ed.tv_usec - st.tv_usec) / 1000.0f;
@@ -288,6 +326,8 @@ float time_dif(struct timeval st, struct timeval ed) {
 
 #define TRANSMISSION_FREQ 20
 #define JOYSTICK_WATCHDOG_LIFETIME 200
+
+// #define JOYSTICK
 
 /*----------------------------------------------------------------
  * main -- execute terminal
@@ -323,18 +363,24 @@ int main(int argc, char **argv)
 	// ------------------------------------MAIN LOOP------------------------------------------
 	struct timeval ctrl_trans_start;
 	struct timeval ctrl_trans_end;
-	// struct timeval loop_monitor_start;
-	// struct timeval loop_monitor_end;
-	int joystick_watchdog = JOYSTICK_WATCHDOG_LIFETIME;
+
+	#ifndef JOYSTICK
+		struct timeval ctrl_monitor_start;
+		struct timeval ctrl_monitor_end;
+		gettimeofday(&ctrl_monitor_start, 0);
+	#else
+		int joystick_watchdog = JOYSTICK_WATCHDOG_LIFETIME;
+		struct js_event js;
+		int axis[6] = {0};
+	#endif
+
 	char rc = -1;
 	char c = -1;
 	char tmp_c = -1;
 	uint8_t current_mode = MODE_SAFE;
 	uint8_t tmp_mode = -1;
 	controls cont = {0, 0, 0, 0};
-	int axis[6] = {0};
 	int buttons[12] = {0};
-	struct js_event js;
 	
 	gettimeofday(&ctrl_trans_start, 0);
 	for (;;) {
@@ -342,19 +388,27 @@ int main(int argc, char **argv)
 		if ((tmp_c = term_getchar_nb()) != -1) {
 			c = tmp_c;
 		}
-
-		// read controls and detect connection of joystick
-		if (read_file(fd, js, axis, buttons) == -1) {
-			joystick_watchdog -= 1;
-			if (joystick_watchdog < 0) {
-				// term_puts("\nJOYSTICK UNPLUGGED\n");
-				joystick_watchdog = JOYSTICK_WATCHDOG_LIFETIME;
-			}
-		} 
-
-		// update controls
-		// set_controls(&cont, axis);
 		
+		#ifndef JOYSTICK
+			keyboard_control(&cont, c);
+			gettimeofday(&ctrl_monitor_end, 0);
+			if (time_dif(ctrl_monitor_start, ctrl_monitor_end) > 1000.0) {
+				printf("\n--==<< controls (trpy): %d %d %d %d >>==--\n", cont.throttle, cont.roll, cont.pitch, cont.yaw);
+				gettimeofday(&ctrl_monitor_start, 0);
+			}
+		#else
+			// read controls and detect connection of joystick
+			if (read_file(fd, js, axis, buttons) == -1) {
+				joystick_watchdog -= 1;
+				if (joystick_watchdog < 0) {
+					term_puts("\nJOYSTICK UNPLUGGED\n");
+					joystick_watchdog = JOYSTICK_WATCHDOG_LIFETIME;
+				}
+			} 
+
+			joystick_control(&cont, axis);
+		#endif
+
 		tmp_mode = get_mode_change(c, cont, buttons);
 		// transmit mode change signal immediately after detection
 		if (tmp_mode != 255) {
@@ -368,7 +422,7 @@ int main(int argc, char **argv)
 		if (time_dif(ctrl_trans_start, ctrl_trans_end) > (float) (1000 / TRANSMISSION_FREQ)) {
 			gettimeofday(&ctrl_trans_start, 0);
 			send_ctrl_msg(cont, c);
-			// c = -1; // reset key
+			c = -1; // reset key
 		}
 
 		if ((rc = serial_port_getchar()) != -1) {
