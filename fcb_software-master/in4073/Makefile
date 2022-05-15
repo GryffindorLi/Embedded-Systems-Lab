@@ -64,6 +64,8 @@ $(abspath ../components/ble/common/ble_conn_params.c) \
 $(abspath ../components/ble/ble_services/ble_nus/ble_nus.c) \
 $(abspath ../components/ble/common/ble_srv_common.c) \
 $(abspath ../components/softdevice/common/softdevice_handler/softdevice_handler.c) \
+$(abspath ./calibration.c) \
+$(abspath ./keyboard.c) \
 $(abspath ./D2PC.c) \
 $(abspath ./PC2D.c) 
 

@@ -33,6 +33,7 @@
 #include "PC2D.h"
 #include "queue.h"
 #include "D2PC.h"
+#include "keyboard.h"
 
 bool demo_done;
 uint32_t panic_to_safe_timer = -1;
@@ -160,6 +161,7 @@ uint8_t on_mode_change(uint8_t current_mode, int16_t* aes) {
 				return current_mode;
 			} else {
 				if (aes[0] + aes[1] + aes[2] + aes[3] != 0) {
+					reset_control_offset();
 					printf("\n---===Stop motors first to enter MANUAL mode!===---\n");
 					return current_mode;
 				} else {
@@ -175,6 +177,7 @@ uint8_t on_mode_change(uint8_t current_mode, int16_t* aes) {
 				return current_mode;
 			} else {
 				if (aes[0] + aes[1] + aes[2] + aes[3] != 0) {
+					reset_control_offset();
 					printf("\n---===Stop motors first to enter CALIBRATION mode!===---\n");
 					return current_mode;
 				} else {
@@ -190,6 +193,7 @@ uint8_t on_mode_change(uint8_t current_mode, int16_t* aes) {
 				return current_mode;
 			} else {
 				if (aes[0] + aes[1] + aes[2] + aes[3] != 0) {
+					reset_control_offset();
 					printf("\n---===Stop motors first to enter YAW CONTROL mode!===---\n");
 					return current_mode;
 				} else {

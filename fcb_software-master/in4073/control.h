@@ -17,15 +17,18 @@ extern int16_t sax, say, saz;
 // Angle definitions
 extern int32_t yaw, pitch, roll;
 
-//calibration mode
-extern int start_calibration;
-void calibration (void);
+// tuned PID values:
+int16_t p_yaw, i_yaw, d_yaw;
+int16_t p_pitch, i_pitch, d_pitch;
+int16_t p_roll, i_roll, d_roll;
 
+// functions:
+void update_motors(void);
+int16_t set_throttle(controls cont, uint16_t throttle_scale);
+void controller_manual(controls cont);
 void filter_angles();
-void handle_keys(uint8_t key);
-controls offset_controls(controls cont);
-void reset_offset();
 void get_error(controls cont);
+void tune_controller();
 void controller(controls cont);
 int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode);
 
