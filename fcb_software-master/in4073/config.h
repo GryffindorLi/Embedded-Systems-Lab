@@ -95,4 +95,9 @@
 #define throttle_per_key 200
 #define angle_per_key 100
 
+// _____useful_functions_____:
+
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
+
 #endif /* CONFIG_H_ */

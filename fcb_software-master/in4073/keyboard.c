@@ -10,9 +10,6 @@
 #include <stdio.h>
 #include "config.h"
 
-#define MAX(x, y) (((x) > (y)) ? (x) : (y))
-#define MIN(x, y) (((x) < (y)) ? (x) : (y))
-
 // keyboard control offsets
 int16_t throttle_offset = 0;
 int16_t yaw_offset = 0;

@@ -17,6 +17,11 @@ extern int16_t sax, say, saz;
 // Angle definitions
 extern int32_t yaw, pitch, roll;
 
+// calibration data
+int16_t C_pitch_offset, C_roll_offset, C_yaw_offset;
+int16_t C_pitch_slope, C_roll_slope;
+int calibration;
+
 // tuned PID values:
 int16_t p_yaw, i_yaw, d_yaw;
 int16_t p_pitch, i_pitch, d_pitch;

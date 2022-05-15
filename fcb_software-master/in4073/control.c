@@ -28,9 +28,6 @@
 #include "config.h"
 #include "keyboard.h"
 
-#define MAX(x, y) (((x) > (y)) ? (x) : (y))
-#define MIN(x, y) (((x) < (y)) ? (x) : (y))
-
 // placeholders:
 uint16_t motor[4];
 int16_t ae[4];
@@ -44,6 +41,11 @@ int16_t sax, say, saz; // x,y,z accel (m/s^2 to int16), LSB = 1670
 
 // angle definitions:
 int32_t yaw, pitch, roll = 0;
+
+// calibration data
+int16_t C_pitch_offset, C_roll_offset, C_yaw_offset;
+int16_t C_pitch_slope, C_roll_slope;
+int calibration = 0; // set to true if the calibration mode has been run
 
 // control variables:
 int32_t error[3];
@@ -107,9 +109,16 @@ void filter_angles(void){
 	// angles are in degrees
 	// combine gyro and accelerometer to remove drift:
 
+	yaw = (int32_t) (gyro_rate_yaw*sr + acc_rate_yaw*(saz/LSB_acc))/100; // this is a rate
 	pitch = (int32_t) (LSB_deg*(gyro_rate*(phi/LSB_deg + (sp*10)/(LSB_ddeg*freq)) + acc_rate*(sax/LSB_acc)))/100;
 	roll = (int32_t) (LSB_deg*(gyro_rate*(theta/LSB_deg + (sq*10)/(LSB_ddeg*freq)) + acc_rate*(say/LSB_acc)))/100;
-	yaw = (int32_t) (gyro_rate_yaw*sr + acc_rate_yaw*(saz/LSB_acc))/100; // this is a rate
+
+	if( calibration == 1 ){
+		// printf("\nPitch offset: %d, Pitch slope: %d\n", C_pitch_offset, C_pitch_slope);
+		yaw = yaw + C_yaw_offset;
+		pitch = ((pitch + C_pitch_offset)*16384)/C_pitch_slope;
+		roll = ((roll + C_roll_offset)*16384)/C_roll_slope; 
+	}
 }
 
 /*
@@ -137,16 +146,6 @@ void get_error(controls cont){
 	prev_error[0] = error[0];
 	prev_error[1] = error[1];
 	prev_error[2] = error[2];
-}
-
-/*
- * @Author Kenrick Trip
- * @Param none.
- * @Return updated keyboard actuated tuning gains.
- */
-void tune_controller(){
-	update_controller_gains();
-	printf("%u\n", (uint16_t)p_yaw);
 }
 
 /*
@@ -205,7 +204,6 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 
 		case MODE_CALIBRATION:	
 			ae[0] = safe_motor; ae[1] = safe_motor; ae[2] = safe_motor; ae[3] = safe_motor; // motors off
-			// reset_angle_offset(); change calibration mode significantly
 			filter_angles();
 			run_calibration();
 			break;
@@ -216,14 +214,14 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			actuate_cont = offset_controls(cont);
 
 			#ifdef tuning
-				tune_controller();
+				update_controller_gains();;
 			#endif
 
 			filter_angles();
 			get_error(actuate_cont);
 			controller(actuate_cont);
-			printf("\n%ld\n", yaw);
-			printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", ae[0], ae[1], ae[2], ae[3]);
+			printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
+			//printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", ae[0], ae[1], ae[2], ae[3]);
 			break;
 
 		case MODE_FULL_CONTROL:
@@ -232,7 +230,7 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			actuate_cont = offset_controls(cont);
 
 			#ifdef tuning
-				tune_controller();
+				update_controller_gains();;
 			#endif
 
 			filter_angles();
