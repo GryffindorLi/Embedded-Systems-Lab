@@ -99,6 +99,7 @@ int	term_getchar()
 #include <stdlib.h>
 #include "../PC2D.h"
 #include "../control.h"
+#include "../keyboard.h"
 
 static int fd_serial_port;
 static int is_string = 0;
@@ -327,7 +328,7 @@ float time_dif(struct timeval st, struct timeval ed) {
 #define TRANSMISSION_FREQ 20
 #define JOYSTICK_WATCHDOG_LIFETIME 200
 
-// #define JOYSTICK
+#define JOYSTICK
 
 /*----------------------------------------------------------------
  * main -- execute terminal
@@ -350,7 +351,7 @@ int main(int argc, char **argv)
 	// if no argument is given at execution time, /dev/ttyUSB0 is assumed
 	// asserts are in the function
 	if (argc == 1) {
-		serial_port_open("/dev/ttyUSB0");
+		serial_port_open("/dev/ttyUSB1");
 	} else if (argc == 2) {
 		serial_port_open(argv[1]);
 	} else {

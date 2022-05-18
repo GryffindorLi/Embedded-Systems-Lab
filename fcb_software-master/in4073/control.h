@@ -16,6 +16,9 @@ extern int16_t sax, say, saz;
 
 // Angle definitions
 extern int32_t yaw, pitch, roll;
+int32_t yaw_buf[3];
+int32_t pitch_buf[3];
+int32_t roll_buf[3];
 
 // calibration data
 int16_t C_pitch_offset, C_roll_offset, C_yaw_offset;

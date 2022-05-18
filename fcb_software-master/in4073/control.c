@@ -41,6 +41,9 @@ int16_t sax, say, saz; // x,y,z accel (m/s^2 to int16), LSB = 1670
 
 // angle definitions:
 int32_t yaw, pitch, roll = 0;
+int32_t yaw_buf[3] = {0, 0, 0};
+int32_t pitch_buf[3] = {0, 0, 0};
+int32_t roll_buf[3] = {0, 0, 0};
 
 // calibration data
 int16_t C_pitch_offset, C_roll_offset, C_yaw_offset;
@@ -109,9 +112,19 @@ void filter_angles(void){
 	// angles are in degrees
 	// combine gyro and accelerometer to remove drift:
 
-	yaw = (int32_t) (gyro_rate_yaw*sr + acc_rate_yaw*(saz/LSB_acc))/100; // this is a rate
-	pitch = (int32_t) (LSB_deg*(gyro_rate*(phi/LSB_deg + (sp*10)/(LSB_ddeg*freq)) + acc_rate*(sax/LSB_acc)))/100;
-	roll = (int32_t) (LSB_deg*(gyro_rate*(theta/LSB_deg + (sq*10)/(LSB_ddeg*freq)) + acc_rate*(say/LSB_acc)))/100;
+	for(int i=0; i<2; i++){
+		yaw_buf[i+1] = yaw_buf[i];
+		pitch_buf[i+1] = pitch_buf[i];
+		roll_buf[i+1] = roll_buf[i];
+	}
+
+	yaw_buf[0] = (int32_t) (gyro_rate_yaw*sr + acc_rate_yaw*(saz/LSB_acc))/100; // this is a rate
+	pitch_buf[0] = (int32_t) (LSB_deg*(gyro_rate*(phi/LSB_deg + (sp*10)/(LSB_ddeg*freq)) + acc_rate*(sax/LSB_acc)))/100;
+	roll_buf[0] = (int32_t) (LSB_deg*(gyro_rate*(theta/LSB_deg + (sq*10)/(LSB_ddeg*freq)) + acc_rate*(say/LSB_acc)))/100;
+
+	yaw = (yaw_buf[0] + yaw_buf[1] + yaw_buf[2])/3;
+	pitch = (pitch_buf[0] + pitch_buf[1] + pitch_buf[2])/3;
+	roll = (roll_buf[0] + roll_buf[1] + roll_buf[2])/3;
 
 	if( calibration == 1 ){
 		// printf("\nPitch offset: %d, Pitch slope: %d\n", C_pitch_offset, C_pitch_slope);
@@ -128,9 +141,11 @@ void filter_angles(void){
  */
 void get_error(controls cont){
 	// find the error between control input and filtered IMU values:
-	error[0] = (int32_t) cont.yaw - yaw;
-	error[1] = (int32_t) cont.pitch - pitch;
-	error[2] = (int32_t) cont.roll - roll;
+	error[0] = (int32_t) cont.yaw/65 - yaw; // scale yaw control input
+	error[1] = (int32_t) cont.pitch/5 - pitch; // scale pitch control input
+	error[2] = (int32_t) cont.roll/5 - roll; // scale roll control input
+
+	//printf("\nYaw input: %d, Pitch input: %d, Roll input: %d\n", cont.yaw/(65*LSB_ddeg),cont.pitch/(5*LSB_deg), cont.roll/(5*LSB_deg));
 
 	// compute the derivative of the error:
 	derror[0] = (int32_t) (error[0] - prev_error[0]) * freq;
@@ -220,8 +235,8 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			filter_angles();
 			get_error(actuate_cont);
 			controller(actuate_cont);
-			printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
-			//printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", ae[0], ae[1], ae[2], ae[3]);
+			//printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
+			printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", ae[0], ae[1], ae[2], ae[3]);
 			break;
 
 		case MODE_FULL_CONTROL:
