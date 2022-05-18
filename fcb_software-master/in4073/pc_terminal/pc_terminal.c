@@ -126,6 +126,8 @@ void serial_port_open(const char *serial_device)
 	result = tcgetattr(fd_serial_port, &tty);
 	assert(result == 0);
 
+	fcntl(fd_serial_port, F_SETFL, O_NONBLOCK); // set unblocking
+
 	tty.c_iflag = IGNBRK; /* ignore break condition */
 	tty.c_oflag = 0;
 	tty.c_lflag = 0;
@@ -282,7 +284,7 @@ void joystick_control(controls* cont, int* axis) {
 	cont->throttle = -axis[THROTTLE_AXIS] + 32767;
 }
 
-void keyboard_control(controls* cont, char c) {
+int keyboard_control(controls* cont, char c) {
 	switch (c) {
 		case 32:	// space
 			cont->throttle = safeuint16pint16(cont->throttle, 100);
@@ -316,8 +318,10 @@ void keyboard_control(controls* cont, char c) {
 			cont->yaw = 0;
 			break;
 		default:
+			return 0;
 			break;
 	}
+	return 1;
 }
 
 
@@ -328,7 +332,7 @@ float time_dif(struct timeval st, struct timeval ed) {
 #define TRANSMISSION_FREQ 100
 #define JOYSTICK_WATCHDOG_LIFETIME 200
 
-#define JOYSTICK
+// #define JOYSTICK
 
 /*----------------------------------------------------------------
  * main -- execute terminal
@@ -351,7 +355,7 @@ int main(int argc, char **argv)
 	// if no argument is given at execution time, /dev/ttyUSB0 is assumed
 	// asserts are in the function
 	if (argc == 1) {
-		serial_port_open("/dev/ttyUSB8");
+		serial_port_open("/dev/ttyUSB0");
 	} else if (argc == 2) {
 		serial_port_open(argv[1]);
 	} else {
@@ -391,7 +395,7 @@ int main(int argc, char **argv)
 		}
 		
 		#ifndef JOYSTICK
-			keyboard_control(&cont, c);
+			if (keyboard_control(&cont, c)) c = -1;
 			gettimeofday(&ctrl_monitor_end, 0);
 			if (time_dif(ctrl_monitor_start, ctrl_monitor_end) > 1000.0) {
 				printf("\n--==<< controls (trpy): %d %d %d %d >>==--\n", cont.throttle, cont.roll, cont.pitch, cont.yaw);
@@ -409,6 +413,7 @@ int main(int argc, char **argv)
 
 			joystick_control(&cont, axis);
 		#endif
+
 
 		tmp_mode = get_mode_change(c, cont, buttons);
 		// transmit mode change signal immediately after detection

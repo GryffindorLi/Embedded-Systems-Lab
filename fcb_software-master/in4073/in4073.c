@@ -284,7 +284,7 @@ int main(void)
 
 	// --------------------------------MAIN LOOP------------------------------------
 
-	while (!demo_done) {
+	while (!demo_done) {	
 		if (check_loop_time)
 			start_time = get_time_us();
 
@@ -303,7 +303,7 @@ int main(void)
 			current_key = on_set_key(&rec_msg);
 			Ct_flag = 0;
 		}
-
+		
 		// PANIC to SAFE
 		if (panic_to_safe_timer != -1) {
 			if (get_time_us() - panic_to_safe_timer > panic_to_safe_delay) {
@@ -325,7 +325,7 @@ int main(void)
 				panic_to_safe_timer = get_time_us();
 				printf("\nDISCONNECTION!!\n");
 			}
-		}	
+		}
 
 		if (check_timer_flag()) {
 			// 20HZ
@@ -333,7 +333,7 @@ int main(void)
 				// 1HZ
 				nrf_gpio_pin_toggle(BLUE);
 				printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
-				printf("\n%ld\n", loop_time);
+				if (check_loop_time) printf("\n%ld\n", loop_time);
 			}
 
 			adc_request_sample();
@@ -341,16 +341,19 @@ int main(void)
 
 			clear_timer_flag();
 		}
-
-		if (check_sensor_int_flag()) {
+		
+		
+		if (check_sensor_int_flag()) {	
 			//100Hz
-			get_sensor_data();
+			get_sensor_data();	
+
 			aes = run_filters_and_control(current_control, current_key, current_mode);
 		}
 
 		if (check_loop_time) {
 			end_time = get_time_us();
 			loop_time = end_time - start_time;
+			if (check_loop_time) printf("%ld\n", loop_time);
 		}
 	}	
 
