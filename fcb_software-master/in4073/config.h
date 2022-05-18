@@ -77,7 +77,7 @@
 // _____frequency control loop_____:
 
 // 1/looptime in hz
-#define freq 50
+#define freq 280
 
 // _____filter_settings_____:
 
@@ -105,5 +105,6 @@
 
 // _____in4073_settings_____:
 #define panic_to_safe_delay 1000000
+#define check_loop_time 1  
 
 #endif /* CONFIG_H_ */

@@ -259,6 +259,7 @@ uint8_t current_mode = 0;
 controls current_control;
 char current_key;
 
+
 int main(void)
 {
 	// --------------------------------INITIALIZATION------------------------------------
@@ -273,6 +274,9 @@ int main(void)
 	quad_ble_init();
 
 	uint32_t counter = 0;
+	uint32_t start_time = 0;
+	uint32_t end_time = 0;
+	uint32_t loop_time = 0;
 	uint32_t idle_timer = get_time_us();
 	demo_done = false;
 	wireless_mode = false;
@@ -281,7 +285,9 @@ int main(void)
 	// --------------------------------MAIN LOOP------------------------------------
 
 	while (!demo_done) {
-		// receive message when there is message
+		if (check_loop_time)
+			start_time = get_time_us();
+
 		if (rx_queue.count) {
 			receive_message(&rx_queue);
 			UART_watch_dog = 1000;
@@ -327,6 +333,7 @@ int main(void)
 				// 1HZ
 				nrf_gpio_pin_toggle(BLUE);
 				printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
+				printf("\n%ld\n", loop_time);
 			}
 
 			adc_request_sample();
@@ -339,6 +346,11 @@ int main(void)
 			//100Hz
 			get_sensor_data();
 			aes = run_filters_and_control(current_control, current_key, current_mode);
+		}
+
+		if (check_loop_time) {
+			end_time = get_time_us();
+			loop_time = end_time - start_time;
 		}
 	}	
 

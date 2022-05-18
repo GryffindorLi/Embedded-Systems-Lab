@@ -351,7 +351,7 @@ int main(int argc, char **argv)
 	// if no argument is given at execution time, /dev/ttyUSB0 is assumed
 	// asserts are in the function
 	if (argc == 1) {
-		serial_port_open("/dev/ttyUSB5");
+		serial_port_open("/dev/ttyUSB6");
 	} else if (argc == 2) {
 		serial_port_open(argv[1]);
 	} else {
