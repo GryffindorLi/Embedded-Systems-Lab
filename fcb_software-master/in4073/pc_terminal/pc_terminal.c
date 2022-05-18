@@ -325,7 +325,7 @@ float time_dif(struct timeval st, struct timeval ed) {
 	return (ed.tv_sec - st.tv_sec) * 1000.0f + (ed.tv_usec - st.tv_usec) / 1000.0f;
 }
 
-#define TRANSMISSION_FREQ 50
+#define TRANSMISSION_FREQ 100
 #define JOYSTICK_WATCHDOG_LIFETIME 200
 
 #define JOYSTICK
@@ -351,7 +351,7 @@ int main(int argc, char **argv)
 	// if no argument is given at execution time, /dev/ttyUSB0 is assumed
 	// asserts are in the function
 	if (argc == 1) {
-		serial_port_open("/dev/ttyUSB6");
+		serial_port_open("/dev/ttyUSB8");
 	} else if (argc == 2) {
 		serial_port_open(argv[1]);
 	} else {

@@ -82,7 +82,7 @@ int16_t set_throttle(controls cont, uint16_t throttle_scale){
 	if( cont.throttle < throttle_init ){
 		throttle = 0;
 	} else {
-		throttle = cont.throttle / throttle_scale;
+		throttle = min_motor + cont.throttle / throttle_scale;
 	}
 	return throttle;
 }
@@ -141,7 +141,7 @@ void filter_angles(void){
  */
 void get_error(controls cont){
 	// find the error between control input and filtered IMU values:
-	error[0] = (int32_t) cont.yaw/65 - yaw; // scale yaw control input
+	error[0] = (int32_t) cont.yaw - yaw; // scale yaw control input
 	error[1] = (int32_t) cont.pitch/5 - pitch; // scale pitch control input
 	error[2] = (int32_t) cont.roll/5 - roll; // scale roll control input
 
@@ -173,7 +173,7 @@ void controller(controls cont){
 		ae[0] = ae[1] = ae[2] = ae[3] = 0;
 	} else {
 		// define all 3 PID controllers
-		yaw_command = (int32_t) (p_yaw*error[0] + i_yaw*ierror[0] + p_yaw*derror[0]) / LSB_drad; // note: do not devide by 1000
+		yaw_command = (int32_t) (p_yaw*error[0] + i_yaw*ierror[0] + p_yaw*derror[0]) / (LSB_drad); // note: do not devide by 1000
 		if (yaw_control_mode) {
 			pitch_command = 0;
 			roll_command = 0;
@@ -183,10 +183,10 @@ void controller(controls cont){
 		}
 
 		// calculate motor outputs, scale them between 0 and 800:
-		ae[0] = MIN(max_motor, MAX(min_motor, (int16_t) set_throttle(cont, t_scale) + (-yaw_command + pitch_command))); 
-		ae[1] = MIN(max_motor, MAX(min_motor, (int16_t) set_throttle(cont, t_scale) + (yaw_command - roll_command))); 
-		ae[2] = MIN(max_motor, MAX(min_motor, (int16_t) set_throttle(cont, t_scale) + (-yaw_command - pitch_command))); 
-		ae[3] = MIN(max_motor, MAX(min_motor, (int16_t) set_throttle(cont, t_scale) + (yaw_command + roll_command))); 
+		ae[0] = MIN(max_motor, MAX(min_motor, (int16_t) set_throttle(cont, t_scale_manual) + (-yaw_command + pitch_command))); 
+		ae[1] = MIN(max_motor, MAX(min_motor, (int16_t) set_throttle(cont, t_scale_manual) + (yaw_command - roll_command))); 
+		ae[2] = MIN(max_motor, MAX(min_motor, (int16_t) set_throttle(cont, t_scale_manual) + (-yaw_command - pitch_command))); 
+		ae[3] = MIN(max_motor, MAX(min_motor, (int16_t) set_throttle(cont, t_scale_manual) + (yaw_command + roll_command))); 
 	}
 }
 
@@ -205,10 +205,10 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			break;
 		
 		case MODE_PANIC:
-			ae[0] = MAX(panic_motor, ae[0] - panic_rampdown_factor); 
-			ae[1] = MAX(panic_motor, ae[1] - panic_rampdown_factor);  
-			ae[2] = MAX(panic_motor, ae[2] - panic_rampdown_factor); 
-			ae[3] = MAX(panic_motor, ae[3] - panic_rampdown_factor); 
+			ae[0] = MAX(MIN(ae[0], panic_motor), ae[0] - panic_rampdown_factor); 
+			ae[1] = MAX(MIN(ae[1], panic_motor), ae[1] - panic_rampdown_factor);  
+			ae[2] = MAX(MIN(ae[2], panic_motor), ae[2] - panic_rampdown_factor); 
+			ae[3] = MAX(MIN(ae[3], panic_motor), ae[3] - panic_rampdown_factor); 
 			break;
 
 		case MODE_MANUAL:

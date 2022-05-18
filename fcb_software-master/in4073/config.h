@@ -19,9 +19,9 @@
 // _____control gains_____:
 
 // yaw control gains:
-#define Kpy 311
-#define Kiy 61
-#define Kdy 10
+#define Kpy 10
+#define Kiy 1
+#define Kdy 50
 
 // pitch control gains * 1000:
 #define Kpp 1310
@@ -45,7 +45,7 @@
 // angle scaling: 32767/65 ≈ 500
 #define a_scale 300
 // throttle_offset
-#define throttle_init 100
+#define throttle_init 5
 
 // constants are IMU values from mpu6050.c:
 
@@ -63,7 +63,7 @@
 // _____motor range limits_____:
 
 // minimum motor value where it starts turning
-#define min_motor 150 
+#define min_motor 200 
 // max motor value in manual mode
 #define manual_max_motor 400
 // max motor value in full control mode, set to 1000 after testing
@@ -102,9 +102,10 @@
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
+#define SIGN(x, y) (((x) < (y)) ? -1 : 1)
 
 // _____in4073_settings_____:
 #define panic_to_safe_delay 1000000
-#define check_loop_time 1  
+#define check_loop_time 0  
 
 #endif /* CONFIG_H_ */
