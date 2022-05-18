@@ -83,6 +83,7 @@ int	term_getchar()
 #include <time.h>
 #include "../PC2D.h"
 #include "../D2PC.h"
+#include "logging.h"
 
 static int is_string = 0;
 
@@ -298,11 +299,13 @@ int main(int argc, char **argv)
 			if (is_string){
 				D2PC_string_message_p recv_mess = (D2PC_string_message_p)decode(mess);
 				printf("String is %s\n", recv_mess->string);
+				logging((void*)recv_mess, is_string);
 				free(recv_mess);
 			} else {
 				D2PC_message_p recv_mess = (D2PC_message_p)decode(mess);
 				uint16_t recv_cs = cal_checksum(*recv_mess);
 				if (recv_cs == recv_mess->checksum){
+					logging((void*)recv_mess, is_string);
 					printf("Mode is %u\n", recv_mess->mode);
 					printf("Battery is %u\n", recv_mess->battery);
 					printf("Yaw is %d\n", recv_mess->y);
