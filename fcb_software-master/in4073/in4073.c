@@ -34,6 +34,7 @@
 #include "queue.h"
 #include "D2PC.h"
 #include "keyboard.h"
+#include "config.h"
 
 bool demo_done;
 uint32_t panic_to_safe_timer = -1;
@@ -215,7 +216,7 @@ controls on_set_control(CTRL_msg* msg) {
 			msg->control.roll = 0;
 			msg->control.pitch = 0;
 			msg->control.yaw = 0;
-			printf("\n Throttle up before Acrobats!\n");
+			//printf("\n Throttle up before Acrobats!\n");
 		}
 	}
 	return msg->control;
@@ -283,6 +284,7 @@ int main(void)
 		// receive message when there is message
 		if (rx_queue.count) {
 			receive_message(&rx_queue);
+			UART_watch_dog = 1000;
 		}
 		// check if there is message		
 		if (Md_flag == 1) {
@@ -298,7 +300,7 @@ int main(void)
 
 		// PANIC to SAFE
 		if (panic_to_safe_timer != -1) {
-			if (get_time_us() - panic_to_safe_timer > 500000) {
+			if (get_time_us() - panic_to_safe_timer > panic_to_safe_delay) {
 				current_mode = MODE_SAFE;
 				panic_to_safe_timer = -1;
 				printf("\nentered SAFE MODE\n");
@@ -314,6 +316,7 @@ int main(void)
 			idle_timer = get_time_us();
 			if (UART_watch_dog < 1) {
 				if (current_mode > MODE_PANIC) current_mode = MODE_PANIC;
+				panic_to_safe_timer = get_time_us();
 				printf("\nDISCONNECTION!!\n");
 			}
 		}	

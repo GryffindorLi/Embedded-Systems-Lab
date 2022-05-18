@@ -43,7 +43,9 @@
 // throttle scaling manual mode: 65535/300 ≈ 220
 #define t_scale_manual 220
 // angle scaling: 32767/65 ≈ 500
-#define a_scale 500
+#define a_scale 300
+// throttle_offset
+#define throttle_init 100
 
 // constants are IMU values from mpu6050.c:
 
@@ -70,6 +72,7 @@
 #define safe_motor 0
 // panic mode motor value
 #define panic_motor 200
+#define panic_rampdown_factor 1
 
 // _____frequency control loop_____:
 
@@ -99,5 +102,8 @@
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
+
+// _____in4073_settings_____:
+#define panic_to_safe_delay 1000000
 
 #endif /* CONFIG_H_ */

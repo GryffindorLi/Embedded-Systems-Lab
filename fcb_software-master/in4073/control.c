@@ -79,10 +79,10 @@ void update_motors(void){
 int16_t set_throttle(controls cont, uint16_t throttle_scale){
 	int16_t throttle;
 
-	if( cont.throttle < 500 ){
+	if( cont.throttle < throttle_init ){
 		throttle = 0;
 	} else {
-		throttle = 120 + cont.throttle / (uint16_t) throttle_scale;
+		throttle = cont.throttle / throttle_scale;
 	}
 	return throttle;
 }
@@ -97,7 +97,7 @@ int16_t set_throttle(controls cont, uint16_t throttle_scale){
 void controller_manual(controls cont){
 	ae[0] = MIN(manual_max_motor, MAX(0, set_throttle(cont, t_scale_manual) + (- cont.yaw + cont.pitch) / a_scale)); 
 	ae[1] = MIN(manual_max_motor, MAX(0, set_throttle(cont, t_scale_manual) + (cont.yaw - cont.roll) / a_scale)); 
-	ae[2] = MIN(manual_max_motor, MAX(0, set_throttle(cont, t_scale_manual) + (- cont.yaw - cont.pitch) / (a_scale*5))); 
+	ae[2] = MIN(manual_max_motor, MAX(0, set_throttle(cont, t_scale_manual) + (- cont.yaw - cont.pitch) / (a_scale))); 
 	ae[3] = MIN(manual_max_motor, MAX(0, set_throttle(cont, t_scale_manual) + (cont.yaw + cont.roll) / a_scale));
 }
 
@@ -205,10 +205,10 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			break;
 		
 		case MODE_PANIC:
-			ae[0] = MIN(panic_motor, ae[0]); 
-			ae[1] = MIN(panic_motor, ae[1]);  
-			ae[2] = MIN(panic_motor, ae[2]); 
-			ae[3] = MIN(panic_motor, ae[3]); 
+			ae[0] = MAX(panic_motor, ae[0] - panic_rampdown_factor); 
+			ae[1] = MAX(panic_motor, ae[1] - panic_rampdown_factor);  
+			ae[2] = MAX(panic_motor, ae[2] - panic_rampdown_factor); 
+			ae[3] = MAX(panic_motor, ae[3] - panic_rampdown_factor); 
 			break;
 
 		case MODE_MANUAL:
@@ -236,7 +236,7 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			get_error(actuate_cont);
 			controller(actuate_cont);
 			//printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
-			printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", ae[0], ae[1], ae[2], ae[3]);
+			//printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", ae[0], ae[1], ae[2], ae[3]);
 			break;
 
 		case MODE_FULL_CONTROL:

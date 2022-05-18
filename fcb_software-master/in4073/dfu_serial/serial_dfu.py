@@ -6,7 +6,7 @@ from nrfhex import *
 
 parser = argparse.ArgumentParser(description='Script for uploading application binary to the nrf51 dfu bootloader through serial.')
 parser.add_argument('filename', type=str, help='the filename of the binary')
-parser.add_argument('-p', '--port', default = '/dev/ttyUSB1', help='default is /dev/ttyUSB1')
+parser.add_argument('-p', '--port', default = '/dev/ttyUSB5', help='default is /dev/ttyUSB5')
 
 args = parser.parse_args()
 #print args.filename
