@@ -100,6 +100,7 @@ int	term_getchar()
 #include "../PC2D.h"
 #include "../control.h"
 #include "../keyboard.h"
+#include "logging.h"
 
 static int fd_serial_port;
 static int is_string = 0;

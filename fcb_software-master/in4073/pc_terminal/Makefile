@@ -6,20 +6,27 @@ LDFLAGS = -lm
 
 EXEC = ./pc-terminal
 
-default: pc_terminal.o PC2D.o joystick.o
-	$(LD) $(LDFLAGS) pc_terminal.o PC2D.o joystick.o -o $(EXEC)
+default: pc_terminal.o PC2D.o joystick.o logging.o
+	$(LD) $(LDFLAGS) pc_terminal.o PC2D.o joystick.o logging.o -o $(EXEC)
 
 pc_terminal.o: pc_terminal.c ../PC2D.h joystick.h
-	$(CC) $(CFLAGS) -c pc_terminal.c 
+	$(CC) $(CFLAGS) -c pc_terminal.c -o pc_terminal.o
 
 joystick.o: joystick.c
-	$(CC) $(CFLAGS) -c joystick.c
+	$(CC) $(CFLAGS) -c joystick.c -o joystick.o
 
 PC2D.o: ../PC2D.c
-	$(CC) $(CFLAGS) -c ../PC2D.c
+	$(CC) $(CFLAGS) -c ../PC2D.c -o PC2D.o
+
+D2PC.o: ../D2PC.c
+	$(CC) $(CFLAGS) -c ../D2PC.c -o D2PC.o
+
+logging.o: logging.c
+	$(CC) $(CFLAGS) -c ./logging.c -o logging.o
 
 clean:
 	rm $(EXEC)
+	rm *.o
 
 run: default
 	$(EXEC)
