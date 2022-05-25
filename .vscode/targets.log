@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue May 17 15:20:19 2022
+# Make data base, printed on Tue May 24 12:18:12 2022
 
 # Variables
 
@@ -47,11 +47,11 @@ CURDIR := /home/kenrick/Documents/GitHub/CS4140ES-Embedded-Systems-Lab
 # makefile
 SHELL = /bin/sh
 # environment
-SNAP_DATA = /var/snap/code/96
+SNAP_DATA = /var/snap/code/97
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:50498
+JOURNAL_STREAM = 8:47871
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -75,9 +75,9 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-_ = /snap/code/96/usr/share/code/code
+_ = /snap/code/97/usr/share/code/code
 # environment
-MANAGERPID = 1640
+MANAGERPID = 1580
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -85,7 +85,7 @@ LC_NAME = nl_NL.UTF-8
 # environment
 VSCODE_CWD = /home/kenrick
 # environment
-GSETTINGS_SCHEMA_DIR = /snap/code/96/usr/share/glib-2.0/schemas
+GSETTINGS_SCHEMA_DIR = /snap/code/97/usr/share/glib-2.0/schemas
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -93,15 +93,15 @@ PATH = /home/kenrick/.local/bin:/home/kenrick/.local/bin:/usr/local/sbin:/usr/lo
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/UBUNTUPC:@/tmp/.ICE-unix/1892,unix/UBUNTUPC:/tmp/.ICE-unix/1892
+SESSION_MANAGER = local/UBUNTUPC:@/tmp/.ICE-unix/1837,unix/UBUNTUPC:/tmp/.ICE-unix/1837
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GDK_PIXBUF_MODULE_FILE = /home/kenrick/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
-SNAP = /snap/code/96
+SNAP = /snap/code/97
 # environment
-SNAP_VERSION = da15b6fd
+SNAP_VERSION = c3511e6c
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
@@ -111,9 +111,9 @@ DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 4c65f58db117479aba046a66fe940f20
+INVOCATION_ID = 6c7c732c91b14da1964fd1aef00bf146
 # environment
-GDK_PIXBUF_MODULEDIR = /snap/code/96/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+GDK_PIXBUF_MODULEDIR = /snap/code/97/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -123,7 +123,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 3145
+GIO_LAUNCHED_DESKTOP_FILE_PID = 2750
 # automatic
 %F = $(notdir $%)
 # environment
@@ -137,7 +137,7 @@ PWD = /home/kenrick/Documents/GitHub/CS4140ES-Embedded-Systems-Lab
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1857
+SSH_AGENT_PID = 1802
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -151,7 +151,7 @@ LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /home/kenrick/.config/Code/CachedData/da15b6fd3ef856477bf6f4fb29ba1b7af717770d
+VSCODE_CODE_CACHE_PATH = /home/kenrick/.config/Code/CachedData/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
 # environment
 LOGNAME = kenrick
 # environment
@@ -183,19 +183,19 @@ MAKECMDGOALS := all
 # environment
 QT_IM_MODULE = ibus
 # environment
-SNAP_USER_DATA = /home/kenrick/snap/code/96
+SNAP_USER_DATA = /home/kenrick/snap/code/97
 # environment
 SHLVL = 0
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-d7131fad-545f-4252-b4db-ad0ba9229422.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-e549e0b5-b4a4-432b-8f8d-53f1677a4282.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
 USER = kenrick
 # environment
-SNAP_REVISION = 96
+SNAP_REVISION = 97
 # environment
 LC_MONETARY = nl_NL.UTF-8
 # makefile
@@ -213,7 +213,7 @@ MAKE_COMMAND := make
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-dde9fac9-1.67.1-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-dde9fac9-1.67.2-main.sock
 # environment
 BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
 # makefile
@@ -260,7 +260,6 @@ CHROME_DESKTOP = code-url-handler.desktop
 WINDOWPATH = 2
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
- 
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # default
@@ -270,7 +269,7 @@ LC_ADDRESS = nl_NL.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 3205
+VSCODE_PID = 2814
 # variable set hash-table stats:
 # Load=129/1024=13%, Rehash=0, Collisions=23/151=15%
 
@@ -291,6 +290,7 @@ VSCODE_PID = 3205
 # Files
 
 # Not a target:
+ 
 all:
 #  Command line target.
 #  Implicit rule search has been done.
@@ -338,6 +338,6 @@ GNUmakefile:
 # strcache performance: lookups = 19 / hit rate = 15%
 # hash-table stats:
 # Load=16/8192=0%, Rehash=0, Collisions=1/19=5%
-# Finished Make data base on Tue May 17 15:20:19 2022
+# Finished Make data base on Tue May 24 12:18:12 2022
 
  

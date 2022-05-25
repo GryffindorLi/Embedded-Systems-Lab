@@ -46,7 +46,7 @@ void set_offset(){
 }
 
 /*
- * @Author Karan
+ * @Author Kenrick Trip
  * @Param none.
  * @Return instruction message.
  */
@@ -54,19 +54,19 @@ void send_instruction(){
     if (calib_notice) {
         switch (calib_phase) {
             case 0:
-                printf("\nPlace upside, wait 5 seconds\n");
+                printf("\nPlace level, hit '+' key when ready \n");
                 break;
             case 1:
-                printf("\nPlace rocket up, wait 5 seconds\n");
+                printf("\nPlace nose up, hit '+' key when ready\n");
                 break;
             case 2:
-                printf("\nPlace rocket down, wait 5 seconds\n");
+                printf("\nPlace nose down, hit '+' key when ready\n");
                 break;
             case 3:
-                printf("\nPlace sideways Left, wait 5 seconds\n");
+                printf("\nPlace sideways Left, hit '+' key when ready\n");
                 break;
             case 4:
-                printf("\nPlace sideways Right, wait 5 seconds\n");
+                printf("\nPlace sideways Right, hit '+' key when ready\n");
                 break;
             default:
                 break;
@@ -90,17 +90,16 @@ void data_to_slope(){
  * @Param none.
  * @Return slopes and offsets of the angles.
  */
-void run_calibration(){
+void run_calibration(uint8_t key){
     if (start_calibration > 0){
         if (start_calibration == 1) {
             calib_phase = 0;
             calib_notice = 1;
-            calib_timer = get_time_us();
             start_calibration = 2; // during calibration
         }
         if (calib_phase < 5) {
             send_instruction();
-            if (calib_timer != -1 && get_time_us() - calib_timer > 5000000) {
+            if (key == '+') {
                 collect_data();
                 set_offset();
                 calib_phase += 1;

@@ -162,7 +162,7 @@ void bound_offsets(){
 }
 
 /*
- * @Author Hanyuan
+ * @Author Kenrick Trip
  * @Param cont, struct of control commands, key input, controller mode.
  * @Return motor output.
  */

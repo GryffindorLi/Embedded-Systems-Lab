@@ -399,7 +399,8 @@ int main(int argc, char **argv)
 			if (keyboard_control(&cont, c)) c = -1;
 			gettimeofday(&ctrl_monitor_end, 0);
 			if (time_dif(ctrl_monitor_start, ctrl_monitor_end) > 1000.0) {
-				printf("\n--==<< controls (trpy): %d %d %d %d >>==--\n", cont.throttle, cont.roll, cont.pitch, cont.yaw);
+				if (current_mode != MODE_CALIBRATION)
+					printf("\n--==<< controls (trpy): %d %d %d %d >>==--\n", cont.throttle, cont.roll, cont.pitch, cont.yaw);
 				gettimeofday(&ctrl_monitor_start, 0);
 			}
 		#else

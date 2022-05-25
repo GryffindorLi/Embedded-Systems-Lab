@@ -220,7 +220,7 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 		case MODE_CALIBRATION:	
 			ae[0] = safe_motor; ae[1] = safe_motor; ae[2] = safe_motor; ae[3] = safe_motor; // motors off
 			filter_angles();
-			run_calibration();
+			run_calibration(key);
 			break;
 
 		case MODE_YAW_CONTROL:

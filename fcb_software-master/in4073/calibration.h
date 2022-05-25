@@ -18,6 +18,6 @@ extern int32_t yaw, pitch, roll;
 
 void collect_data();
 void set_offset();
-void run_calibration();
+void run_calibration(uint8_t key);
 void data_to_slope();
 void send_instruction();
