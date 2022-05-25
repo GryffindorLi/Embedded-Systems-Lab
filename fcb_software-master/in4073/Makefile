@@ -231,7 +231,7 @@ pc:
 pc-run: 
 	cd pc_terminal/; make run
 	
-upload-run: default pc
+upload-run: default pc config.h
 	dfu_serial/./serial_dfu.py  _build/in4073.bin
 	cd pc_terminal/; make run
 
