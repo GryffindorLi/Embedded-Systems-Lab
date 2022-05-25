@@ -30,6 +30,7 @@
 
 // placeholders:
 uint16_t motor[4];
+int16_t sqrt_motor[4];
 int16_t ae[4];
 int wireless_mode;
 int yaw_control_mode;
@@ -118,20 +119,22 @@ void filter_angles(void){
 		roll_buf[i+1] = roll_buf[i];
 	}
 
-	yaw_buf[0] = (int32_t) (gyro_rate_yaw*sr + acc_rate_yaw*(saz/LSB_acc))/100; // this is a rate
-	pitch_buf[0] = (int32_t) (LSB_deg*(gyro_rate*(phi/LSB_deg + (sp*10)/(LSB_ddeg*freq)) + acc_rate*(sax/LSB_acc)))/100;
-	roll_buf[0] = (int32_t) (LSB_deg*(gyro_rate*(theta/LSB_deg + (sq*10)/(LSB_ddeg*freq)) + acc_rate*(say/LSB_acc)))/100;
-
+	yaw_buf[0] = (int32_t) (gyro_rate_yaw*sr + acc_rate_yaw*(saz/LSB_acc))/1000; // this is a rate
+	pitch_buf[0] = (int32_t) (LSB_deg*(gyro_rate*(theta/LSB_deg + (sq*10)/(LSB_ddeg*freq)) + acc_rate*(say/LSB_acc)))/100;
+	roll_buf[0] = (int32_t) (LSB_deg*(gyro_rate*(phi/LSB_deg + (sp*10)/(LSB_ddeg*freq)) + acc_rate*(sax/LSB_acc)))/100;
+	
 	yaw = (yaw_buf[0] + yaw_buf[1] + yaw_buf[2])/3;
 	pitch = (pitch_buf[0] + pitch_buf[1] + pitch_buf[2])/3;
 	roll = (roll_buf[0] + roll_buf[1] + roll_buf[2])/3;
 
 	if( calibration == 1 ){
-		// printf("\nPitch offset: %d, Pitch slope: %d\n", C_pitch_offset, C_pitch_slope);
 		yaw = yaw + C_yaw_offset;
 		pitch = ((pitch + C_pitch_offset)*16384)/C_pitch_slope;
 		roll = ((roll + C_roll_offset)*16384)/C_roll_slope; 
 	}
+
+	if (print_angles)
+		printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
 }
 
 /*
@@ -141,11 +144,9 @@ void filter_angles(void){
  */
 void get_error(controls cont){
 	// find the error between control input and filtered IMU values:
-	error[0] = (int32_t) cont.yaw - yaw; // scale yaw control input
-	error[1] = (int32_t) cont.pitch/5 - pitch; // scale pitch control input
-	error[2] = (int32_t) cont.roll/5 - roll; // scale roll control input
-
-	//printf("\nYaw input: %d, Pitch input: %d, Roll input: %d\n", cont.yaw/(65*LSB_ddeg),cont.pitch/(5*LSB_deg), cont.roll/(5*LSB_deg));
+	error[0] = (int32_t) cont.yaw/2 - yaw; // scale yaw control input
+	error[1] = (int32_t) cont.pitch - pitch; // scale pitch control input
+	error[2] = (int32_t) cont.roll - roll; // scale roll control input
 
 	// compute the derivative of the error:
 	derror[0] = (int32_t) (error[0] - prev_error[0]) * freq;
@@ -167,26 +168,51 @@ void get_error(controls cont){
  * @Author Kenrick Trip
  * @Param cont, struct of control commands.
  * @Return updated motor commands in ae array.
+ * @TODO: not yet tested!!!!
+ * @retrieved from: https://www.codeproject.com/Articles/69941/Best-Square-Root-Method-Algorithm-Function-Precisi
+ */
+int16_t sqrt_motors(int16_t motor_val)
+{
+	int16_t sqrt = *(uint16_t*) &motor_val; 
+	// set square root bias
+	sqrt  += 127 << 23;
+	// appraximate the square root
+	sqrt >>= 1;
+
+	return *(int16_t*) &sqrt;
+}   
+
+/*
+ * @Author Kenrick Trip
+ * @Param cont, struct of control commands.
+ * @Return updated motor commands in ae array.
  */
 void controller(controls cont){
 	if(set_throttle(cont, t_scale) < 100){
 		ae[0] = ae[1] = ae[2] = ae[3] = 0;
 	} else {
 		// define all 3 PID controllers
-		yaw_command = (int32_t) (p_yaw*error[0] + i_yaw*ierror[0] + p_yaw*derror[0]) / (LSB_drad); // note: do not devide by 1000
+		yaw_command = (int32_t) (p_yaw*error[0] + i_yaw*ierror[0] + d_yaw*derror[0]) / (100*LSB_drad); // note: do not devide by 1000
+
 		if (yaw_control_mode) {
 			pitch_command = 0;
 			roll_command = 0;
 		} else {
-			pitch_command = (int32_t) (p_pitch*error[1] + i_pitch*ierror[1] + d_pitch*derror[1])/(1000*LSB_rad); // note: devide by 1000
-			roll_command = (int32_t) (p_roll*error[2] + i_roll*ierror[2] + d_roll*derror[2])/(1000*LSB_rad); // note: devide by 1000
+			yaw_command = 0; // disable yaw control for tuning
+			pitch_command = (int32_t) (p_pitch*error[1] + i_pitch*ierror[1] + d_pitch*derror[1])/(10*LSB_rad); // note: devide by 1000
+			roll_command = (int32_t) (p_roll*error[2] + i_roll*ierror[2] + d_roll*derror[2])/(10*LSB_rad); // note: devide by 1000
 		}
 
+		sqrt_motor_vals[0] = sqrt_motors((int16_t) set_throttle(cont, t_scale_manual) + (-yaw_command - pitch_command));
+		sqrt_motor_vals[1] = sqrt_motors((int16_t) set_throttle(cont, t_scale_manual) + (yaw_command - roll_command));
+		sqrt_motor_vals[2] = sqrt_motors((int16_t) set_throttle(cont, t_scale_manual) + (-yaw_command + pitch_command));
+		sqrt_motor_vals[3] = sqrt_motors((int16_t) set_throttle(cont, t_scale_manual) + (yaw_command + roll_command));
+
 		// calculate motor outputs, scale them between 0 and 800:
-		ae[0] = MIN(max_motor, MAX(min_motor, (int16_t) set_throttle(cont, t_scale_manual) + (-yaw_command + pitch_command))); 
-		ae[1] = MIN(max_motor, MAX(min_motor, (int16_t) set_throttle(cont, t_scale_manual) + (yaw_command - roll_command))); 
-		ae[2] = MIN(max_motor, MAX(min_motor, (int16_t) set_throttle(cont, t_scale_manual) + (-yaw_command - pitch_command))); 
-		ae[3] = MIN(max_motor, MAX(min_motor, (int16_t) set_throttle(cont, t_scale_manual) + (yaw_command + roll_command))); 
+		ae[0] = MIN(max_motor, MAX(min_motor, sqrt_motor_vals[0])); 
+		ae[1] = MIN(max_motor, MAX(min_motor, sqrt_motor_vals[1])); 
+		ae[2] = MIN(max_motor, MAX(min_motor, sqrt_motor_vals[2])); 
+		ae[3] = MIN(max_motor, MAX(min_motor, sqrt_motor_vals[3])); 
 	}
 }
 
@@ -229,14 +255,12 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			actuate_cont = offset_controls(cont);
 
 			#ifdef tuning
-				update_controller_gains();;
+				update_controller_gains();
 			#endif
 
 			filter_angles();
 			get_error(actuate_cont);
 			controller(actuate_cont);
-			//printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
-			//printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", ae[0], ae[1], ae[2], ae[3]);
 			break;
 
 		case MODE_FULL_CONTROL:
@@ -245,7 +269,7 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			actuate_cont = offset_controls(cont);
 
 			#ifdef tuning
-				update_controller_gains();;
+				update_controller_gains();
 			#endif
 
 			filter_angles();

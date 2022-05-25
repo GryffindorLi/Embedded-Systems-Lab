@@ -9,6 +9,9 @@ extern uint16_t motor[4];
 extern int16_t ae[4];
 extern int wireless_mode;
 
+// for sqrt of motor values:
+int16_t sqrt_motor_vals[4];
+
 // for IMU:
 extern int16_t phi, theta, psi;
 extern int16_t sp, sq, sr;
@@ -39,5 +42,6 @@ void get_error(controls cont);
 void tune_controller();
 void controller(controls cont);
 int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode);
+int16_t sqrt_motors(int16_t motor_val);
 
 #endif /* CONTROL_H_ */

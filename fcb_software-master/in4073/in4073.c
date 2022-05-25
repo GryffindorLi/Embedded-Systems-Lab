@@ -205,6 +205,22 @@ uint8_t on_mode_change(uint8_t current_mode, int16_t* aes) {
 			}
 			break;
 
+		case MODE_FULL_CONTROL:
+			if (current_mode == MODE_FULL_CONTROL) {
+				return current_mode;
+			} else {
+				if (aes[0] + aes[1] + aes[2] + aes[3] != 0) {
+					reset_control_offset();
+					printf("\n---===Stop motors first to enter FULL CONTROL mode!===---\n");
+					return current_mode;
+				} else {
+					start_calibration = 0;
+					printf("\n---===Entering FULL CONTROL mode!===---\n");
+					return mode;
+				}
+			}
+			break;
+
 		default:
 			return current_mode;
 	}

@@ -283,6 +283,7 @@ void joystick_control(controls* cont, int* axis) {
 	cont->pitch = axis[PITCH_AXIS];
 	cont->yaw = axis[YAW_AXIS];
 	cont->throttle = -axis[THROTTLE_AXIS] + 32767;
+	//printf("%d %d %d %d\n", cont->yaw, cont->pitch, cont->roll, cont->throttle);
 }
 
 int keyboard_control(controls* cont, char c) {
@@ -333,7 +334,7 @@ float time_dif(struct timeval st, struct timeval ed) {
 #define TRANSMISSION_FREQ 100
 #define JOYSTICK_WATCHDOG_LIFETIME 200
 
-// #define JOYSTICK
+#define JOYSTICK
 
 /*----------------------------------------------------------------
  * main -- execute terminal
@@ -356,7 +357,7 @@ int main(int argc, char **argv)
 	// if no argument is given at execution time, /dev/ttyUSB0 is assumed
 	// asserts are in the function
 	if (argc == 1) {
-		serial_port_open("/dev/ttyUSB0");
+		serial_port_open("/dev/ttyUSB2");
 	} else if (argc == 2) {
 		serial_port_open(argv[1]);
 	} else {

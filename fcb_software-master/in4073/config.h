@@ -19,19 +19,19 @@
 // _____control gains_____:
 
 // yaw control gains:
-#define Kpy 10
-#define Kiy 1
-#define Kdy 50
+#define Kpy 300
+#define Kiy 60
+#define Kdy 0
 
 // pitch control gains * 1000:
-#define Kpp 1310
-#define Kip 75
-#define Kdp 5650
+#define Kpp 2500
+#define Kip 50
+#define Kdp 160
 
 // roll control gains * 1000:
-#define Kpr 1310
-#define Kir 75
-#define Kdr 5650
+#define Kpr 4900
+#define Kir 85
+#define Kdr 240
 
 // _____scaling factors_____:
 
@@ -67,7 +67,7 @@
 // max motor value in manual mode
 #define manual_max_motor 400
 // max motor value in full control mode, set to 1000 after testing
-#define max_motor 500
+#define max_motor 800
 // safe mode motor value
 #define safe_motor 0
 // panic mode motor value
@@ -84,13 +84,19 @@
 // gyro and accelerometer percentages
 #define gyro_rate 98
 #define acc_rate 2
-#define gyro_rate_yaw 99
-#define acc_rate_yaw 1
+#define gyro_rate_yaw 1000
+#define acc_rate_yaw 0
+// print tuned angle values, 1 = enable, 0 = disable
+#define print_angles 0
 
 // _____tuning_settings_____:
 
 // tuning change in percentage:
-#define tune_offset 1
+#define tune_offset 2
+// 1 = yaw, 2 = pitch, 3 = roll
+#define tuning_axis 1
+// enable PID prints, 1 = enable, 0 = disable
+#define PID_prints 1
 
 // _____keyboard_control_settings_____:
 
