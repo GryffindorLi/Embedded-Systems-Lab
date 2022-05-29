@@ -27,12 +27,13 @@
 #include "calibration.h"
 #include "config.h"
 #include "keyboard.h"
-// For Kalman Filter
 
-int16_t e[2], bias[2];//error terms 
-int16_t sp_scaled[2],phi_scaled[2], sax_scaled[2];
-int16_t C1 =100;
-int32_t C2= 1000000; //constants
+// for Kalman Filter:
+int16_t e[3], bias[3]; // error terms 
+int16_t sp_scaled[3],phi_scaled[3], sax_scaled[3];
+int16_t C1 = 100;
+int32_t C2 = 1000000; // constants
+
 // placeholders:
 uint16_t motor[4];
 int16_t sqrt_motor[4];
@@ -123,8 +124,7 @@ void filter_kalman(void)
 {
 		sp_scaled[0] = sp/LSB_ddeg;
 		phi_scaled[0] = phi/LSB_deg;
-		for (int j=0; j<2; j++)
-		{
+		for (int j=0; j<2; j++){
 			pitch_buf[j+1] = sp_scaled[j] - bias[j];
 			phi_scaled[j+1] = phi_scaled[j] + (pitch_buf[j+1]/freq);
 			e[j+1] =  phi_scaled[j+1] - sax_scaled[j+1];

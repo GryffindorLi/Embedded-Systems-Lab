@@ -35,3 +35,23 @@ uint32_t Yr[2];
 uint8_t Qr[3];
 uint8_t Rr[2];
 uint32_t Kr[6];
+
+// functions:
+// yaw:
+void yaw_state();
+void yaw_cov();
+void yaw_error();
+void yaw_gain();
+void yaw_update();
+// pitch:
+void pitch_state();
+void pitch_cov();
+void pitch_error();
+void pitch_gain();
+void pitch_update();
+// roll:
+void roll_state();
+void roll_cov();
+void roll_error();
+void roll_gain();
+void roll_update();
