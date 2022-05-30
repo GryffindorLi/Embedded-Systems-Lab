@@ -205,22 +205,6 @@ uint8_t on_mode_change(uint8_t current_mode, int16_t* aes) {
 			}
 			break;
 
-		case MODE_FULL_CONTROL:
-			if (current_mode == MODE_FULL_CONTROL) {
-				return current_mode;
-			} else {
-				if (aes[0] + aes[1] + aes[2] + aes[3] != 0) {
-					reset_control_offset();
-					printf("\n---===Stop motors first to enter FULL CONTROL mode!===---\n");
-					return current_mode;
-				} else {
-					start_calibration = 0;
-					printf("\n---===Entering FULL CONTROL mode!===---\n");
-					return mode;
-				}
-			}
-			break;
-
 		default:
 			return current_mode;
 	}
@@ -306,18 +290,19 @@ int main(void)
 
 		if (rx_queue.count) {
 			receive_message(&rx_queue);
-			UART_watch_dog = 1000;
 		}
 		// check if there is message		
 		if (Md_flag == 1) {
 			current_mode = on_mode_change(current_mode, aes);
 			Md_flag = 0;
+			UART_watch_dog = 1000;
 		} 
 		if (Ct_flag == 1) {
 			memcpy(&rec_msg, Ct_buffer, sizeof(CTRL_msg));
 			current_control = on_set_control(&rec_msg);
 			current_key = on_set_key(&rec_msg);
 			Ct_flag = 0;
+			UART_watch_dog = 1000;
 		}
 		
 		// PANIC to SAFE

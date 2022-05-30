@@ -39,13 +39,14 @@
 // yaw/pitch/roll ranging from -32767 to 32767
 
 // throttle scaling control mode: 65535/800 ≈ 82
-#define t_scale 82
-// throttle scaling manual mode: 65535/300 ≈ 220
-#define t_scale_manual 220
+#define t_scale 4
 // angle scaling: 32767/65 ≈ 500
-#define a_scale 300
+#define a_scale 40
+#define y_scale 160
 // throttle_offset
 #define throttle_init 5
+
+#define after_sqrt_scale 5
 
 // constants are IMU values from mpu6050.c:
 
@@ -65,7 +66,7 @@
 // minimum motor value where it starts turning
 #define min_motor 200 
 // max motor value in manual mode
-#define manual_max_motor 400
+#define manual_max_motor 800
 // max motor value in full control mode, set to 1000 after testing
 #define max_motor 800
 // safe mode motor value
@@ -103,12 +104,6 @@
 // set offset gains per key hit
 #define throttle_per_key 200
 #define angle_per_key 100
-
-// _____useful_functions_____:
-
-#define MAX(x, y) (((x) > (y)) ? (x) : (y))
-#define MIN(x, y) (((x) < (y)) ? (x) : (y))
-#define SIGN(x, y) (((x) < (y)) ? -1 : 1)
 
 // _____in4073_settings_____:
 #define panic_to_safe_delay 1000000

@@ -27,6 +27,8 @@
 #include "calibration.h"
 #include "config.h"
 #include "keyboard.h"
+#include "intmaths.h"
+#include "math.h"
 
 // placeholders:
 uint16_t motor[4];
@@ -72,18 +74,25 @@ void update_motors(void){
 	motor[3] = ae[3];
 }
 
+void set_aes(uint16_t throttle, int16_t scaled_roll, int16_t scaled_pitch, int16_t scaled_yaw) {
+	ae[0] = int16clamp(after_sqrt_scale * int16sqrt(set_throttle(throttle, t_scale) + scaled_pitch * 2 - scaled_yaw), min_motor, max_motor);
+	ae[1] = int16clamp(after_sqrt_scale * int16sqrt(set_throttle(throttle, t_scale) + scaled_roll * 2 + scaled_yaw), min_motor, max_motor);
+	ae[2] = int16clamp(after_sqrt_scale * int16sqrt(set_throttle(throttle, t_scale) - scaled_pitch * 2 - scaled_yaw), min_motor, max_motor);
+	ae[3] = int16clamp(after_sqrt_scale * int16sqrt(set_throttle(throttle, t_scale) - scaled_roll * 2 + scaled_yaw), min_motor, max_motor);
+}
+
 /*
  * @Author Kenrick Trip
  * @Param cont, struct of control commands.
  * @Return scaled throttle value.
  */
-int16_t set_throttle(controls cont, uint16_t throttle_scale){
+int16_t set_throttle(uint16_t cont_throttle, uint16_t throttle_scale){
 	int16_t throttle;
 
-	if( cont.throttle < throttle_init ){
+	if( cont_throttle < throttle_init ){
 		throttle = 0;
 	} else {
-		throttle = min_motor + cont.throttle / throttle_scale;
+		throttle = (min_motor / after_sqrt_scale) * (min_motor / after_sqrt_scale) + cont_throttle / throttle_scale;
 	}
 	return throttle;
 }
@@ -96,10 +105,7 @@ int16_t set_throttle(controls cont, uint16_t throttle_scale){
  * @Return updated motor commands in ae array.
  */
 void controller_manual(controls cont){
-	ae[0] = MIN(manual_max_motor, MAX(0, set_throttle(cont, t_scale_manual) + (- cont.yaw + cont.pitch) / a_scale)); 
-	ae[1] = MIN(manual_max_motor, MAX(0, set_throttle(cont, t_scale_manual) + (cont.yaw - cont.roll) / a_scale)); 
-	ae[2] = MIN(manual_max_motor, MAX(0, set_throttle(cont, t_scale_manual) + (- cont.yaw - cont.pitch) / (a_scale))); 
-	ae[3] = MIN(manual_max_motor, MAX(0, set_throttle(cont, t_scale_manual) + (cont.yaw + cont.roll) / a_scale));
+	set_aes(cont.throttle, cont.roll / a_scale, cont.pitch / a_scale, cont.yaw / y_scale);
 }
 
 // ____Control Mode only____:
@@ -164,23 +170,23 @@ void get_error(controls cont){
 	prev_error[2] = error[2];
 }
 
-/*
- * @Author Kenrick Trip
- * @Param cont, struct of control commands.
- * @Return updated motor commands in ae array.
- * @TODO: not yet tested!!!!
- * @retrieved from: https://www.codeproject.com/Articles/69941/Best-Square-Root-Method-Algorithm-Function-Precisi
- */
-int16_t sqrt_motors(int16_t motor_val)
-{
-	int16_t sqrt = *(uint16_t*) &motor_val; 
-	// set square root bias
-	sqrt  += 127 << 23;
-	// appraximate the square root
-	sqrt >>= 1;
+// /*
+//  * @Author Kenrick Trip
+//  * @Param cont, struct of control commands.
+//  * @Return updated motor commands in ae array.
+//  * @TODO: not yet tested!!!!
+//  * @retrieved from: https://www.codeproject.com/Articles/69941/Best-Square-Root-Method-Algorithm-Function-Precisi
+//  */
+// int16_t sqrt_motors(int16_t motor_val)
+// {
+// 	int16_t sqrt = *(uint16_t*) &motor_val; 
+// 	// set square root bias
+// 	sqrt  += 127 << 23;
+// 	// appraximate the square root
+// 	sqrt >>= 1;
 
-	return *(int16_t*) &sqrt;
-}   
+// 	return *(int16_t*) &sqrt;
+// }   
 
 /*
  * @Author Kenrick Trip
@@ -188,7 +194,7 @@ int16_t sqrt_motors(int16_t motor_val)
  * @Return updated motor commands in ae array.
  */
 void controller(controls cont){
-	if(set_throttle(cont, t_scale) < 100){
+	if(set_throttle(cont.throttle, t_scale) < 100){
 		ae[0] = ae[1] = ae[2] = ae[3] = 0;
 	} else {
 		// define all 3 PID controllers
@@ -202,17 +208,7 @@ void controller(controls cont){
 			pitch_command = (int32_t) (p_pitch*error[1] + i_pitch*ierror[1] + d_pitch*derror[1])/(10*LSB_rad); // note: devide by 1000
 			roll_command = (int32_t) (p_roll*error[2] + i_roll*ierror[2] + d_roll*derror[2])/(10*LSB_rad); // note: devide by 1000
 		}
-
-		sqrt_motor_vals[0] = sqrt_motors((int16_t) set_throttle(cont, t_scale_manual) + (-yaw_command - pitch_command));
-		sqrt_motor_vals[1] = sqrt_motors((int16_t) set_throttle(cont, t_scale_manual) + (yaw_command - roll_command));
-		sqrt_motor_vals[2] = sqrt_motors((int16_t) set_throttle(cont, t_scale_manual) + (-yaw_command + pitch_command));
-		sqrt_motor_vals[3] = sqrt_motors((int16_t) set_throttle(cont, t_scale_manual) + (yaw_command + roll_command));
-
-		// calculate motor outputs, scale them between 0 and 800:
-		ae[0] = MIN(max_motor, MAX(min_motor, sqrt_motor_vals[0])); 
-		ae[1] = MIN(max_motor, MAX(min_motor, sqrt_motor_vals[1])); 
-		ae[2] = MIN(max_motor, MAX(min_motor, sqrt_motor_vals[2])); 
-		ae[3] = MIN(max_motor, MAX(min_motor, sqrt_motor_vals[3])); 
+		set_aes(cont.throttle, roll_command, pitch_command, yaw_command);
 	}
 }
 

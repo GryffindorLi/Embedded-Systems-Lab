@@ -9,6 +9,7 @@
 #include "PC2D.h"
 #include <stdio.h>
 #include "config.h"
+#include "intmaths.h"
 
 // keyboard control offsets
 int16_t p_offset = 0;
