@@ -30,6 +30,12 @@
 #include "intmaths.h"
 #include "math.h"
 
+// for Kalman Filter:
+int16_t e[3], bias[3]; // error terms 
+int16_t sp_scaled[3],phi_scaled[3], sax_scaled[3];
+int16_t C1 = 100;
+int32_t C2 = 1000000; // constants
+
 // placeholders:
 uint16_t motor[4];
 int16_t sqrt_motor[4];
@@ -115,6 +121,28 @@ void controller_manual(controls cont){
  * @Param none.
  * @Return filtered yaw, pitch and roll angles.
  */
+/*
+ * @Author Karan Pathak
+ * @Param none.
+ * @Return filtered  pitch angles.
+ */
+void filter_kalman(void)
+{
+		sp_scaled[0] = sp/LSB_ddeg;
+		phi_scaled[0] = phi/LSB_deg;
+		for (int j=0; j<2; j++){
+			pitch_buf[j+1] = sp_scaled[j] - bias[j];
+			phi_scaled[j+1] = phi_scaled[j] + (pitch_buf[j+1]/freq);
+			e[j+1] =  phi_scaled[j+1] - sax_scaled[j+1];
+			phi_scaled[j+1] = phi_scaled[j+1] - e[j+1]/C1;
+			bias[j+1] = bias[j] + (e[j+1]/freq)/C2;
+		}
+	
+	pitch = (pitch_buf[0] + pitch_buf[1] + pitch_buf[2])/3;
+	if( calibration == 1 ){
+			pitch = ((pitch + C_pitch_offset)*16384)/C_pitch_slope;
+	}
+}
 void filter_angles(void){
 	// angles are in degrees
 	// combine gyro and accelerometer to remove drift:
