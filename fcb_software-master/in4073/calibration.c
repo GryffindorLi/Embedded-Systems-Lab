@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include "timers.h"
 #include "config.h"
+#include "hal/barometer.h"
+#include "intmaths.h"
 
 int start_calibration;
 int calibration;
@@ -12,6 +14,12 @@ int calibration;
 int32_t pitch_data[5], roll_data[5];
 int16_t C_pitch_offset, C_roll_offset, C_yaw_offset;
 int16_t C_pitch_slope, C_roll_slope;
+
+int32_t ref_temp;
+int8_t ref_altitude;
+int32_t ref_pressure;
+int32_t pressure;
+int32_t temperature;
 
 int32_t counter = 0xFFFF;
 int32_t calib_timer = -1;
@@ -43,6 +51,11 @@ void set_offset(){
         C_pitch_offset = -pitch;
         C_roll_offset = -roll;
     }
+    else if (calib_phase == 5) {
+        ref_temp = temperature;
+        ref_pressure = pressure;
+        ref_altitude = 0;
+    }
 }
 
 /*
@@ -68,6 +81,10 @@ void send_instruction(){
             case 4:
                 printf("\nPlace sideways Right, hit '+' key when ready\n");
                 break;
+            case 5:
+                printf("\nPlace level at ground level, hit '+' key when ready\n");
+                break;
+
             default:
                 break;
         }
@@ -106,7 +123,12 @@ void run_calibration(uint8_t key){
                 calib_notice = 1;
                 calib_timer = get_time_us();
             }
-        } else {
+        } 
+        else if (calib_phase == 5){
+            send_instruction();
+            set_offset();
+        } 
+        else {
             printf("\n---===CALIBRATION FINISHED===---\n");
             calib_phase = 0;
             calib_timer = -1;

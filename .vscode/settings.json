@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "app_util_platform.h": "c"
+        "app_util_platform.h": "c",
+        "mpu6050.h": "c"
     }
 }

@@ -29,12 +29,22 @@
 #include "keyboard.h"
 #include "intmaths.h"
 #include "math.h"
+#include "hal/barometer.h"
+#include "kalman.h"
 
 // for Kalman Filter:
-int16_t e[3], bias[3]; // error terms 
+int16_t e[3], bias[3]; // error terms
 int16_t sp_scaled[3],phi_scaled[3], sax_scaled[3];
 int16_t C1 = 100;
 int32_t C2 = 1000000; // constants
+
+// for altitude calculations:
+int32_t ref_temp = 0;
+int8_t ref_altitude = 0;
+int32_t ref_pressure = 0;
+int32_t pressure;
+int32_t temperature;
+int16_t altitude = 0;
 
 // placeholders:
 uint16_t motor[4];
@@ -42,6 +52,7 @@ int16_t sqrt_motor[4];
 int16_t ae[4];
 int wireless_mode;
 int yaw_control_mode;
+int height_control_mode = 0;
 
 // for IMU:
 int16_t phi, theta, psi; // computed angles  (deg to int16), LSB = 182
@@ -60,10 +71,10 @@ int16_t C_pitch_slope, C_roll_slope;
 int calibration = 0; // set to true if the calibration mode has been run
 
 // control variables:
-int32_t error[3];
-int32_t prev_error[3] = {0, 0, 0}; // initialize to 0
-int32_t derror[3];
-int32_t ierror[3];
+int32_t error[4];
+int32_t prev_error[4] = {0, 0, 0, 0}; // initialize to 0
+int32_t derror[4];
+int32_t ierror[4];
 int32_t yaw_command;
 int32_t pitch_command;
 int32_t roll_command;
@@ -81,10 +92,10 @@ void update_motors(void){
 }
 
 void set_aes(uint16_t throttle, int16_t scaled_roll, int16_t scaled_pitch, int16_t scaled_yaw) {
-	ae[0] = int16clamp(after_sqrt_scale * int16sqrt(set_throttle(throttle, t_scale) + scaled_pitch * 2 - scaled_yaw), min_motor, max_motor);
-	ae[1] = int16clamp(after_sqrt_scale * int16sqrt(set_throttle(throttle, t_scale) + scaled_roll * 2 + scaled_yaw), min_motor, max_motor);
-	ae[2] = int16clamp(after_sqrt_scale * int16sqrt(set_throttle(throttle, t_scale) - scaled_pitch * 2 - scaled_yaw), min_motor, max_motor);
-	ae[3] = int16clamp(after_sqrt_scale * int16sqrt(set_throttle(throttle, t_scale) - scaled_roll * 2 + scaled_yaw), min_motor, max_motor);
+	ae[0] = int16clamp(set_throttle(throttle, t_scale) + after_sqrt_scale * int16sqrt2(scaled_pitch - scaled_yaw), min_motor, max_motor);
+	ae[1] = int16clamp(set_throttle(throttle, t_scale) + after_sqrt_scale * int16sqrt2(- scaled_roll + scaled_yaw), min_motor, max_motor);
+	ae[2] = int16clamp(set_throttle(throttle, t_scale) + after_sqrt_scale * int16sqrt2(- scaled_pitch - scaled_yaw), min_motor, max_motor);
+	ae[3] = int16clamp(set_throttle(throttle, t_scale) + after_sqrt_scale * int16sqrt2(scaled_roll + scaled_yaw), min_motor, max_motor);
 }
 
 /*
@@ -92,15 +103,14 @@ void set_aes(uint16_t throttle, int16_t scaled_roll, int16_t scaled_pitch, int16
  * @Param cont, struct of control commands.
  * @Return scaled throttle value.
  */
-int16_t set_throttle(uint16_t cont_throttle, uint16_t throttle_scale){
-	int16_t throttle;
-
-	if( cont_throttle < throttle_init ){
-		throttle = 0;
+int16_t set_throttle(uint16_t throttle, uint16_t throttle_scale){
+	int16_t throttle_command;
+	if( throttle < throttle_init ){
+		throttle_command = 0;
 	} else {
-		throttle = (min_motor / after_sqrt_scale) * (min_motor / after_sqrt_scale) + cont_throttle / throttle_scale;
+		throttle_command = min_motor + throttle / throttle_scale;
 	}
-	return throttle;
+	return throttle_command;
 }
 
 // ____Manual Mode only____:
@@ -111,23 +121,17 @@ int16_t set_throttle(uint16_t cont_throttle, uint16_t throttle_scale){
  * @Return updated motor commands in ae array.
  */
 void controller_manual(controls cont){
-	set_aes(cont.throttle, cont.roll / a_scale, cont.pitch / a_scale, cont.yaw / y_scale);
+	set_aes(set_throttle(cont.throttle, t_scale_manual), cont.roll / a_scale, cont.pitch / a_scale, cont.yaw / y_scale);
 }
 
 // ____Control Mode only____:
 
 /*
- * @Author Kenrick Trip
- * @Param none.
- * @Return filtered yaw, pitch and roll angles.
- */
-/*
  * @Author Karan Pathak
  * @Param none.
  * @Return filtered  pitch angles.
  */
-void filter_kalman(void)
-{
+void filter_kalman(void){
 		sp_scaled[0] = sp/LSB_ddeg;
 		phi_scaled[0] = phi/LSB_deg;
 		for (int j=0; j<2; j++){
@@ -137,38 +141,59 @@ void filter_kalman(void)
 			phi_scaled[j+1] = phi_scaled[j+1] - e[j+1]/C1;
 			bias[j+1] = bias[j] + (e[j+1]/freq)/C2;
 		}
-	
+
 	pitch = (pitch_buf[0] + pitch_buf[1] + pitch_buf[2])/3;
 	if( calibration == 1 ){
 			pitch = ((pitch + C_pitch_offset)*16384)/C_pitch_slope;
 	}
 }
+
+/*
+ * @Author Kenrick Trip
+ * @Param none.
+ * @Return filtered yaw, pitch and roll angles.
+ */
 void filter_angles(void){
 	// angles are in degrees
 	// combine gyro and accelerometer to remove drift:
 
-	for(int i=0; i<2; i++){
-		yaw_buf[i+1] = yaw_buf[i];
-		pitch_buf[i+1] = pitch_buf[i];
-		roll_buf[i+1] = roll_buf[i];
-	}
+	if (use_kalman == 0){
+		for(int i=0; i<2; i++){
+			yaw_buf[i+1] = yaw_buf[i];
+			pitch_buf[i+1] = pitch_buf[i];
+			roll_buf[i+1] = roll_buf[i];
+		}
 
-	yaw_buf[0] = (int32_t) (gyro_rate_yaw*sr + acc_rate_yaw*(saz/LSB_acc))/1000; // this is a rate
-	pitch_buf[0] = (int32_t) (LSB_deg*(gyro_rate*(theta/LSB_deg + (sq*10)/(LSB_ddeg*freq)) + acc_rate*(say/LSB_acc)))/100;
-	roll_buf[0] = (int32_t) (LSB_deg*(gyro_rate*(phi/LSB_deg + (sp*10)/(LSB_ddeg*freq)) + acc_rate*(sax/LSB_acc)))/100;
-	
-	yaw = (yaw_buf[0] + yaw_buf[1] + yaw_buf[2])/3;
-	pitch = (pitch_buf[0] + pitch_buf[1] + pitch_buf[2])/3;
-	roll = (roll_buf[0] + roll_buf[1] + roll_buf[2])/3;
+		yaw_buf[0] = (int32_t) (gyro_rate_yaw*sr + acc_rate_yaw*(saz/LSB_acc))/1000; // this is a rate
+		pitch_buf[0] = (int32_t) (LSB_deg*(gyro_rate*(theta/LSB_deg + (sq*10)/(LSB_ddeg*freq)) + acc_rate*(say/LSB_acc)))/100;
+		roll_buf[0] = (int32_t) (LSB_deg*(gyro_rate*(phi/LSB_deg + (sp*10)/(LSB_ddeg*freq)) + acc_rate*(sax/LSB_acc)))/100;
+
+		yaw = (yaw_buf[0] + yaw_buf[1] + yaw_buf[2])/3;
+		pitch = (pitch_buf[0] + pitch_buf[1] + pitch_buf[2])/3;
+		roll = (roll_buf[0] + roll_buf[1] + roll_buf[2])/3;
+	}
+	else
+		run_kalman_filter();
 
 	if( calibration == 1 ){
 		yaw = yaw + C_yaw_offset;
 		pitch = ((pitch + C_pitch_offset)*16384)/C_pitch_slope;
-		roll = ((roll + C_roll_offset)*16384)/C_roll_slope; 
+		roll = ((roll + C_roll_offset)*16384)/C_roll_slope;
 	}
 
 	if (print_angles)
 		printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
+}
+
+/*
+ * @Author Kenrick Trip
+ * @Param motor value outputted by the controller.
+ * @Return the square root of this value.
+ */
+int16_t find_altitude(int32_t pressure){
+	int32_t pressure_ratio = (pressure/ref_pressure)*1000;
+	int32_t log_pressure_ratio = (-1742 + (2821 + (-1470 + (447 - 56.57 * (pressure_ratio/1000)) * (pressure_ratio/1000)) * (pressure_ratio/1000)) * (pressure_ratio/1000));
+	return ref_altitude + (log_pressure_ratio*8314.46*(ref_temp + 273))/(-9810*29);
 }
 
 /*
@@ -188,33 +213,23 @@ void get_error(controls cont){
 	derror[2] = (int32_t) (error[2] - prev_error[2]) * freq;
 
 	// compute the integral of the error:
-	ierror[0] = (int32_t) ((float) (error[0] + prev_error[0]) / (2 * freq));
-	ierror[1] = (int32_t) ((float) (error[1] + prev_error[1]) / (2 * freq));
-	ierror[2] = (int32_t) ((float) (error[2] + prev_error[2]) / (2 * freq));
+	ierror[0] = (int32_t) (error[0] + prev_error[0]) / (2 * freq);
+	ierror[1] = (int32_t) (error[1] + prev_error[1]) / (2 * freq);
+	ierror[2] = (int32_t) (error[2] + prev_error[2]) / (2 * freq);
 
 	// update previous error:
 	prev_error[0] = error[0];
 	prev_error[1] = error[1];
 	prev_error[2] = error[2];
+
+	// calculate height control error
+	if(height_control_mode == 1 && calibration == 1){
+		altitude = find_altitude(pressure);
+		error[3] = (int32_t) 0; // add cont.height - altitude
+		derror[2] = (int32_t) (error[3] - prev_error[3]) * freq;
+		ierror[3] = (int32_t) (error[3] + prev_error[3]) / (2 * freq);
+	}
 }
-
-// /*
-//  * @Author Kenrick Trip
-//  * @Param cont, struct of control commands.
-//  * @Return updated motor commands in ae array.
-//  * @TODO: not yet tested!!!!
-//  * @retrieved from: https://www.codeproject.com/Articles/69941/Best-Square-Root-Method-Algorithm-Function-Precisi
-//  */
-// int16_t sqrt_motors(int16_t motor_val)
-// {
-// 	int16_t sqrt = *(uint16_t*) &motor_val; 
-// 	// set square root bias
-// 	sqrt  += 127 << 23;
-// 	// appraximate the square root
-// 	sqrt >>= 1;
-
-// 	return *(int16_t*) &sqrt;
-// }   
 
 /*
  * @Author Kenrick Trip
@@ -253,12 +268,12 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			ae[0] = safe_motor; ae[1] = safe_motor; ae[2] = safe_motor; ae[3] = safe_motor;
 			reset_control_offset();
 			break;
-		
+
 		case MODE_PANIC:
-			ae[0] = MAX(MIN(ae[0], panic_motor), ae[0] - panic_rampdown_factor); 
-			ae[1] = MAX(MIN(ae[1], panic_motor), ae[1] - panic_rampdown_factor);  
-			ae[2] = MAX(MIN(ae[2], panic_motor), ae[2] - panic_rampdown_factor); 
-			ae[3] = MAX(MIN(ae[3], panic_motor), ae[3] - panic_rampdown_factor); 
+			ae[0] = MAX(MIN(ae[0], panic_motor), ae[0] - panic_rampdown_factor);
+			ae[1] = MAX(MIN(ae[1], panic_motor), ae[1] - panic_rampdown_factor);
+			ae[2] = MAX(MIN(ae[2], panic_motor), ae[2] - panic_rampdown_factor);
+			ae[3] = MAX(MIN(ae[3], panic_motor), ae[3] - panic_rampdown_factor);
 			break;
 
 		case MODE_MANUAL:
@@ -267,7 +282,7 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			controller_manual(actuate_cont);
 			break;
 
-		case MODE_CALIBRATION:	
+		case MODE_CALIBRATION:
 			ae[0] = safe_motor; ae[1] = safe_motor; ae[2] = safe_motor; ae[3] = safe_motor; // motors off
 			filter_angles();
 			run_calibration(key);
@@ -289,6 +304,22 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 
 		case MODE_FULL_CONTROL:
 			yaw_control_mode = 0;
+			handle_keys(key);
+			actuate_cont = offset_controls(cont);
+
+			#ifdef tuning
+				update_controller_gains();
+			#endif
+
+			filter_angles();
+			get_error(actuate_cont);
+			controller(actuate_cont);
+			break;
+
+		case MODE_HEIGHT_CONTROL:
+			yaw_control_mode = 0;
+			height_control_mode = 1;
+
 			handle_keys(key);
 			actuate_cont = offset_controls(cont);
 

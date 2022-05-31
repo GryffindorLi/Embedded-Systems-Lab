@@ -39,14 +39,17 @@
 // yaw/pitch/roll ranging from -32767 to 32767
 
 // throttle scaling control mode: 65535/800 ≈ 82
-#define t_scale 4
+#define t_scale 82
+// throttle scaling manual mode: 65535/300 ≈ 220
+#define t_scale_manual 220
+
 // angle scaling: 32767/65 ≈ 500
 #define a_scale 40
 #define y_scale 160
 // throttle_offset
 #define throttle_init 5
 
-#define after_sqrt_scale 5
+#define after_sqrt_scale 1
 
 // constants are IMU values from mpu6050.c:
 
@@ -82,11 +85,14 @@
 
 // _____filter_settings_____:
 
+// select kalman filter, 1 = enable, 0 = disable:
+#define use_kalman 0
+
 // gyro and accelerometer percentages
 #define gyro_rate 98
 #define acc_rate 2
 #define gyro_rate_yaw 1000
-#define acc_rate_yaw 0
+#define acc_rate_yaw 1
 // print tuned angle values, 1 = enable, 0 = disable
 #define print_angles 0
 
@@ -97,7 +103,7 @@
 // 1 = yaw, 2 = pitch, 3 = roll
 #define tuning_axis 1
 // enable PID prints, 1 = enable, 0 = disable
-#define PID_prints 1
+#define PID_prints 0
 
 // _____keyboard_control_settings_____:
 

@@ -3,6 +3,13 @@
 
 extern int16_t C_pitch_offset, C_roll_offset, C_yaw_offset;
 extern int16_t C_pitch_slope, C_roll_slope;
+
+extern int32_t ref_temp;
+extern int8_t ref_altitude;
+extern int32_t ref_pressure;
+extern int32_t pressure;
+extern int32_t temperature;
+
 extern int start_calibration;
 extern int calibration;
 

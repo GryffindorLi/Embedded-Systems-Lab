@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun May 29 13:33:59 2022
+# Make data base, printed on Tue May 31 20:03:13 2022
 
 # Variables
 
@@ -51,7 +51,7 @@ SNAP_DATA = /var/snap/code/97
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:53699
+JOURNAL_STREAM = 8:53367
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -77,7 +77,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 _ = /snap/code/97/usr/share/code/code
 # environment
-MANAGERPID = 1620
+MANAGERPID = 1596
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -93,7 +93,7 @@ PATH = /home/kenrick/.local/bin:/home/kenrick/.local/bin:/usr/local/sbin:/usr/lo
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/UBUNTUPC:@/tmp/.ICE-unix/1872,unix/UBUNTUPC:/tmp/.ICE-unix/1872
+SESSION_MANAGER = local/UBUNTUPC:@/tmp/.ICE-unix/1849,unix/UBUNTUPC:/tmp/.ICE-unix/1849
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -111,7 +111,7 @@ DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = a9edc47936a74e0aa15fde03ccfeeb80
+INVOCATION_ID = 4889785d58a34122a96b3ce8f90cf78c
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/97/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -123,7 +123,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 3423
+GIO_LAUNCHED_DESKTOP_FILE_PID = 48647
 # automatic
 %F = $(notdir $%)
 # environment
@@ -137,7 +137,7 @@ PWD = /home/kenrick/Documents/GitHub/CS4140ES-Embedded-Systems-Lab
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1837
+SSH_AGENT_PID = 1814
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -189,7 +189,7 @@ SHLVL = 0
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-6b68f385-d8e8-422c-ba6d-f31057f77c8a.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-9ccd8f74-878e-4d3a-a0b0-ad7886ec2559.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -269,7 +269,7 @@ LC_ADDRESS = nl_NL.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 3469
+VSCODE_PID = 48697
 # variable set hash-table stats:
 # Load=129/1024=13%, Rehash=0, Collisions=23/151=15%
 
@@ -281,7 +281,6 @@ VSCODE_PID = 3469
 
 # . (device 66312, inode 263991): 8 files, no impossibilities.
 
- 
 # 8 files, no impossibilities in 1 directories.
 
 # Implicit Rules
@@ -325,6 +324,7 @@ GNUmakefile:
 #  Failed to be updated.
 
 # files hash-table stats:
+ 
 # Load=6/1024=1%, Rehash=0, Collisions=0/15=0%
 # VPATH Search Paths
 
@@ -338,6 +338,6 @@ GNUmakefile:
 # strcache performance: lookups = 19 / hit rate = 15%
 # hash-table stats:
 # Load=16/8192=0%, Rehash=0, Collisions=1/19=5%
-# Finished Make data base on Sun May 29 13:33:59 2022
+# Finished Make data base on Tue May 31 20:03:13 2022
 
  

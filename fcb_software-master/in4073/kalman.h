@@ -2,6 +2,8 @@
 #include <stdbool.h>
 
 extern int16_t ae[4];
+// Angle definitions
+extern int32_t yaw, pitch, roll;
 
 // for yaw axis:
 uint16_t c1;
@@ -37,6 +39,9 @@ uint8_t Rr[2];
 uint32_t Kr[6];
 
 // functions:
+void set_angles();
+void run_kalman_filter();
+
 // yaw:
 void yaw_state();
 void yaw_cov();

@@ -8,9 +8,17 @@
 extern uint16_t motor[4];
 extern int16_t ae[4];
 extern int wireless_mode;
+extern int32_t pressure;
+extern int32_t temperature;
 
 // for sqrt of motor values:
 int16_t sqrt_motor_vals[4];
+
+// for altitude calculations:
+int32_t ref_temp;
+int8_t ref_altitude;
+int32_t ref_pressure;
+int16_t altitude;
 
 // for IMU:
 extern int16_t phi, theta, psi;

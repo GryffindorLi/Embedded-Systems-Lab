@@ -9,6 +9,9 @@
 // motor values
 int16_t ae[4];
 
+// angles
+int32_t yaw, pitch, roll;
+
 // for IMU:
 int16_t phi, theta, psi; // computed angles  (deg to int16), LSB = 182
 int16_t sp, sq, sr; // x,y,z gyro (deg/s to int16), LSB = 16.4
@@ -16,20 +19,20 @@ int16_t sax, say, saz; // x,y,z accel (m/s^2 to int16), LSB = 1670
 
 
 // for yaw axis:
-uint16_t c1 = 10; // change to actual value
-uint32_t y[3] = {0, 0, 0}; 
+uint16_t c1 = 3153; // 3.15e-3, devide by 1000000
+uint32_t y[3] = {1, 1, 1}; 
 uint32_t y_next[3] = {0, 0, 0}; 
-uint32_t Py[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0}; 
+uint32_t Py[9] = {-10, 0, 0, 0, -10, 0, 0, 0, -10}; 
 uint32_t Py_next[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 uint32_t Yy[2] = {0, 0};
-uint8_t Qy[3] = {2, 1, 1};
-uint8_t Ry[2] = {1, 1};
+uint8_t Qy[3] = {0, 0, 0};
+uint8_t Ry[2] = {0, 0};
 uint32_t Ky[6] = {0, 0, 0, 0, 0, 0};
 
 
 void yaw_state(){
     y_next[0] = y[0] + y[1]/freq - y[2]/freq;
-    y_next[1] = y[1] + (c1*(-ae[0] + ae[1] - ae[2] + ae[3]));
+    y_next[1] = y[1] + (c1*(-ae[0] + ae[1] - ae[2] + ae[3]))/1000000;
     y_next[2] = y[2];
 }
 
@@ -47,51 +50,51 @@ void yaw_cov(){
 
 void yaw_error(){
     Yy[0] = sr - y_next[0];
-    Yy[1] = (acc_rate_yaw*(saz/LSB_acc))/1000 - y_next[1];
+    Yy[1] = (acc_rate_yaw*saz)/1000 - y_next[1];
 }
 
 void yaw_gain(){
-    Ky[0] = Py_next[0]*(Py_next[4] + Ry[0]) - Py_next[1]+Py_next[3];
-    Ky[1] = Py_next[1]*(Py_next[0] + Ry[1]) - Py_next[0]+Py_next[1];
-    Ky[2] = Py_next[3]*(Py_next[4] + Ry[0]) - Py_next[4]+Py_next[3];
-    Ky[3] = Py_next[4]*(Py_next[0] + Ry[1]) - Py_next[3]+Py_next[1];
-    Ky[4] = Py_next[6]*(Py_next[4] + Ry[0]) - Py_next[7]+Py_next[3];
-    Ky[5] = Py_next[7]*(Py_next[0] + Ry[1]) - Py_next[6]+Py_next[1];
+    Ky[0] = ((Py_next[0]*(Py_next[4] + Ry[0]))/1 - Py_next[1]+Py_next[3]);
+    Ky[1] = ((Py_next[1]*(Py_next[0] + Ry[1]))/1 - Py_next[0]+Py_next[1]);
+    Ky[2] = ((Py_next[3]*(Py_next[4] + Ry[0]))/1 - Py_next[4]+Py_next[3]);
+    Ky[3] = ((Py_next[4]*(Py_next[0] + Ry[1]))/1 - Py_next[3]+Py_next[1]);
+    Ky[4] = ((Py_next[6]*(Py_next[4] + Ry[0]))/1 - Py_next[7]+Py_next[3]);
+    Ky[5] = ((Py_next[7]*(Py_next[0] + Ry[1]))/1 - Py_next[6]+Py_next[1]);
 }
 
 void yaw_update(){
     // state update:
-    y[0] = y_next[0] + Ky[0]*Yy[0] + Ky[1]*Yy[1]; 
-    y[1] = y_next[1] + Ky[2]*Yy[0] + Ky[3]*Yy[1]; 
-    y[2] = y_next[2] + Ky[4]*Yy[0] + Ky[5]*Yy[1]; 
+    y[0] = y_next[0] + (Ky[0]*Yy[0] + Ky[1]*Yy[1])/1; 
+    y[1] = y_next[1] + (Ky[2]*Yy[0] + Ky[3]*Yy[1])/1; 
+    y[2] = y_next[2] + (Ky[4]*Yy[0] + Ky[5]*Yy[1])/1; 
 
     // covariance update:
-    Py[0] = Py_next[0]*(1-Ky[0]) - Py_next[3]*Ky[1];
-    Py[1] = Py_next[1]*(1-Ky[0]) - Py_next[4]*Ky[1];
-    Py[2] = Py_next[2]*(1-Ky[0]) - Py_next[5]*Ky[1];
-    Py[3] = -Py_next[0]*Ky[2] + Py_next[3]*(1-Ky[3]);
-    Py[4] = -Py_next[1]*Ky[2] + Py_next[4]*(1-Ky[3]);
-    Py[5] = -Py_next[2]*Ky[2] + Py_next[5]*(1-Ky[3]);
-    Py[6] = -Py_next[0]*Ky[4] - Py_next[3]*Ky[5] + Py_next[6];
-    Py[7] = -Py_next[1]*Ky[4] - Py_next[4]*Ky[5] + Py_next[7];
-    Py[8] = -Py_next[2]*Ky[4] - Py_next[5]*Ky[5] + Py_next[8];
+    Py[0] = Py_next[0] - (Py_next[0]*Ky[0])/1 - (Py_next[3]*Ky[1])/1;
+    Py[1] = Py_next[1] - (Py_next[1]*Ky[0])/1 - (Py_next[4]*Ky[1])/1;
+    Py[2] = Py_next[2] - (Py_next[2]*Ky[0])/1 - (Py_next[5]*Ky[1])/1;
+    Py[3] = -(Py_next[0]*Ky[2])/1 + Py_next[3] - (Py_next[3]*Ky[3])/1;
+    Py[4] = -(Py_next[1]*Ky[2])/1 + Py_next[4] - (Py_next[4]*Ky[3])/1;
+    Py[5] = -(Py_next[2]*Ky[2])/1 + Py_next[5] - (Py_next[5]*Ky[3])/1;
+    Py[6] = -(Py_next[0]*Ky[4])/1 - (Py_next[3]*Ky[5])/1 + Py_next[6];
+    Py[7] = -(Py_next[1]*Ky[4])/1 - (Py_next[4]*Ky[5])/1 + Py_next[7];
+    Py[8] = -(Py_next[2]*Ky[4])/1 - (Py_next[5]*Ky[5])/1 + Py_next[8];
 }
 
 // for pitch axis:
-uint16_t c2 = 10; // change to actual value
+uint16_t c2 = 617; // 617 devide by 10000
 uint32_t p[3] = {0, 0, 0}; 
 uint32_t p_next[3] = {0, 0, 0}; 
 uint32_t Pp[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0}; 
 uint32_t Pp_next[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 uint32_t Yp[2] = {0, 0};
-uint8_t Qp[3] = {2, 1, 1};
-uint8_t Rp[2] = {1, 1};
+uint8_t Qp[3] = {0, 0, 0};
+uint8_t Rp[2] = {0, 0};
 uint32_t Kp[6] = {0, 0, 0, 0, 0, 0};
 
 
 void pitch_state(){
     p_next[0] = p[0] + p[1]/freq - p[2]/freq;
-    p_next[1] = p[1] + (c1*(-ae[0] + ae[2]))/freq;
+    p_next[1] = p[1] + (c2*(-ae[0] + ae[2]))/(10000*freq);
     p_next[2] = p[2];
 }
 
@@ -140,20 +143,20 @@ void pitch_update(){
 }
 
 // for roll axis:
-uint16_t c3 = 10; // change to actual value
+uint16_t c3 = 617; // 617 devide by 10000
 uint32_t r[3] = {0, 0, 0}; 
 uint32_t r_next[3] = {0, 0, 0}; 
 uint32_t Pr[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0}; 
 uint32_t Pr_next[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 uint32_t Yr[2] = {0, 0};
-uint8_t Qr[3] = {2, 1, 1};
-uint8_t Rr[2] = {1, 1};
+uint8_t Qr[3] = {0, 0, 0};
+uint8_t Rr[2] = {0, 0};
 uint32_t Kr[6] = {0, 0, 0, 0, 0, 0};
 
 
 void roll_state(){
     r_next[0] = r[0] + r[1]/freq - r[2]/freq;
-    r_next[1] = r[1] + (c1*(-ae[1] + ae[3]))/freq;
+    r_next[1] = r[1] + (c2*(-ae[0] + ae[2]))/(10000*freq);
     r_next[2] = r[2];
 }
 
@@ -201,6 +204,12 @@ void roll_update(){
     Pr[8] = -Pr_next[2]*Kr[4] - Pr_next[5]*Kr[5] + Pr_next[8];
 }
 
+void set_angles(){
+    yaw = y[0];
+    pitch = p[0];
+    roll = r[0];
+}
+
 void run_kalman_filter(){
     // yaw:
     yaw_state();
@@ -220,4 +229,7 @@ void run_kalman_filter(){
     roll_error();
     roll_gain();
     roll_update();
+
+    // write angles:
+    set_angles();
 }

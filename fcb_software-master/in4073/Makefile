@@ -68,7 +68,8 @@ $(abspath ./calibration.c) \
 $(abspath ./keyboard.c) \
 $(abspath ./D2PC.c) \
 $(abspath ./PC2D.c) \
-$(abspath ./intmaths.c)
+$(abspath ./intmaths.c) \
+$(abspath ./kalman.c)
 
 #assembly files common to all targets
 ASM_SOURCE_FILES  = $(abspath ../components/toolchain/gcc/gcc_startup_nrf51.s)
