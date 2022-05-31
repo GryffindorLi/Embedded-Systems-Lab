@@ -35,7 +35,7 @@ int32_t yaw, pitch, roll;
  * @Param none.
  * @Return calibration data.
  */
-void collect_data(){	
+void collect_data(){
 	pitch_data[calib_phase] = -pitch;
 	roll_data[calib_phase] = -roll;
 }
@@ -123,11 +123,11 @@ void run_calibration(uint8_t key){
                 calib_notice = 1;
                 calib_timer = get_time_us();
             }
-        } 
+        }
         else if (calib_phase == 5){
             send_instruction();
             set_offset();
-        } 
+        }
         else {
             printf("\n---===CALIBRATION FINISHED===---\n");
             calib_phase = 0;
