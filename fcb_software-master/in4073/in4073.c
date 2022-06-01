@@ -304,7 +304,7 @@ int main(void)
 	baro_init();
 	spi_flash_init();
 	quad_ble_init();
-
+	uint32_t s_timer = get_time_us();
 	uint32_t counter = 0;
 	uint32_t start_time = 0;
 	uint32_t end_time = 0;
@@ -316,7 +316,8 @@ int main(void)
 
 	// --------------------------------MAIN LOOP------------------------------------
 
-	while (!demo_done) {	
+	while (!demo_done) {
+		printf("start of the loop\n");	
 		if (check_loop_time)
 			start_time = get_time_us();
 
@@ -335,6 +336,7 @@ int main(void)
 			current_key = on_set_key(&rec_msg);
 			Ct_flag = 0;
 			UART_watch_dog = 1000;
+			printf("\n Loop Time : %ldms\n", (get_time_us() - s_timer)*1000);
 		}
 		
 		// PANIC to SAFE
