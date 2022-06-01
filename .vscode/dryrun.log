@@ -1,6 +1,0 @@
-make --dry-run --keep-going --print-directory
-make: Entering directory '/home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab'
-make: Leaving directory '/home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab'
- 
-make: *** No targets specified and no makefile found.  Stop.
-
