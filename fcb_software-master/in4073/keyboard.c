@@ -29,33 +29,33 @@ int16_t p_roll, i_roll, d_roll;
 void handle_keys(uint8_t key) {
 	switch (key) {
         // controller offsets:
-		case 'w':
+		case 's':
 			throttle_offset += throttle_per_key;
 			break;
-		case 's':
+		case 'x':
 			throttle_offset -= throttle_per_key;
 			break;
-		case 'd':
+		case 'z':
 			yaw_offset -= angle_per_key;
 			break;
-		case 'a':
+		case 'c':
 			yaw_offset += angle_per_key;
 			break;
-		case 'i': // up
+		case 'h': // up
 			pitch_offset += angle_per_key;
 			break;
-		case 'k': // down
+		case 'n': // down
 			pitch_offset -= angle_per_key;
 			break;
-		case 'j': // left
+		case 'b': // left
 			roll_offset += angle_per_key;
 			break;
-		case 'l': // right
+		case 'm': // right
 			roll_offset -= angle_per_key;
 			break;
 
         // PID tuning offsets:
-		case 'P':
+		case 'p':
 			if (tuning_axis == 1)
 				p_offset += (tune_offset*Kpy)/100;
 			else if (tuning_axis == 2)
@@ -66,7 +66,7 @@ void handle_keys(uint8_t key) {
 				printf("ERROR: invalid tuning axis should be (1,2,3)");
 			break;
 
-        case 'I':
+        case 'i':
 			if (tuning_axis == 1)
 				i_offset += (tune_offset*Kiy)/100;
 			else if (tuning_axis == 2)
@@ -77,7 +77,7 @@ void handle_keys(uint8_t key) {
 				printf("ERROR: invalid tuning axis should be (1,2,3)");
 			break;
 
-		case 'D':
+		case 'd':
 			if (tuning_axis == 1)
 				d_offset += (tune_offset*Kdy)/100;
 			else if (tuning_axis == 2)
@@ -115,9 +115,9 @@ void bound_offsets(){
 	roll_offset = MIN(20000, MAX(-20000, roll_offset));
 
     // PID tuning offset
-	p_offset = MIN(30000, MAX(0, yaw_p_offset));
-    i_offset = MIN(30000, MAX(0, yaw_p_offset));
-    d_offset = MIN(30000, MAX(0, yaw_p_offset));
+	p_offset = MIN(30000, MAX(0, p_offset));
+    i_offset = MIN(30000, MAX(0, i_offset));
+    d_offset = MIN(30000, MAX(0, d_offset));
 }
 
 /*

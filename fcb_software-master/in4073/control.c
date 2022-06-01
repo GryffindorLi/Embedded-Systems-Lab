@@ -96,10 +96,10 @@ void set_aes(uint16_t throttle, int16_t scaled_roll, int16_t scaled_pitch, int16
 		ae[0] = ae[1] = ae[2] = ae[3] = 0;
 	}
 	else {
-		ae[0] = int16clamp(after_sqrt_scale * int16sqrt2(set_throttle(throttle, t_scale) + scaled_pitch * 2 - scaled_yaw), min_motor, max_motor);
-		ae[1] = int16clamp(after_sqrt_scale * int16sqrt2(set_throttle(throttle, t_scale) + scaled_roll * 2 + scaled_yaw), min_motor, max_motor);
-		ae[2] = int16clamp(after_sqrt_scale * int16sqrt2(set_throttle(throttle, t_scale) - scaled_pitch * 2 - scaled_yaw), min_motor, max_motor);
-		ae[3] = int16clamp(after_sqrt_scale * int16sqrt2(set_throttle(throttle, t_scale) - scaled_roll * 2 + scaled_yaw), min_motor, max_motor);
+		ae[0] = int16clamp(after_sqrt_scale * int16sqrt(set_throttle(throttle, t_scale) - scaled_pitch * 2 - scaled_yaw), min_motor, max_motor);
+		ae[1] = int16clamp(after_sqrt_scale * int16sqrt(set_throttle(throttle, t_scale) - scaled_roll * 2 + scaled_yaw), min_motor, max_motor);
+		ae[2] = int16clamp(after_sqrt_scale * int16sqrt(set_throttle(throttle, t_scale) + scaled_pitch * 2 - scaled_yaw), min_motor, max_motor);
+		ae[3] = int16clamp(after_sqrt_scale * int16sqrt(set_throttle(throttle, t_scale) + scaled_roll * 2 + scaled_yaw), min_motor, max_motor);
 	}
 }
 
@@ -246,15 +246,15 @@ void controller(controls cont){
 		ae[0] = ae[1] = ae[2] = ae[3] = 0;
 	} else {
 		// define all 3 PID controllers
-		yaw_command = (int32_t) (p_yaw*error[0] + i_yaw*ierror[0] + d_yaw*derror[0]) / (100*LSB_drad); // note: do not devide by 1000
+		yaw_command = (int32_t) (p_yaw*error[0] + i_yaw*ierror[0] + d_yaw*derror[0]) / (LSB_drad); // note: do not devide by 1000
 
 		if (yaw_control_mode) {
 			pitch_command = 0;
 			roll_command = 0;
 		} else {
-			yaw_command = 0; // disable yaw control for tuning
-			pitch_command = (int32_t) (p_pitch*error[1] + i_pitch*ierror[1] + d_pitch*derror[1])/(10*LSB_rad); // note: devide by 1000
-			roll_command = (int32_t) (p_roll*error[2] + i_roll*ierror[2] + d_roll*derror[2])/(10*LSB_rad); // note: devide by 1000
+			// yaw_command = 0; // disable yaw control for tuning
+			pitch_command = (int32_t) (p_pitch*error[1] + i_pitch*ierror[1] + d_pitch*derror[1])/(LSB_rad); // note: devide by 1000
+			roll_command = (int32_t) (p_roll*error[2] + i_roll*ierror[2] + d_roll*derror[2])/(LSB_rad); // note: devide by 1000
 		}
 		set_aes(cont.throttle, roll_command, pitch_command, yaw_command);
 	}

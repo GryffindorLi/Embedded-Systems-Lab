@@ -19,19 +19,19 @@
 // _____control gains_____:
 
 // yaw control gains:
-#define Kpy 300
-#define Kiy 60
-#define Kdy 0
+#define Kpy 1000
+#define Kiy 100
+#define Kdy 50
 
 // pitch control gains * 1000:
-#define Kpp 2500
+#define Kpp 2000
 #define Kip 50
-#define Kdp 160
+#define Kdp 200
 
 // roll control gains * 1000:
-#define Kpr 4900
+#define Kpr 4000
 #define Kir 85
-#define Kdr 240
+#define Kdr 300
 
 // _____scaling factors_____:
 
@@ -44,12 +44,12 @@
 // #define t_scale_manual 220
 
 // angle scaling: 32767/65 ≈ 500
-#define a_scale 40
-#define y_scale 160
+#define a_scale 20
+#define y_scale 20
 // throttle_offset
 #define throttle_init 5
 
-#define after_sqrt_scale 5
+#define after_sqrt_scale 4
 
 // constants are IMU values from mpu6050.c:
 
@@ -99,7 +99,7 @@
 // _____tuning_settings_____:
 
 // tuning change in percentage:
-#define tune_offset 2
+#define tune_offset 3
 // 1 = yaw, 2 = pitch, 3 = roll
 #define tuning_axis 1
 // enable PID prints, 1 = enable, 0 = disable

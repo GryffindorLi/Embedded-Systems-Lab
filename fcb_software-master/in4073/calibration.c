@@ -21,9 +21,6 @@ int32_t ref_pressure;
 int32_t pressure;
 int32_t temperature;
 
-int32_t counter = 0xFFFF;
-int32_t calib_timer = -1;
-int32_t Mean_pitch_offset, Mean_roll_offset;
 int8_t calib_phase = 0;
 int8_t calib_notice = 0;
 
@@ -109,24 +106,22 @@ void data_to_slope(){
  */
 void run_calibration(uint8_t key){
     if (start_calibration > 0){
+        if (calib_notice == 0)
+            printf("\nHit '+' key to start \n");
+
         if (start_calibration == 1) {
-            calib_phase = 0;
             calib_notice = 1;
-            start_calibration = 2; // during calibration
         }
-        if (calib_phase < 5) {
-            send_instruction();
+        
+        if (calib_phase < 6) {
             if (key == '+') {
-                collect_data();
+                send_instruction();
+                if (calib_phase < 5)
+                    collect_data();
                 set_offset();
                 calib_phase += 1;
                 calib_notice = 1;
-                calib_timer = get_time_us();
             }
-        }
-        else if (calib_phase == 5){
-            send_instruction();
-            set_offset();
         }
         else {
             printf("\n---===CALIBRATION FINISHED===---\n");

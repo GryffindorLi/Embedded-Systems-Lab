@@ -281,7 +281,7 @@ uint8_t get_mode_change(char key, controls cont, int* buttons) {
 
 void joystick_control(controls* cont, int* axis) {
 	cont->roll = axis[ROLL_AXIS];
-	cont->pitch = axis[PITCH_AXIS];
+	cont->pitch = -axis[PITCH_AXIS];
 	cont->yaw = axis[YAW_AXIS];
 	cont->throttle = -axis[THROTTLE_AXIS] + 32767;
 	//printf("%d %d %d %d\n", cont->yaw, cont->pitch, cont->roll, cont->throttle);

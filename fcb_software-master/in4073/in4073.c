@@ -366,6 +366,7 @@ int main(void)
 			get_sensor_data();	
 
 			aes = run_filters_and_control(current_control, current_key, current_mode);
+			current_key = '\0';
 		}
 
 		if (check_loop_time) {
