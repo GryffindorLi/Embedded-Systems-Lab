@@ -39,9 +39,9 @@
 // yaw/pitch/roll ranging from -32767 to 32767
 
 // throttle scaling control mode: 65535/800 ≈ 82
-#define t_scale 82
+#define t_scale 4
 // throttle scaling manual mode: 65535/300 ≈ 220
-#define t_scale_manual 220
+// #define t_scale_manual 220
 
 // angle scaling: 32767/65 ≈ 500
 #define a_scale 40
@@ -49,7 +49,7 @@
 // throttle_offset
 #define throttle_init 5
 
-#define after_sqrt_scale 1
+#define after_sqrt_scale 5
 
 // constants are IMU values from mpu6050.c:
 

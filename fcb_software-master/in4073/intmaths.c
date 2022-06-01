@@ -22,7 +22,7 @@ int16_t safeint16pint16(int16_t a, int16_t b) {
 
 int16_t int16sqrt(int16_t a) {
     if (a >= 32761) return 181;
-    
+
     int16_t l = 0;
     int16_t r = 180;
     int16_t m = 90;
@@ -33,7 +33,7 @@ int16_t int16sqrt(int16_t a) {
         if (ms <= a) {
             if (a < (m + 1) * (m + 1)) return m;
             l = m + 1;
-        } else return r = m - 1;
+        } else r = m - 1;
     }
     return 0;
 }

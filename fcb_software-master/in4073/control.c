@@ -92,10 +92,15 @@ void update_motors(void){
 }
 
 void set_aes(uint16_t throttle, int16_t scaled_roll, int16_t scaled_pitch, int16_t scaled_yaw) {
-	ae[0] = int16clamp(set_throttle(throttle, t_scale) + after_sqrt_scale * int16sqrt2(scaled_pitch - scaled_yaw), min_motor, max_motor);
-	ae[1] = int16clamp(set_throttle(throttle, t_scale) + after_sqrt_scale * int16sqrt2(- scaled_roll + scaled_yaw), min_motor, max_motor);
-	ae[2] = int16clamp(set_throttle(throttle, t_scale) + after_sqrt_scale * int16sqrt2(- scaled_pitch - scaled_yaw), min_motor, max_motor);
-	ae[3] = int16clamp(set_throttle(throttle, t_scale) + after_sqrt_scale * int16sqrt2(scaled_roll + scaled_yaw), min_motor, max_motor);
+	if (set_throttle(throttle, t_scale) == 0){
+		ae[0] = ae[1] = ae[2] = ae[3] = 0;
+	}
+	else {
+		ae[0] = int16clamp(after_sqrt_scale * int16sqrt2(set_throttle(throttle, t_scale) + scaled_pitch * 2 - scaled_yaw), min_motor, max_motor);
+		ae[1] = int16clamp(after_sqrt_scale * int16sqrt2(set_throttle(throttle, t_scale) + scaled_roll * 2 + scaled_yaw), min_motor, max_motor);
+		ae[2] = int16clamp(after_sqrt_scale * int16sqrt2(set_throttle(throttle, t_scale) - scaled_pitch * 2 - scaled_yaw), min_motor, max_motor);
+		ae[3] = int16clamp(after_sqrt_scale * int16sqrt2(set_throttle(throttle, t_scale) - scaled_roll * 2 + scaled_yaw), min_motor, max_motor);
+	}
 }
 
 /*
@@ -108,7 +113,7 @@ int16_t set_throttle(uint16_t throttle, uint16_t throttle_scale){
 	if( throttle < throttle_init ){
 		throttle_command = 0;
 	} else {
-		throttle_command = min_motor + throttle / throttle_scale;
+		throttle_command = (min_motor / after_sqrt_scale) * (min_motor / after_sqrt_scale) + throttle / throttle_scale;
 	}
 	return throttle_command;
 }
@@ -121,7 +126,7 @@ int16_t set_throttle(uint16_t throttle, uint16_t throttle_scale){
  * @Return updated motor commands in ae array.
  */
 void controller_manual(controls cont){
-	set_aes(set_throttle(cont.throttle, t_scale_manual), cont.roll / a_scale, cont.pitch / a_scale, cont.yaw / y_scale);
+	set_aes(cont.throttle, cont.roll / a_scale, cont.pitch / a_scale, cont.yaw / y_scale);
 }
 
 // ____Control Mode only____:
