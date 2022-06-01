@@ -6,8 +6,8 @@ LDFLAGS = -lm
 
 EXEC = ./pc-terminal
 
-default: pc_terminal.o PC2D.o intmaths.o joystick.o logging.o
-	$(LD) $(LDFLAGS) pc_terminal.o PC2D.o intmaths.o joystick.o logging.o -o $(EXEC)
+default: pc_terminal.o PC2D.o intmaths.o joystick.o logging.o D2PC.o
+	$(LD) $(LDFLAGS) pc_terminal.o PC2D.o intmaths.o joystick.o logging.o D2PC.o -o $(EXEC)
 
 pc_terminal.o: pc_terminal.c ../PC2D.h ../intmaths.h joystick.h
 	$(CC) $(CFLAGS) -c pc_terminal.c -o pc_terminal.o

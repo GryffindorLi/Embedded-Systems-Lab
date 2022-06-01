@@ -33,6 +33,7 @@
 #include "PC2D.h"
 #include "queue.h"
 #include "D2PC.h"
+#include "D2PC_drone.h"
 #include "keyboard.h"
 #include "config.h"
 
@@ -367,6 +368,9 @@ int main(void)
 				if (current_mode != MODE_CALIBRATION)
 					printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
 				if (check_loop_time) printf("\n%ld\n", loop_time);
+
+				D2PC_message m = init_message();
+				send_data(&m);
 			}
 
 			adc_request_sample();
