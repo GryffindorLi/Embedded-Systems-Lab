@@ -373,6 +373,9 @@ int main(int argc, char **argv)
 	// ------------------------------------MAIN LOOP------------------------------------------
 	struct timeval ctrl_trans_start;
 	struct timeval ctrl_trans_end;
+	struct timeval ctrl_pkg_start;
+	struct timeval ctrl_pkg_end;
+	gettimeofday(&ctrl_pkg_start, 0);
 	#ifndef JOYSTICK
 		struct timeval ctrl_monitor_start;
 		struct timeval ctrl_monitor_end;
@@ -390,6 +393,7 @@ int main(int argc, char **argv)
 	uint8_t tmp_mode = -1;
 	controls cont = {0, 0, 0, 0};
 	int buttons[12] = {0};
+	int ctrl_cnt = 0;
 	
 	gettimeofday(&ctrl_trans_start, 0);
 	for (;;) {
@@ -404,7 +408,7 @@ int main(int argc, char **argv)
 			gettimeofday(&ctrl_monitor_end, 0);
 			if (time_dif(ctrl_monitor_start, ctrl_monitor_end) > 1000.0) {
 				if (current_mode != MODE_CALIBRATION)
-					printf("\n--==<< controls (trpy): %d %d %d %d >>==--\n", cont.throttle, cont.roll, cont.pitch, cont.yaw);
+					// printf("\n--==<< controls (trpy): %d %d %d %d >>==--\n", cont.throttle, cont.roll, cont.pitch, cont.yaw);
 				gettimeofday(&ctrl_monitor_start, 0);
 			}
 		#else
@@ -435,6 +439,13 @@ int main(int argc, char **argv)
 			gettimeofday(&ctrl_trans_start, 0);
 			send_ctrl_msg(cont, c);
 			c = -1; // reset key
+			ctrl_cnt++;
+		}
+
+		gettimeofday(&ctrl_pkg_end, 0);
+		if (time_dif(ctrl_pkg_start, ctrl_pkg_end) > 500.0) {
+			printf("ctrl packages sent: %d\n", ctrl_cnt);
+			gettimeofday(&ctrl_pkg_start, 0);
 		}
 
 		// //uint8_t mess[257];

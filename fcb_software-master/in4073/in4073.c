@@ -308,6 +308,7 @@ int main(void)
 	uint32_t s_timer = get_time_us();
 	uint32_t s_period = 0;
 	uint32_t print_s_timer = get_time_us();
+	uint16_t ctrl_pkg_received = 0;
 	// check ctrl frequency ^
 	uint32_t counter = 0;
 	uint32_t start_time = 0;
@@ -338,9 +339,12 @@ int main(void)
 			current_key = on_set_key(&rec_msg);
 			Ct_flag = 0;
 			UART_watch_dog = 1000;
-			s_period = (get_time_us() - s_timer + 50) / 1000;
+
+			ctrl_pkg_received++;
+			s_period = (get_time_us() - s_timer) / 1000;
 			s_timer = get_time_us();
-			if (get_time_us() - print_s_timer > 1000000) {
+			if (get_time_us() - print_s_timer > 500000) {
+				printf("ctrl packages received: %d\n", ctrl_pkg_received);
 				printf("\n Loop Time : %ldms\n", s_period);
 				print_s_timer = get_time_us();
 			}
@@ -375,7 +379,7 @@ int main(void)
 				// 1HZ
 				nrf_gpio_pin_toggle(BLUE);
 				if (current_mode != MODE_CALIBRATION)
-					printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
+					// printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
 				if (check_loop_time) printf("\n%ld\n", loop_time);
 
 				// D2PC_message m = init_message();
