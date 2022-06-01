@@ -1,6 +1,0 @@
-make --dry-run --always-make --keep-going --print-directory
-make: Entering directory '/home/kenrick/Documents/GitHub/CS4140ES-Embedded-Systems-Lab'
-make: Leaving directory '/home/kenrick/Documents/GitHub/CS4140ES-Embedded-Systems-Lab'
- 
-make: *** No targets specified and no makefile found.  Stop.
-

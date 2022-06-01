@@ -211,17 +211,20 @@ void* decode(uint8_t mess[]) {
 		D2PC_message_p recv_mess = (D2PC_message_p)malloc(sizeof(D2PC_message));
 		recv_mess->mode = mess[1];
 		recv_mess->battery = mess[2];
-		recv_mess->y = ((int16_t)(mess[3]) << 8) + (int16_t)mess[4];
-		recv_mess->p = ((int16_t)(mess[5]) << 8) + (int16_t)mess[6];
-		recv_mess->r = ((int16_t)(mess[7]) << 8) + (int16_t)mess[8];
-		recv_mess->filtered_y = ((int16_t)(mess[9]) << 8) + (int16_t)mess[10];
-		recv_mess->filtered_p = ((int16_t)(mess[11]) << 8) + (int16_t)mess[12];
-		recv_mess->filtered_r = ((int16_t)(mess[13]) << 8) + (int16_t)mess[14];
-		recv_mess->motor1 = ((uint16_t)(mess[15]) << 8) + (uint16_t)mess[16];
-		recv_mess->motor2 = ((uint16_t)(mess[17]) << 8) + (uint16_t)mess[18];
-		recv_mess->motor3 = ((uint16_t)(mess[19]) << 8) + (uint16_t)mess[20];
-		recv_mess->motor4 = ((uint16_t)(mess[21]) << 8) + (uint16_t)mess[22];
-		recv_mess->checksum = ((uint16_t)(mess[23]) << 8) + (uint16_t)mess[24];
+		recv_mess->y = ((int32_t)(mess[3]) << 24) + ((int32_t)(mess[4]) << 16) +
+			((int32_t)(mess[5]) << 8) + (int32_t)mess[6];
+		recv_mess->p = ((int32_t)(mess[7]) << 24) + ((int32_t)(mess[8]) << 16) +
+			((int32_t)(mess[9]) << 8) + (int32_t)mess[10];;
+		recv_mess->r = ((int32_t)(mess[11]) << 24) + ((int32_t)(mess[12]) << 16) +
+			((int32_t)(mess[13]) << 8) + (int32_t)mess[14];
+		recv_mess->filtered_y = ((int16_t)(mess[15]) << 8) + (int16_t)mess[16];
+		recv_mess->filtered_p = ((int16_t)(mess[17]) << 8) + (int16_t)mess[18];
+		recv_mess->filtered_r = ((int16_t)(mess[19]) << 8) + (int16_t)mess[20];
+		recv_mess->motor1 = ((uint16_t)(mess[21]) << 8) + (uint16_t)mess[22];
+		recv_mess->motor2 = ((uint16_t)(mess[23]) << 8) + (uint16_t)mess[24];
+		recv_mess->motor3 = ((uint16_t)(mess[25]) << 8) + (uint16_t)mess[26];
+		recv_mess->motor4 = ((uint16_t)(mess[27]) << 8) + (uint16_t)mess[28];
+		recv_mess->checksum = ((uint16_t)(mess[29]) << 8) + (uint16_t)mess[30];
 
 		return (void*)recv_mess;
 
