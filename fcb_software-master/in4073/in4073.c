@@ -304,7 +304,11 @@ int main(void)
 	baro_init();
 	spi_flash_init();
 	quad_ble_init();
+	// check ctrl frequency v
 	uint32_t s_timer = get_time_us();
+	uint32_t s_period = 0;
+	uint32_t print_s_timer = get_time_us();
+	// check ctrl frequency ^
 	uint32_t counter = 0;
 	uint32_t start_time = 0;
 	uint32_t end_time = 0;
@@ -312,12 +316,10 @@ int main(void)
 	uint32_t idle_timer = get_time_us();
 	demo_done = false;
 	wireless_mode = false;
-	// uint32_t loop_monitor_start = 0;
 
 	// --------------------------------MAIN LOOP------------------------------------
 
 	while (!demo_done) {
-		printf("start of the loop\n");	
 		if (check_loop_time)
 			start_time = get_time_us();
 
@@ -336,7 +338,12 @@ int main(void)
 			current_key = on_set_key(&rec_msg);
 			Ct_flag = 0;
 			UART_watch_dog = 1000;
-			printf("\n Loop Time : %ldms\n", (get_time_us() - s_timer)*1000);
+			s_period = (get_time_us() - s_timer + 50) / 1000;
+			s_timer = get_time_us();
+			if (get_time_us() - print_s_timer > 1000000) {
+				printf("\n Loop Time : %ldms\n", s_period);
+				print_s_timer = get_time_us();
+			}
 		}
 		
 		// PANIC to SAFE
@@ -371,8 +378,8 @@ int main(void)
 					printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
 				if (check_loop_time) printf("\n%ld\n", loop_time);
 
-				D2PC_message m = init_message();
-				send_data(&m);
+				// D2PC_message m = init_message();
+				// send_data(&m);
 			}
 
 			adc_request_sample();

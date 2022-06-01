@@ -287,7 +287,6 @@ void joystick_control(controls* cont, int* axis) {
 	cont->pitch = -axis[PITCH_AXIS];
 	cont->yaw = axis[YAW_AXIS];
 	cont->throttle = -axis[THROTTLE_AXIS] + 32767;
-	//printf("%d %d %d %d\n", cont->yaw, cont->pitch, cont->roll, cont->throttle);
 }
 
 int keyboard_control(controls* cont, char c) {
@@ -335,10 +334,10 @@ float time_dif(struct timeval st, struct timeval ed) {
 	return (ed.tv_sec - st.tv_sec) * 1000.0f + (ed.tv_usec - st.tv_usec) / 1000.0f;
 }
 
-#define TRANSMISSION_FREQ 50
+#define TRANSMISSION_FREQ 100
 #define JOYSTICK_WATCHDOG_LIFETIME 200
 
-#define JOYSTICK
+// #define JOYSTICK
 
 /*----------------------------------------------------------------
  * main -- execute terminal
@@ -361,7 +360,7 @@ int main(int argc, char **argv)
 	// if no argument is given at execution time, /dev/ttyUSB0 is assumed
 	// asserts are in the function
 	if (argc == 1) {
-		serial_port_open("/dev/ttyUSB3");
+		serial_port_open("/dev/ttyUSB0");
 	} else if (argc == 2) {
 		serial_port_open(argv[1]);
 	} else {
@@ -374,8 +373,6 @@ int main(int argc, char **argv)
 	// ------------------------------------MAIN LOOP------------------------------------------
 	struct timeval ctrl_trans_start;
 	struct timeval ctrl_trans_end;
-	struct timeval debug_start;
-	struct timeval debug_end;
 	#ifndef JOYSTICK
 		struct timeval ctrl_monitor_start;
 		struct timeval ctrl_monitor_end;
@@ -386,7 +383,7 @@ int main(int argc, char **argv)
 		int axis[6] = {0};
 	#endif
 
-	//char rc = -1;
+	char rc = -1;
 	char c = -1;
 	char tmp_c = -1;
 	uint8_t current_mode = MODE_SAFE;
@@ -396,7 +393,6 @@ int main(int argc, char **argv)
 	
 	gettimeofday(&ctrl_trans_start, 0);
 	for (;;) {
-		gettimeofday(&debug_start, 0);
 
 		// read the keyboard command every loop
 		if ((tmp_c = term_getchar_nb()) != -1) {
@@ -441,42 +437,39 @@ int main(int argc, char **argv)
 			c = -1; // reset key
 		}
 
-		//uint8_t mess[257];
-		// if ((serial_port_getmessage(mess)) != -1){
-		// 	if (is_string){
-		// 		D2PC_string_message_p recv_mess = (D2PC_string_message_p)decode(mess);
-		// 		printf("String is %s\n", recv_mess->string);
-		// 		logging((void*)recv_mess, is_string);
-		// 		free(recv_mess);
-		// 	} else {
-		// 		D2PC_message_p recv_mess = (D2PC_message_p)decode(mess);
-		// 		uint16_t recv_cs = cal_checksum(*recv_mess);
-		// 		if (recv_cs == recv_mess->checksum){
-		// 			logging((void*)recv_mess, is_string);
-		// 			printf("Mode is %u\n", recv_mess->mode);
-		// 			printf("Battery is %u\n", recv_mess->battery);
-		// 			printf("Yaw is %d\n", recv_mess->y);
-		// 			printf("Pitch is %d\n", recv_mess->p);
-		// 			printf("Roll is %d\n", recv_mess->r);
-		// 			printf("Motor1 is %u\n", recv_mess->motor1);
-		// 			printf("Motor2 is %u\n", recv_mess->motor2);
-		// 			printf("Motor3 is %u\n", recv_mess->motor3);
-		// 			printf("Motor4 is %u\n", recv_mess->motor4);
-		// 			printf("Filtered yaw is %d\n", recv_mess->filtered_y);
-		// 			printf("Filtered pitch is %d\n", recv_mess->filtered_p);
-		// 			printf("Filtered roll is %d\n", recv_mess->filtered_r);
-		// 		} else {
-		// 			perror("Message disrupted during transmission!");
-		// 		}
-				//free(recv_mess);
+		// //uint8_t mess[257];
+		// // if ((serial_port_getmessage(mess)) != -1){
+		// // 	if (is_string){
+		// // 		D2PC_string_message_p recv_mess = (D2PC_string_message_p)decode(mess);
+		// // 		printf("String is %s\n", recv_mess->string);
+		// // 		logging((void*)recv_mess, is_string);
+		// // 		free(recv_mess);
+		// // 	} else {
+		// // 		D2PC_message_p recv_mess = (D2PC_message_p)decode(mess);
+		// // 		uint16_t recv_cs = cal_checksum(*recv_mess);
+		// // 		if (recv_cs == recv_mess->checksum){
+		// // 			logging((void*)recv_mess, is_string);
+		// // 			printf("Mode is %u\n", recv_mess->mode);
+		// // 			printf("Battery is %u\n", recv_mess->battery);
+		// // 			printf("Yaw is %d\n", recv_mess->y);
+		// // 			printf("Pitch is %d\n", recv_mess->p);
+		// // 			printf("Roll is %d\n", recv_mess->r);
+		// // 			printf("Motor1 is %u\n", recv_mess->motor1);
+		// // 			printf("Motor2 is %u\n", recv_mess->motor2);
+		// // 			printf("Motor3 is %u\n", recv_mess->motor3);
+		// // 			printf("Motor4 is %u\n", recv_mess->motor4);
+		// // 			printf("Filtered yaw is %d\n", recv_mess->filtered_y);
+		// // 			printf("Filtered pitch is %d\n", recv_mess->filtered_p);
+		// // 			printf("Filtered roll is %d\n", recv_mess->filtered_r);
+		// // 		} else {
+		// // 			perror("Message disrupted during transmission!");
+		// // 		}
+		// 		//free(recv_mess);
 				
 				
-		
-			
-			gettimeofday(&debug_end, 0);
-			// printf("\n Debug Time: %lfms\n", time_dif(debug_start, debug_end));
-
-		
+		if ((rc = serial_port_getchar()) != -1) {
+			term_putchar(rc);
+		}		
 	}
 
 	term_exitio();
