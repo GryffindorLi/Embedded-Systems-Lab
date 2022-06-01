@@ -18,9 +18,9 @@ typedef struct {
     int32_t y;  // 2 bytes 34
     int32_t p;  // 2 bytes 56
     int32_t r;  // 2 bytes 78
-    int32_t filtered_y;  // 2 bytes 9 10
-    int32_t filtered_p;  // 2 bytes 11 12
-    int32_t filtered_r;  // 2 bytes 13 14
+    int16_t filtered_y;  // 2 bytes 9 10
+    int16_t filtered_p;  // 2 bytes 11 12
+    int16_t filtered_r;  // 2 bytes 13 14
     uint16_t motor1;  // 2 bytes 15 16
     uint16_t motor2; // 17 18
     uint16_t motor3;  // 19 20

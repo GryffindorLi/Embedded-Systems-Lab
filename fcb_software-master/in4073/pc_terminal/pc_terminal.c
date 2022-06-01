@@ -217,17 +217,14 @@ void* decode(uint8_t mess[]) {
 			((int32_t)(mess[9]) << 8) + (int32_t)mess[10];;
 		recv_mess->r = ((int32_t)(mess[11]) << 24) + ((int32_t)(mess[12]) << 16) +
 			((int32_t)(mess[13]) << 8) + (int32_t)mess[14];
-		recv_mess->filtered_y = ((int32_t)(mess[15]) << 24) + ((int32_t)(mess[16]) << 16) +
-			((int32_t)(mess[17]) << 8) + (int32_t)mess[18];
-		recv_mess->filtered_p = ((int32_t)(mess[19]) << 24) + ((int32_t)(mess[20]) << 16) +
-			((int32_t)(mess[21]) << 8) + (int32_t)mess[22];
-		recv_mess->filtered_r = ((int32_t)(mess[23]) << 24) + ((int32_t)(mess[24]) << 16) +
-			((int32_t)(mess[25]) << 8) + (int32_t)mess[26];
-		recv_mess->motor1 = ((uint16_t)(mess[27]) << 8) + (uint16_t)mess[28];
-		recv_mess->motor2 = ((uint16_t)(mess[29]) << 8) + (uint16_t)mess[30];
-		recv_mess->motor3 = ((uint16_t)(mess[31]) << 8) + (uint16_t)mess[32];
-		recv_mess->motor4 = ((uint16_t)(mess[33]) << 8) + (uint16_t)mess[34];
-		recv_mess->checksum = ((uint16_t)(mess[35]) << 8) + (uint16_t)mess[36];
+		recv_mess->filtered_y = ((int16_t)(mess[15]) << 8) + (int16_t)mess[16];
+		recv_mess->filtered_p = ((int16_t)(mess[17]) << 8) + (int16_t)mess[18];
+		recv_mess->filtered_r = ((int16_t)(mess[19]) << 8) + (int16_t)mess[20];
+		recv_mess->motor1 = ((uint16_t)(mess[21]) << 8) + (uint16_t)mess[22];
+		recv_mess->motor2 = ((uint16_t)(mess[23]) << 8) + (uint16_t)mess[24];
+		recv_mess->motor3 = ((uint16_t)(mess[25]) << 8) + (uint16_t)mess[26];
+		recv_mess->motor4 = ((uint16_t)(mess[27]) << 8) + (uint16_t)mess[28];
+		recv_mess->checksum = ((uint16_t)(mess[29]) << 8) + (uint16_t)mess[30];
 
 		return (void*)recv_mess;
 

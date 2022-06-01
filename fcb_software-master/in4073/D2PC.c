@@ -6,6 +6,7 @@
 
 extern uint8_t current_mode;
 extern int16_t* aes;
+extern int16_t phi, theta, psi;
 
 /*
  * @Author Zirui Li
@@ -90,9 +91,9 @@ D2PC_message init_message(void){
                       .y=yaw, 
                       .r=roll,
                       .p=pitch,
-                      .filtered_y=1,
-                      .filtered_r=4,
-                      .filtered_p=5,
+                      .filtered_y=psi,
+                      .filtered_r=phi,
+                      .filtered_p=theta,
                       .motor1=aes[0], 
                       .motor2=aes[1],
                       .motor3=aes[2],

@@ -72,19 +72,13 @@ void send_data(D2PC_message_p m) {
 	uart_put((uint8_t)(m->r >> 8)& 0xff);
 	uart_put((uint8_t)(m->r & 0xff));
 	
-	uart_put((uint8_t)(m->filtered_y >> 24));
-	uart_put((uint8_t)(m->filtered_y >> 16)& 0xff);
-	uart_put((uint8_t)(m->filtered_y >> 8)& 0xff);
+	uart_put((uint8_t)(m->filtered_y >> 8));
 	uart_put((uint8_t)(m->filtered_y & 0xff));
 
-	uart_put((uint8_t)(m->filtered_p >> 24));
-	uart_put((uint8_t)(m->filtered_p >> 16)& 0xff);
-	uart_put((uint8_t)(m->filtered_p >> 8)& 0xff);
+	uart_put((uint8_t)(m->filtered_p >> 8));
 	uart_put((uint8_t)(m->filtered_p & 0xff));
 
-	uart_put((uint8_t)(m->filtered_r >> 24));
-	uart_put((uint8_t)(m->filtered_r >> 16)& 0xff);
-	uart_put((uint8_t)(m->filtered_r >> 8)& 0xff);
+	uart_put((uint8_t)(m->filtered_r >> 8));
 	uart_put((uint8_t)(m->filtered_r & 0xff));
 
 	uart_put((uint8_t)(m->motor1 >> 8));
