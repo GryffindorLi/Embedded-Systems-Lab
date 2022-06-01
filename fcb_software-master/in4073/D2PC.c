@@ -2,6 +2,10 @@
 #include "D2PC.h"
 #include <stdlib.h>
 #include <string.h>
+#include <in4073.h>
+
+extern uint8_t current_mode;
+extern int16_t* aes;
 
 /*
  * @Author Zirui Li
@@ -81,18 +85,18 @@ uint16_t cal_checksum(D2PC_message message){
  */
 D2PC_message init_message(void){
     D2PC_message m = {.head=DATA_HEADER, 
-                      .mode=0,
+                      .mode=current_mode,
                       .battery=19, 
-                      .y=2, 
-                      .r=3, 
-                      .p=4, 
+                      .y=yaw, 
+                      .r=roll,
+                      .p=pitch,
                       .filtered_y=1,
                       .filtered_r=4,
                       .filtered_p=5,
-                      .motor1=400, 
-                      .motor2=450,
-                      .motor3=500,
-                      .motor4=550,
+                      .motor1=aes[0], 
+                      .motor2=aes[1],
+                      .motor3=aes[2],
+                      .motor4=aes[3],
                       .tail=TAIL};
 
     /* A conceputual implementation

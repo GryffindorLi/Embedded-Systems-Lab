@@ -15,12 +15,12 @@ typedef struct {
     char head;  // 1 byte
     uint8_t mode; // 1 byte 1
     uint8_t battery; // 1 byte 2
-    int16_t y;  // 2 bytes 34
-    int16_t p;  // 2 bytes 56
-    int16_t r;  // 2 bytes 78
-    int16_t filtered_y;  // 2 bytes 9 10
-    int16_t filtered_p;  // 2 bytes 11 12
-    int16_t filtered_r;  // 2 bytes 13 14
+    int32_t y;  // 2 bytes 34
+    int32_t p;  // 2 bytes 56
+    int32_t r;  // 2 bytes 78
+    int32_t filtered_y;  // 2 bytes 9 10
+    int32_t filtered_p;  // 2 bytes 11 12
+    int32_t filtered_r;  // 2 bytes 13 14
     uint16_t motor1;  // 2 bytes 15 16
     uint16_t motor2; // 17 18
     uint16_t motor3;  // 19 20
