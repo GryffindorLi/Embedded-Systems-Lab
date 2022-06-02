@@ -109,15 +109,15 @@ void handle_keys(uint8_t key) {
  */
 void bound_offsets(){
     // controller offset
-	throttle_offset = MIN(20000, MAX(-20000, throttle_offset));
-	yaw_offset = MIN(20000, MAX(-20000, yaw_offset));
-	pitch_offset = MIN(20000, MAX(-20000, pitch_offset));
-	roll_offset = MIN(20000, MAX(-20000, roll_offset));
+	throttle_offset = int8clamp(throttle_offset, -78, 78);
+	roll_offset = int8clamp(roll_offset, -78, 78);
+	pitch_offset = int8clamp(pitch_offset, -78, 78);
+	yaw_offset = int8clamp(yaw_offset, -78, 78);
 
     // PID tuning offset
-	p_offset = MIN(30000, MAX(0, p_offset));
-    i_offset = MIN(30000, MAX(0, i_offset));
-    d_offset = MIN(30000, MAX(0, d_offset));
+	p_offset = int16clamp(p_offset, 0, 30000);
+    i_offset = int16clamp(i_offset, 0, 30000);
+    d_offset = int16clamp(d_offset, 0, 30000);
 }
 
 /*
@@ -128,13 +128,13 @@ void bound_offsets(){
 controls offset_controls(controls cont) {
 	controls offset_control;
 	// throttle (uint16 + int16)
-	offset_control.throttle = safeuint16pint16(cont.throttle, throttle_offset);
+	offset_control.throttle = safeuint8pint8(cont.throttle, throttle_offset);
 	// yaw (int16 + int16)
-	offset_control.yaw = safeint16pint16(cont.yaw, yaw_offset);
+	offset_control.yaw = safeint8pint8(cont.yaw, yaw_offset);
 	// pitch (int16 + int16)
-	offset_control.pitch = safeint16pint16(cont.pitch, pitch_offset);
+	offset_control.pitch = safeint8pint8(cont.pitch, pitch_offset);
 	// roll (int16 + int16)
-	offset_control.roll = safeint16pint16(cont.roll, roll_offset);
+	offset_control.roll = safeint8pint8(cont.roll, roll_offset);
 
 	return offset_control;
 }

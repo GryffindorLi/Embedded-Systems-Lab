@@ -48,7 +48,7 @@ int c_state = 0;
 int Md_flag = 0;
 int Ct_flag = 0;
 uint8_t Md_buffer[3] = {'M', 'd', -1};
-uint8_t Ct_buffer[12] = {'C', 't', 0};
+uint8_t Ct_buffer[8] = {'C', 't', 0};
 uint8_t Ct_p = 2;
 
 void send_data(D2PC_message_p m) {

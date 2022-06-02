@@ -6,10 +6,10 @@
 #include "PC2D.h"
 
 // keyboard control offsets
-int16_t throttle_offset;
-int16_t yaw_offset;
-int16_t pitch_offset;
-int16_t roll_offset;
+int8_t throttle_offset;
+int8_t yaw_offset;
+int8_t pitch_offset;
+int8_t roll_offset;
 int16_t yaw_p_offset;
 int16_t pitch_p_offset;
 int16_t roll_p_offset;

@@ -126,7 +126,11 @@ int16_t set_throttle(uint16_t throttle, uint16_t throttle_scale){
  * @Return updated motor commands in ae array.
  */
 void controller_manual(controls cont){
-	set_aes(cont.throttle, cont.roll / a_scale, cont.pitch / a_scale, cont.yaw / y_scale);
+	int16_t roll = remap8216(cont.roll);
+	int16_t pitch = remap8216(cont.pitch);
+	int16_t yaw = remap8216(cont.yaw);
+	uint16_t throttle = remapu8216(cont.throttle);
+	set_aes(throttle, roll / a_scale, pitch / a_scale, yaw / y_scale);
 }
 
 // ____Control Mode only____:
@@ -207,10 +211,13 @@ int16_t find_altitude(int32_t pressure){
  * @Return error, error derivative and the error integral.
  */
 void get_error(controls cont){
+	int16_t roll = remap8216(cont.roll);
+	int16_t pitch = remap8216(cont.pitch);
+	int16_t yaw = remap8216(cont.yaw);
 	// find the error between control input and filtered IMU values:
-	error[0] = (int32_t) cont.yaw/2 - yaw; // scale yaw control input
-	error[1] = (int32_t) cont.pitch - pitch; // scale pitch control input
-	error[2] = (int32_t) cont.roll - roll; // scale roll control input
+	error[0] = (int32_t) yaw / 2 - yaw; // scale yaw control input
+	error[1] = (int32_t) pitch - pitch; // scale pitch control input
+	error[2] = (int32_t) roll - roll; // scale roll control input
 
 	// compute the derivative of the error:
 	derror[0] = (int32_t) (error[0] - prev_error[0]) * freq;
@@ -242,7 +249,8 @@ void get_error(controls cont){
  * @Return updated motor commands in ae array.
  */
 void controller(controls cont){
-	if(set_throttle(cont.throttle, t_scale) < 100){
+	uint16_t throttle = remapu8216(cont.throttle);
+	if(set_throttle(throttle, t_scale) < 100){
 		ae[0] = ae[1] = ae[2] = ae[3] = 0;
 	} else {
 		// define all 3 PID controllers
@@ -256,7 +264,7 @@ void controller(controls cont){
 			pitch_command = (int32_t) (p_pitch*error[1] + i_pitch*ierror[1] + d_pitch*derror[1])/(LSB_rad); // note: devide by 1000
 			roll_command = (int32_t) (p_roll*error[2] + i_roll*ierror[2] + d_roll*derror[2])/(LSB_rad); // note: devide by 1000
 		}
-		set_aes(cont.throttle, roll_command, pitch_command, yaw_command);
+		set_aes(throttle, roll_command, pitch_command, yaw_command);
 	}
 }
 

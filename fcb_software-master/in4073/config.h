@@ -108,8 +108,8 @@
 // _____keyboard_control_settings_____:
 
 // set offset gains per key hit
-#define throttle_per_key 200
-#define angle_per_key 100
+#define throttle_per_key 1
+#define angle_per_key 1
 
 // _____in4073_settings_____:
 #define panic_to_safe_delay 1000000
