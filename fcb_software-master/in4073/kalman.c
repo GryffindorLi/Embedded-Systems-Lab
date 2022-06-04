@@ -32,7 +32,7 @@ uint32_t Ky[6] = {0, 0, 0, 0, 0, 0};
 
 void yaw_state(){
     y_next[0] = y[0] + y[1]/freq - y[2]/freq;
-    y_next[1] = y[1] + (c1*(-ae[0] + ae[1] - ae[2] + ae[3]))/1000000;
+    y_next[1] = y[1] + (c1*(ae[0] - ae[1] + ae[2] - ae[3]))/1000000;
     y_next[2] = y[2];
 }
 
@@ -54,12 +54,12 @@ void yaw_error(){
 }
 
 void yaw_gain(){
-    Ky[0] = ((Py_next[0]*(Py_next[4] + Ry[0]))/1 - Py_next[1]+Py_next[3]);
-    Ky[1] = ((Py_next[1]*(Py_next[0] + Ry[1]))/1 - Py_next[0]+Py_next[1]);
-    Ky[2] = ((Py_next[3]*(Py_next[4] + Ry[0]))/1 - Py_next[4]+Py_next[3]);
-    Ky[3] = ((Py_next[4]*(Py_next[0] + Ry[1]))/1 - Py_next[3]+Py_next[1]);
-    Ky[4] = ((Py_next[6]*(Py_next[4] + Ry[0]))/1 - Py_next[7]+Py_next[3]);
-    Ky[5] = ((Py_next[7]*(Py_next[0] + Ry[1]))/1 - Py_next[6]+Py_next[1]);
+    Ky[0] = (Py_next[0]*(Py_next[4] + Ry[1]) - Py_next[1]*Py_next[3])/((Py_next[0] + Ry[0])*(Py_next[4] + Ry[1]) - Py_next[1]*Py_next[3]);
+    Ky[1] = (Py_next[1]*(Py_next[0] + Ry[0]) - Py_next[0]*Py_next[1])/((Py_next[0] + Ry[0])*(Py_next[4] + Ry[1]) - Py_next[1]*Py_next[3]);
+    Ky[2] = (Py_next[3]*(Py_next[4] + Ry[1]) - Py_next[4]*Py_next[3])/((Py_next[0] + Ry[0])*(Py_next[4] + Ry[1]) - Py_next[1]*Py_next[3]);
+    Ky[3] = (Py_next[4]*(Py_next[0] + Ry[0]) - Py_next[3]*Py_next[1])/((Py_next[0] + Ry[0])*(Py_next[4] + Ry[1]) - Py_next[1]*Py_next[3]);
+    Ky[4] = (Py_next[6]*(Py_next[4] + Ry[1]) - Py_next[7]*Py_next[3])/((Py_next[0] + Ry[0])*(Py_next[4] + Ry[1]) - Py_next[1]*Py_next[3]);
+    Ky[5] = (Py_next[7]*(Py_next[0] + Ry[0]) - Py_next[6]*Py_next[1])/((Py_next[0] + Ry[0])*(Py_next[4] + Ry[1]) - Py_next[1]*Py_next[3]);
 }
 
 void yaw_update(){
@@ -94,7 +94,7 @@ uint32_t Kp[6] = {0, 0, 0, 0, 0, 0};
 
 void pitch_state(){
     p_next[0] = p[0] + p[1]/freq - p[2]/freq;
-    p_next[1] = p[1] + (c2*(-ae[0] + ae[2]))/(10000*freq);
+    p_next[1] = p[1] + (c2*(ae[0] - ae[2]))/(10000*freq);
     p_next[2] = p[2];
 }
 
@@ -116,12 +116,12 @@ void pitch_error(){
 }
 
 void pitch_gain(){
-    Kp[0] = Pp_next[0]*(Pp_next[4] + Rp[0]) - Pp_next[1]+Pp_next[3];
-    Kp[1] = Pp_next[1]*(Pp_next[0] + Rp[1]) - Pp_next[0]+Pp_next[1];
-    Kp[2] = Pp_next[3]*(Pp_next[4] + Rp[0]) - Pp_next[4]+Pp_next[3];
-    Kp[3] = Pp_next[4]*(Pp_next[0] + Rp[1]) - Pp_next[3]+Pp_next[1];
-    Kp[4] = Pp_next[6]*(Pp_next[4] + Rp[0]) - Pp_next[7]+Pp_next[3];
-    Kp[5] = Pp_next[7]*(Pp_next[0] + Rp[1]) - Pp_next[6]+Pp_next[1];
+    Kp[0] = (Pp_next[0]*(Pp_next[4] + Rp[1]) - Pp_next[1]*Pp_next[3])/((Pp_next[0] + Rp[0])*(Pp_next[4] + Rp[1]) - Pp_next[1]*Pp_next[3]);
+    Kp[1] = (Pp_next[1]*(Pp_next[0] + Rp[0]) - Pp_next[0]*Pp_next[1])/((Pp_next[0] + Rp[0])*(Pp_next[4] + Rp[1]) - Pp_next[1]*Pp_next[3]);
+    Kp[2] = (Pp_next[3]*(Pp_next[4] + Rp[1]) - Pp_next[4]*Pp_next[3])/((Pp_next[0] + Rp[0])*(Pp_next[4] + Rp[1]) - Pp_next[1]*Pp_next[3]);
+    Kp[3] = (Pp_next[4]*(Pp_next[0] + Rp[0]) - Pp_next[3]*Pp_next[1])/((Pp_next[0] + Rp[0])*(Pp_next[4] + Rp[1]) - Pp_next[1]*Pp_next[3]);
+    Kp[4] = (Pp_next[6]*(Pp_next[4] + Rp[1]) - Pp_next[7]*Pp_next[3])/((Pp_next[0] + Rp[0])*(Pp_next[4] + Rp[1]) - Pp_next[1]*Pp_next[3]);
+    Kp[5] = (Pp_next[7]*(Pp_next[0] + Rp[0]) - Pp_next[6]*Pp_next[1])/((Pp_next[0] + Rp[0])*(Pp_next[4] + Rp[1]) - Pp_next[1]*Pp_next[3]);
 }
 
 void pitch_update(){
@@ -156,7 +156,7 @@ uint32_t Kr[6] = {0, 0, 0, 0, 0, 0};
 
 void roll_state(){
     r_next[0] = r[0] + r[1]/freq - r[2]/freq;
-    r_next[1] = r[1] + (c2*(-ae[0] + ae[2]))/(10000*freq);
+    r_next[1] = r[1] + (c3*(ae[1] - ae[3]))/(10000*freq);
     r_next[2] = r[2];
 }
 
@@ -178,12 +178,12 @@ void roll_error(){
 }
 
 void roll_gain(){
-    Kr[0] = Pr_next[0]*(Pr_next[4] + Rr[0]) - Pr_next[1]+Pr_next[3];
-    Kr[1] = Pr_next[1]*(Pr_next[0] + Rr[1]) - Pr_next[0]+Pr_next[1];
-    Kr[2] = Pr_next[3]*(Pr_next[4] + Rr[0]) - Pr_next[4]+Pr_next[3];
-    Kr[3] = Pr_next[4]*(Pr_next[0] + Rr[1]) - Pr_next[3]+Pr_next[1];
-    Kr[4] = Pr_next[6]*(Pr_next[4] + Rr[0]) - Pr_next[7]+Pr_next[3];
-    Kr[5] = Pr_next[7]*(Pr_next[0] + Rr[1]) - Pr_next[6]+Pr_next[1];
+    Kr[0] = (Pr_next[0]*(Pr_next[4] + Rr[1]) - Pr_next[1]*Pr_next[3])/((Pr_next[0] + Rr[0])*(Pr_next[4] + Rr[1]) - Pr_next[1]*Pr_next[3]);
+    Kr[1] = (Pr_next[1]*(Pr_next[0] + Rr[0]) - Pr_next[0]*Pr_next[1])/((Pr_next[0] + Rr[0])*(Pr_next[4] + Rr[1]) - Pr_next[1]*Pr_next[3]);
+    Kr[2] = (Pr_next[3]*(Pr_next[4] + Rr[1]) - Pr_next[4]*Pr_next[3])/((Pr_next[0] + Rr[0])*(Pr_next[4] + Rr[1]) - Pr_next[1]*Pr_next[3]);
+    Kr[3] = (Pr_next[4]*(Pr_next[0] + Rr[0]) - Pr_next[3]*Pr_next[1])/((Pr_next[0] + Rr[0])*(Pr_next[4] + Rr[1]) - Pr_next[1]*Pr_next[3]);
+    Kr[4] = (Pr_next[6]*(Pr_next[4] + Rr[1]) - Pr_next[7]*Pr_next[3])/((Pr_next[0] + Rr[0])*(Pr_next[4] + Rr[1]) - Pr_next[1]*Pr_next[3]);
+    Kr[5] = (Pr_next[7]*(Pr_next[0] + Rr[0]) - Pr_next[6]*Pr_next[1])/((Pr_next[0] + Rr[0])*(Pr_next[4] + Rr[1]) - Pr_next[1]*Pr_next[3]);
 }
 
 void roll_update(){
