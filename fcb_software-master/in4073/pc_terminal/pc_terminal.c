@@ -421,7 +421,7 @@ int main(int argc, char **argv)
 		int axis[6] = {0};
 	#endif
 
-	//char rc = -1;
+	char rc = -1;
 	char c = -1;
 	char tmp_c = -1;
 	uint8_t current_mode = MODE_SAFE;
@@ -475,9 +475,9 @@ int main(int argc, char **argv)
 			c = -1; // reset key
 		}
 #ifdef LOG_FROM_TERMINAL
-		if ((c = serial_port_getchar()) != -1) {
-			term_putchar(c);
-			file_putchar(c, fp);
+		if ((rc = serial_port_getchar()) != -1) {
+			term_putchar(rc);
+			file_putchar(rc, fp);
 		}
 #endif
 
