@@ -1,0 +1,786 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 4.2.1
+ 
+# Built for x86_64-pc-linux-gnu
+ 
+# Copyright (C) 1988-2016 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Sat Jun  4 16:00:48 2022
+
+# Variables
+
+# 'override' directive
+GNUMAKEFLAGS := 
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# environment
+DESKTOP_SESSION = ubuntu
+# default
+.SHELLFLAGS := -c
+# environment
+XDG_SESSION_CLASS = user
+# makefile (from 'Makefile', line 5)
+MAKEFILE_DIR := ./ 
+# environment
+XDG_SESSION_TYPE = x11
+# environment
+VSCODE_LOG_NATIVE = false
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# makefile (from '../components/toolchain/gcc/Makefile.posix', line 3)
+GNU_PREFIX := arm-none-eabi
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+XAUTHORITY = /run/user/1000/gdm/Xauthority
+# environment
+GDMSESSION = ubuntu
+# environment
+XMODIFIERS = @im=ibus
+# makefile
+CURDIR := /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/in4073
+# makefile (from 'Makefile', line 14)
+MK := mkdir
+# makefile
+SHELL = /bin/sh
+# makefile (from 'Makefile', line 15)
+RM := rm -rf
+# environment
+VTE_VERSION = 6003
+# environment
+VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_languagePackId":"1a7316c624e1dd66d26cf581ee0fb4ca.zh-cn","_translationsConfigFile":"/home/ubuntu/.config/Code/clp/1a7316c624e1dd66d26cf581ee0fb4ca.zh-cn/tcf.json","_cacheRoot":"/home/ubuntu/.config/Code/clp/1a7316c624e1dd66d26cf581ee0fb4ca.zh-cn","_resolvedLanguagePackCoreLocation":"/home/ubuntu/.config/Code/clp/1a7316c624e1dd66d26cf581ee0fb4ca.zh-cn/dfd34e8260c270da74b5c2d86d61aee4b6d56977","_corruptedFile":"/home/ubuntu/.config/Code/clp/1a7316c624e1dd66d26cf581ee0fb4ca.zh-cn/corrupted.info","_languagePackSupport":true}
+# environment
+JOURNAL_STREAM = 8:35078
+# makefile (from 'Makefile', line 120)
+CFLAGS = -DNRF51 -DSOFTDEVICE_PRESENT -DS110 -DBLE_STACK_SUPPORT_REQD -mcpu=cortex-m0 -mthumb -mabi=aapcs --std=gnu11  -Wall -Werror -O3 -mfloat-abi=soft  -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin --short-enums
+# environment
+XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
+# makefile (from '../components/toolchain/gcc/Makefile.posix', line 1)
+MAKEFILE_LIST :=  Makefile ../components/toolchain/gcc/Makefile.posix
+# automatic
+@F = $(notdir $@)
+# environment
+IM_CONFIG_PHASE = 1
+# makefile (from 'Makefile', line 166)
+OBJECTS = $(C_OBJECTS) $(ASM_OBJECTS)
+# environment
+USERNAME = ubuntu
+# environment
+XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus,guid=b1a544be07b5406033fb7dde629b5dc4
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# makefile (from 'Makefile', line 26)
+AS := '../gcc-arm-none-eabi/bin/arm-none-eabi-as'
+# environment
+_ = /usr/bin/code
+# environment
+MANAGERPID = 1314
+# makefile (from 'Makefile', line 38)
+C_SOURCE_FILES = $(abspath ../components/toolchain/system_nrf51.c) $(abspath ../components/drivers_nrf/delay/nrf_delay.c) $(abspath ./in4073.c) $(abspath ./control.c) $(abspath ./hal/gpio.c) $(abspath ./hal/timers.c) $(abspath ./hal/uart.c) $(abspath ./hal/twi.c) $(abspath ./hal/adc.c) $(abspath ./hal/barometer.c) $(abspath ./hal/spi_flash.c) $(abspath ./utils/quad_ble.c) $(abspath ./utils/queue.c) $(abspath ./mpu6050/inv_mpu.c) $(abspath ./mpu6050/inv_mpu_dmp_motion_driver.c) $(abspath ./mpu6050/ml.c) $(abspath ./mpu6050/mpu6050.c) $(abspath ../components/libraries/util/app_error.c) $(abspath ../components/libraries/timer/app_timer.c) $(abspath ../components/libraries/util/nrf_assert.c) $(abspath ../components/drivers_nrf/common/nrf_drv_common.c) $(abspath ../components/drivers_nrf/pstorage/pstorage.c) $(abspath ../components/ble/common/ble_advdata.c) $(abspath ../components/ble/ble_advertising/ble_advertising.c) $(abspath ../components/ble/common/ble_conn_params.c) $(abspath ../components/ble/ble_services/ble_nus/ble_nus.c) $(abspath ../components/ble/common/ble_srv_common.c) $(abspath ../components/softdevice/common/softdevice_handler/softdevice_handler.c) $(abspath ./calibration.c) $(abspath ./keyboard.c) $(abspath ./D2PC.c) $(abspath ./PC2D.c) $(abspath ./D2PC_drone.c) $(abspath ./logs_flash.c) $(abspath ./intmaths.c) $(abspath ./kalman.c)
+# environment
+LESSOPEN = | /usr/bin/lesspipe %s
+# environment
+VSCODE_CWD = /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/in4073
+# makefile (from 'Makefile', line 139)
+ASMFLAGS = -x assembler-with-cpp -DNRF51 -DSOFTDEVICE_PRESENT -DS110 -DBLE_STACK_SUPPORT_REQD
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# environment
+PATH = /home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+# makefile (from 'Makefile', line 28)
+LD := '../gcc-arm-none-eabi/bin/arm-none-eabi-ld'
+# environment
+GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
+# makefile (from 'Makefile', line 159)
+ASM_SOURCE_FILE_NAMES = $(notdir $(ASM_SOURCE_FILES))
+# environment
+SESSION_MANAGER = local/ubuntu2004:@/tmp/.ICE-unix/1561,unix/ubuntu2004:/tmp/.ICE-unix/1561
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
+# makefile (from 'Makefile', line 27)
+AR := '../gcc-arm-none-eabi/bin/arm-none-eabi-ar' -r
+# environment
+XDG_MENU_PREFIX = gnome-
+# environment
+VSCODE_LOG_STACK = false
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+INVOCATION_ID = 3caae5802b0b41af80d53d3428fd0f31
+# makefile (from 'Makefile', line 131)
+LDFLAGS = -Xlinker -Map=$(LISTING_DIRECTORY)/$(OUTPUT_FILENAME).map -mthumb -mabi=aapcs -L $(TEMPLATE_PATH) -T$(LINKER_SCRIPT) -mcpu=cortex-m0 -Wl,--gc-sections --specs=nano.specs -lc -lnosys  -lm 
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
+# environment
+LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+# environment
+XDG_SESSION_DESKTOP = ubuntu
+# environment
+SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
+# makefile (from 'Makefile', line 32)
+SIZE := '../gcc-arm-none-eabi/bin/arm-none-eabi-size'
+# automatic
+%F = $(notdir $%)
+# environment
+DISPLAY = :0
+# environment
+VSCODE_PIPE_LOGGING = true
+# makefile (from 'Makefile', line 160)
+ASM_PATHS = $(call remduplicates, $(dir $(ASM_SOURCE_FILES) ))
+# environment
+PWD = /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/in4073
+# default
+.LOADED := 
+# environment
+SSH_AGENT_PID = 1523
+# makefile (from 'Makefile', line 161)
+ASM_OBJECTS = $(addprefix $(OBJECT_DIRECTORY)/, $(ASM_SOURCE_FILE_NAMES:.s=.o) )
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
+# environment
+GTK_MODULES = gail:atk-bridge
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+HOME = /home/ubuntu
+# environment
+LESSCLOSE = /usr/bin/lesspipe %s %s
+# environment
+VSCODE_CLI = 1
+# environment
+VSCODE_CODE_CACHE_PATH = /home/ubuntu/.config/Code/CachedData/dfd34e8260c270da74b5c2d86d61aee4b6d56977
+# environment
+LOGNAME = ubuntu
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+# makefile (from 'Makefile', line 100)
+INC_PATHS = -I$(abspath ./) -I$(abspath ./mpu6050) -I$(abspath ./utils/config) -I$(abspath ./utils) -I$(abspath ./hal) -I$(abspath ../components/device) -I$(abspath ../components/toolchain/gcc) -I$(abspath ../components/toolchain) -I$(abspath ../components/drivers_nrf/hal) -I$(abspath ../components/drivers_nrf/delay) -I$(abspath ../components/softdevice/s110/headers) -I$(abspath ../components/drivers_nrf/config) -I$(abspath ../components/libraries/util) -I$(abspath ../components/ble/common) -I$(abspath ../components/drivers_nrf/pstorage) -I$(abspath ../components/libraries/timer) -I$(abspath ../components/ble/ble_services/ble_nus) -I$(abspath ../components/drivers_nrf/common) -I$(abspath ../components/ble/ble_advertising) -I$(abspath ../components/libraries/trace) -I$(abspath ../components/softdevice/common/softdevice_handler)
+# makefile (from 'Makefile', line 102)
+OBJECT_DIRECTORY = _build
+# environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# environment
+GNOME_DESKTOP_SESSION_ID = this-is-deprecated
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# makefile (from '../components/toolchain/gcc/Makefile.posix', line 2)
+GNU_VERSION := 9.2.1
+# environment
+MAKELEVEL := 0
+# environment
+COLORTERM = truecolor
+# makefile (from 'Makefile', line 35)
+remduplicates = $(strip $(if $1,$(firstword $1) $(call remduplicates,$(filter-out $(firstword $1),$1))))
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# environment
+QT_IM_MODULE = ibus
+# environment
+SHLVL = 1
+# makefile (from 'Makefile', line 29)
+NM := '../gcc-arm-none-eabi/bin/arm-none-eabi-nm'
+# makefile (from 'Makefile', line 25)
+CC := '../gcc-arm-none-eabi/bin/arm-none-eabi-gcc'
+# environment
+GNOME_SHELL_SESSION_MODE = ubuntu
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-5a6de561-742e-4bea-ad24-d5911a735514.sock
+# default
+MAKE_VERSION := 4.2.1
+# environment
+USER = ubuntu
+# makefile (from 'Makefile', line 21)
+NO_ECHO := @
+# makefile
+.DEFAULT_GOAL := default
+# environment
+XDG_CURRENT_DESKTOP = Unity
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# makefile (from 'Makefile', line 3)
+OUTPUT_FILENAME := 
+# default
+MAKE_COMMAND := make
+# default
+.VARIABLES := 
+# automatic
+*F = $(notdir $*)
+# makefile (from '../components/toolchain/gcc/Makefile.posix', line 1)
+GNU_INSTALL_ROOT := ../gcc-arm-none-eabi
+# environment
+VSCODE_IPC_HOOK = /run/user/1000/vscode-9415da10-1.66.2-main.sock
+# makefile
+MAKEFLAGS = pqrR
+# makefile (from 'Makefile', line 77)
+ASM_SOURCE_FILES = $(abspath ../components/toolchain/gcc/gcc_startup_nrf51.s)
+# environment
+MFLAGS = -pqrR
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# makefile (from 'Makefile', line 30)
+OBJDUMP := '../gcc-arm-none-eabi/bin/arm-none-eabi-objdump'
+# environment
+GDK_BACKEND = x11
+# automatic
++F = $(notdir $+)
+# makefile (from 'Makefile', line 155)
+C_SOURCE_FILE_NAMES = $(notdir $(C_SOURCE_FILES))
+# environment
+QT_ACCESSIBILITY = 1
+# makefile (from 'Makefile', line 104)
+OUTPUT_BINARY_DIRECTORY = $(OBJECT_DIRECTORY)
+# default
+MAKEFILES := 
+# makefile (from 'Makefile', line 4)
+MAKEFILE_NAME :=  Makefile
+# automatic
+<F = $(notdir $<)
+# makefile (from 'Makefile', line 7)
+TEMPLATE_PATH = ../components/toolchain/gcc
+# makefile (from 'Makefile', line 1)
+PROJECT_NAME := in4073
+# environment
+LC_ALL = C
+# environment
+DBUS_STARTER_BUS_TYPE = session
+# makefile (from 'Makefile', line 107)
+BUILD_DIRECTORIES := _build
+# makefile (from 'Makefile', line 132)
+LIBS = -lm
+# environment
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/f74fe3ea_f445_4d54_80b5_4977811be54c
+# automatic
+^F = $(notdir $^)
+# makefile (from 'Makefile', line 31)
+OBJCOPY := '../gcc-arm-none-eabi/bin/arm-none-eabi-objcopy'
+# environment
+GNOME_TERMINAL_SERVICE = :1.96
+# default
+SUFFIXES := 
+# makefile (from 'Makefile', line 156)
+C_PATHS = $(call remduplicates, $(dir $(C_SOURCE_FILES) ) )
+# environment
+CHROME_DESKTOP = code-url-handler.desktop
+ 
+# environment
+WINDOWPATH = 2
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# makefile (from 'Makefile', line 103)
+LISTING_DIRECTORY = $(OBJECT_DIRECTORY)
+# default
+.RECIPEPREFIX := 
+# makefile (from 'Makefile', line 157)
+C_OBJECTS = $(addprefix $(OBJECT_DIRECTORY)/, $(C_SOURCE_FILE_NAMES:.c=.o) )
+# environment
+LANG = C
+# environment
+TERM = xterm-256color
+# environment
+VSCODE_PID = 2248
+# environment
+DBUS_STARTER_ADDRESS = unix:path=/run/user/1000/bus,guid=b1a544be07b5406033fb7dde629b5dc4
+# variable set hash-table stats:
+# Load=140/1024=14%, Rehash=0, Collisions=21/357=6%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/in4073 (device 64768, inode 9572111): 31 files, no impossibilities.
+# /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/in4073/hal (device 64768, inode 9572135): No files, no impossibilities so far.
+# /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/in4073/mpu6050 (device 64768, inode 9572153): No files, no impossibilities so far.
+# . (device 64768, inode 9572111): 31 files, no impossibilities.
+# /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/drivers_nrf/pstorage (device 64768, inode 9438221): No files, no impossibilities so far.
+# /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/ble/common (device 64768, inode 9438081): 13 files, no impossibilities.
+# /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/softdevice/common/softdevice_handler (device 64768, inode 9438440): 8 files, no impossibilities.
+# /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/toolchain/gcc (device 64768, inode 9438490): 23 files, no impossibilities.
+# /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/ble/ble_advertising (device 64768, inode 9437983): 4 files, no impossibilities.
+# /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/libraries/timer (device 64768, inode 9438384): No files, no impossibilities so far.
+# /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/libraries/util (device 64768, inode 9438403): No files, no impossibilities so far.
+# /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/toolchain (device 64768, inode 9438485): No files, no impossibilities so far.
+# /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/drivers_nrf/delay (device 64768, inode 9438177): No files, no impossibilities so far.
+# /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/in4073/utils (device 64768, inode 9572173): No files, no impossibilities so far.
+# /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/drivers_nrf/common (device 64768, inode 9438170): No files, no impossibilities so far.
+# /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/ble/ble_services/ble_nus (device 64768, inode 9438063): 4 files, no impossibilities.
+
+# 114 files, no impossibilities in 16 directories.
+
+# Implicit Rules
+
+_build/%.o: %.c
+#  recipe to execute (from 'Makefile', line 182):
+	@echo Compiling file: $(notdir $<)
+	$(NO_ECHO)$(CC) $(CFLAGS) $(INC_PATHS) -c -o $@ $<
+
+_build/%.o: %.s
+#  recipe to execute (from 'Makefile', line 187):
+	@echo Compiling file: $(notdir $<)
+	$(NO_ECHO)$(CC) $(ASMFLAGS) $(INC_PATHS) -c -o $@ $<
+
+# 2 implicit rules, 0 (0.0%) terminal.
+
+# Files
+
+# Not a target:
+_build/ble_advdata.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/nrf_drv_common.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+_build/.out: _build _build/system_nrf51.o _build/nrf_delay.o _build/in4073.o _build/control.o _build/gpio.o _build/timers.o _build/uart.o _build/twi.o _build/adc.o _build/barometer.o _build/spi_flash.o _build/quad_ble.o _build/queue.o _build/inv_mpu.o _build/inv_mpu_dmp_motion_driver.o _build/ml.o _build/mpu6050.o _build/app_error.o _build/app_timer.o _build/nrf_assert.o _build/nrf_drv_common.o _build/pstorage.o _build/ble_advdata.o _build/ble_advertising.o _build/ble_conn_params.o _build/ble_nus.o _build/ble_srv_common.o _build/softdevice_handler.o _build/calibration.o _build/keyboard.o _build/D2PC.o _build/PC2D.o _build/D2PC_drone.o _build/logs_flash.o _build/intmaths.o _build/kalman.o _build/gcc_startup_nrf51.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 193):
+	@echo Linking target: $(OUTPUT_FILENAME).out
+	$(NO_ECHO)$(CC) $(LDFLAGS) $(OBJECTS) $(LIBS) -o $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).out
+
+# Not a target:
+_build/logs_flash.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+all: clean
+#  Command line target.
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/5=0%
+#  recipe to execute (from 'Makefile', line 146):
+	$(NO_ECHO)$(MAKE) -f $(MAKEFILE_NAME) -C $(MAKEFILE_DIR) -e cleanobj
+	$(NO_ECHO)$(MAKE) -f $(MAKEFILE_NAME) -C $(MAKEFILE_DIR) -e in4073
+
+cleanobj:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 227):
+	$(RM) $(BUILD_DIRECTORIES)/*.o
+
+# Not a target:
+_build/adc.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+finalize: genbin genhex echosize
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/kalman.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/calibration.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/timers.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/ble_advertising.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/softdevice_handler.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# makefile (from 'Makefile', line 169)
+in4073: LINKER_SCRIPT = in4073.ld
+# makefile (from 'Makefile', line 168)
+in4073: OUTPUT_FILENAME := in4073
+in4073: _build _build/system_nrf51.o _build/nrf_delay.o _build/in4073.o _build/control.o _build/gpio.o _build/timers.o _build/uart.o _build/twi.o _build/adc.o _build/barometer.o _build/spi_flash.o _build/quad_ble.o _build/queue.o _build/inv_mpu.o _build/inv_mpu_dmp_motion_driver.o _build/ml.o _build/mpu6050.o _build/app_error.o _build/app_timer.o _build/nrf_assert.o _build/nrf_drv_common.o _build/pstorage.o _build/ble_advdata.o _build/ble_advertising.o _build/ble_conn_params.o _build/ble_nus.o _build/ble_srv_common.o _build/softdevice_handler.o _build/calibration.o _build/keyboard.o _build/D2PC.o _build/PC2D.o _build/D2PC_drone.o _build/logs_flash.o _build/intmaths.o _build/kalman.o _build/gcc_startup_nrf51.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+# variable set hash-table stats:
+# Load=2/32=6%, Rehash=0, Collisions=0/2=0%
+#  recipe to execute (from 'Makefile', line 171):
+	@echo Linking target: $(OUTPUT_FILENAME).out
+	$(NO_ECHO)$(CC) $(LDFLAGS) $(OBJECTS) $(LIBS) -o $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).out
+	$(NO_ECHO)$(MAKE) -f $(MAKEFILE_NAME) -C $(MAKEFILE_DIR) -e finalize
+
+# Not a target:
+_build/mpu6050.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.SUFFIXES:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/app_error.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/control.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-04 16:00:35.517175105
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+_build/app_timer.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+genhex:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 215):
+	@echo Preparing: $(OUTPUT_FILENAME).hex
+	$(NO_ECHO)$(OBJCOPY) -O ihex $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).out $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).hex
+
+# Not a target:
+_build/ble_srv_common.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/D2PC.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/keyboard.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/in4073.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/PC2D.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/pstorage.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/twi.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+help:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 151):
+	@echo following targets are available:
+	@echo 	in4073
+
+default: in4073
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+ble:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 243):
+	cd pc_terminal/; make run-ble
+
+# Not a target:
+_build/barometer.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+ 
+
+# Not a target:
+_build/intmaths.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/inv_mpu_dmp_motion_driver.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/uart.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+config.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/nrf_delay.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/ble_nus.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+clean:
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: ''
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# automatic
+# @ := clean
+# automatic
+# % := 
+# automatic
+# * := 
+# automatic
+# + := 
+# automatic
+# | := 
+# automatic
+# < := 
+# automatic
+# ^ := 
+# automatic
+# ? := 
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=1/13=8%
+#  recipe to execute (from 'Makefile', line 224):
+	$(RM) $(BUILD_DIRECTORIES)
+
+upload-run: default pc config.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 239):
+	dfu_serial/./serial_dfu.py  _build/in4073.bin
+	cd pc_terminal/; make run
+
+# Not a target:
+_build/gcc_startup_nrf51.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/gpio.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/inv_mpu.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/D2PC_drone.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+_build:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 178):
+	$(MK) $@
+
+pc-run:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 236):
+	cd pc_terminal/; make run
+	
+
+# Not a target:
+_build/ml.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+_build/.hex: _build/.out
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 204):
+	@echo Preparing: $(OUTPUT_FILENAME).hex
+	$(NO_ECHO)$(OBJCOPY) -O ihex $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).out $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).hex
+
+genbin:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 210):
+	@echo Preparing: $(OUTPUT_FILENAME).bin
+	$(NO_ECHO)$(OBJCOPY) -O binary $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).out $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).bin
+
+# Not a target:
+_build/ble_conn_params.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/system_nrf51.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+echosize:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 219):
+	-@echo ''
+	$(NO_ECHO)$(SIZE) $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).out
+	-@echo ''
+
+# Not a target:
+_build/queue.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/quad_ble.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/spi_flash.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+_build/nrf_assert.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+_build/.bin: _build/.out
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 199):
+	@echo Preparing: $(OUTPUT_FILENAME).bin
+	$(NO_ECHO)$(OBJCOPY) -O binary $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).out $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).bin
+
+upload: default
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 230):
+	dfu_serial/./serial_dfu.py  _build/in4073.bin
+
+pc:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 233):
+	cd pc_terminal/; make
+
+# Not a target:
+../components/toolchain/gcc/Makefile.posix:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-11 09:59:25.414971003
+#  File has been updated.
+#  Successfully updated.
+
+# files hash-table stats:
+# Load=61/1024=6%, Rehash=0, Collisions=5/169=3%
+# VPATH Search Paths
+
+vpath %.c /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/toolchain:/home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/drivers_nrf/delay:/home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/in4073:/home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/in4073/hal:/home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/in4073/utils:/home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/in4073/mpu6050:/home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/libraries/util:/home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/libraries/timer:/home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/drivers_nrf/common:/home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/drivers_nrf/pstorage:/home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/ble/common:/home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/ble/ble_advertising:/home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/ble/ble_services/ble_nus:/home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/softdevice/common/softdevice_handler
+vpath %.s /home/ubuntu/Desktop/CS4140ES-Embedded-Systems-Lab/fcb_software-master/components/toolchain/gcc
+
+# 2 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 151 / storage = 3392 B / avg = 22 B
+# current buf: size = 8162 B / used = 3392 B / count = 151 / avg = 22 B
+
+# strcache performance: lookups = 258 / hit rate = 41%
+# hash-table stats:
+# Load=151/8192=2%, Rehash=0, Collisions=9/258=3%
+# Finished Make data base on Sat Jun  4 16:00:48 2022
+
+ 

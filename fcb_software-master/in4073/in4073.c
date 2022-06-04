@@ -36,6 +36,7 @@
 #include "D2PC_drone.h"
 #include "keyboard.h"
 #include "config.h"
+#include "logs_flash.h"
 
 bool demo_done;
 uint32_t panic_to_safe_timer = -1;
@@ -50,50 +51,6 @@ int Ct_flag = 0;
 uint8_t Md_buffer[3] = {'M', 'd', -1};
 uint8_t Ct_buffer[12] = {'C', 't', 0};
 uint8_t Ct_p = 2;
-
-void send_data(D2PC_message_p m) {
-    uart_put((uint8_t)(m->head));
-
-	uart_put(m->mode);
-
-	uart_put(m->battery);
-
-	uart_put((uint8_t)(m->y >> 24));
-	uart_put((uint8_t)(m->y >> 16)& 0xff);
-	uart_put((uint8_t)(m->y >> 8)& 0xff);
-	uart_put((uint8_t)(m->y & 0xff));
-
-	uart_put((uint8_t)(m->p >> 24));
-	uart_put((uint8_t)(m->p >> 16)& 0xff);
-	uart_put((uint8_t)(m->p >> 8)& 0xff);
-	uart_put((uint8_t)(m->p & 0xff));
-
-	uart_put((uint8_t)(m->r >> 24));
-	uart_put((uint8_t)(m->r >> 16)& 0xff);
-	uart_put((uint8_t)(m->r >> 8)& 0xff);
-	uart_put((uint8_t)(m->r & 0xff));
-	
-	uart_put((uint8_t)(m->filtered_y >> 8));
-	uart_put((uint8_t)(m->filtered_y & 0xff));
-
-	uart_put((uint8_t)(m->filtered_p >> 8));
-	uart_put((uint8_t)(m->filtered_p & 0xff));
-
-	uart_put((uint8_t)(m->filtered_r >> 8));
-	uart_put((uint8_t)(m->filtered_r & 0xff));
-
-	uart_put((uint8_t)(m->motor1 >> 8));
-	uart_put((uint8_t)(m->motor1 & 0xff));
-	uart_put((uint8_t)(m->motor2 >> 8));
-	uart_put((uint8_t)(m->motor2 & 0xff));
-	uart_put((uint8_t)(m->motor3 >> 8));
-	uart_put((uint8_t)(m->motor3 & 0xff));
-	uart_put((uint8_t)(m->motor4 >> 8));
-	uart_put((uint8_t)(m->motor4 & 0xff));
-	uart_put((uint8_t)(m->checksum >> 8));
-	uart_put((uint8_t)(m->checksum & 0xff));
-	uart_put((uint8_t)(m->tail));
-}
 
 /*
  * @Author: Hanyuan Ban
@@ -383,7 +340,27 @@ int main(void)
 			}
 
 			adc_request_sample();
-			read_baro();		
+			read_baro();
+			D2PC_message p = init_message();
+			//send_data(&m);
+
+			write_D2PC_msg_flash(&p);
+#ifndef LOG_FROM_TERMINAL
+			send_data(&m);
+#endif
+
+#ifdef LOG_FROM_TERMINAL
+/*
+			print_data(&m);
+			printf("index: %hu,mode: %hu,battery: %hu,"\
+            "yaw: %ld,pitch: %ld,roll: %ld,"\
+            "filtered_yaw: %hd,filtered_pitch: %hd,filtered_roll: %hd,"\
+            " motor1: %hd,motor2: %hd,motor3: %hd,motor4: %hd\n", 
+            p.idx, p.mode, p.battery, p.y, p.p, p.r,
+            p.filtered_y, p.filtered_p, p.filtered_r, p.motor1,
+            p.motor2, p.motor3, p.motor4);
+*/
+#endif		
 
 			clear_timer_flag();
 		}

@@ -1,16 +1,15 @@
-#include <stdbool.h>
+#include <stdio.h>
 #include "D2PC.h"
 #include <stdlib.h>
 #include <string.h>
-#include "in4073.h"
 
 /*
  * @Author Zirui Li
  * @Param message The message with all fields being filled except the checksum field.
  * @Return the checksum of the message.
  */
-uint16_t cal_checksum(D2PC_message message){
-    uint16_t sum = 0;
+int16_t cal_checksum(D2PC_message message){
+    int16_t sum = 0;
 
     while (message.mode != 0){
         sum += (message.mode) & 1;
@@ -70,6 +69,11 @@ uint16_t cal_checksum(D2PC_message message){
     while (message.filtered_r != 0){
         sum += (message.filtered_r) & 1;
         message.filtered_r >>= 1;
+    }
+
+    while (message.idx != 0){
+        sum += (message.idx) & 1;
+        message.idx >>= 1;
     }
 
     return sum;    

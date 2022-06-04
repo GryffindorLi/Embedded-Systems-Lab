@@ -1,0 +1,488 @@
+mpu init result: 0
+mpu set sensors: 0
+mpu conf fifo  : 0
+
+dmp load firm  : 0
+dmp set orient : 0
+dmp en features: 0
+dmp set rate   : 0
+dmp set state  : 0
+dlpf set freq  : 0
+
+Motor0: 1984, Motor1: 0, Motor2: 1745, Motor3: 0
+index: 0,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 1,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 2,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 3,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 4,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 5,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 6,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 7,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 8,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 9,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 10,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 11,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 12,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 13,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 14,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 15,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 16,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 17,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 18,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 19,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 20,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 10ms
+index: 21,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 22,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 23,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 24,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 25,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 26,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 27,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 28,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 29,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 30,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 31,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 32,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 33,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 34,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 35,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 36,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 37,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 38,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 39,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 40,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 17ms
+index: 41,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 42,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 43,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 44,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 45,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 46,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 47,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 48,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 49,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 50,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 51,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 52,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 53,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 54,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 55,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 56,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 57,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 58,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 59,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 60,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 9ms
+index: 61,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 62,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 63,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 64,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 65,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 66,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 67,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 68,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 69,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 70,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 71,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 72,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 73,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 74,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 75,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 76,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 77,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 78,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 79,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 80,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 9ms
+index: 81,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 82,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 83,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 84,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 85,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 86,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 87,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 88,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 89,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 90,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 91,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 92,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 93,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 94,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 95,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 96,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 97,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 98,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 99,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 100,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 10ms
+index: 101,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 102,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 103,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 104,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 105,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 106,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 107,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 108,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 109,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 110,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 111,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 112,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 113,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 114,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 115,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 116,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 117,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 118,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 119,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 120,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 46ms
+index: 121,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 122,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 123,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 124,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 125,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 126,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 127,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 128,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 129,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 130,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 131,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 132,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 133,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 134,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 135,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 136,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 137,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 138,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 139,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 140,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 20ms
+index: 141,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 142,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 143,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 144,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 145,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 146,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 147,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 148,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 149,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 150,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 151,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 152,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 153,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 154,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 155,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 156,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 157,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 158,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 159,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 160,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 13ms
+index: 161,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 162,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 163,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 164,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 165,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 166,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 167,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 168,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 169,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 170,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 171,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 172,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 173,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 174,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 175,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 176,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 177,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 178,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 179,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 180,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 44ms
+index: 181,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 182,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 183,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 184,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 185,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 186,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 187,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 188,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 189,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 190,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 191,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 192,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 193,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 194,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 195,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 196,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 197,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 198,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 199,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 200,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 49ms
+index: 201,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 202,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 203,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 204,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 205,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 206,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 207,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 208,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 209,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 210,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 211,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 212,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 213,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 214,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 215,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 216,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 217,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 218,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 219,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 220,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 41ms
+index: 221,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 222,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 223,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 224,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 225,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 226,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 227,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 228,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 229,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 230,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 231,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 232,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 233,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 234,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 235,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 236,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 237,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 238,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 239,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 240,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 18ms
+index: 241,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 242,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 243,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 244,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 245,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 246,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 247,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 248,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 249,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 250,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 251,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 252,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 253,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 254,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 255,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 0,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 1,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 2,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 3,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 4,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 10ms
+index: 5,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 6,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 7,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 8,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 9,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 10,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 11,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 12,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 13,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 14,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 15,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 16,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 17,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 18,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 19,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 20,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 21,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 22,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 23,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 24,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 33ms
+index: 25,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 26,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 27,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 28,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 29,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 30,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 31,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 32,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 33,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 34,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 35,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 36,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 37,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 38,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 39,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 40,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 41,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 42,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 43,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 44,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 30ms
+index: 45,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 46,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 47,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 48,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 49,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 50,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 51,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 52,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 53,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 54,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 55,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 56,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 57,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 58,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 59,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 60,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 61,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 62,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 63,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 64,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 2ms
+index: 65,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 66,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 67,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 68,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 69,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 70,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 71,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 72,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 73,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 74,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 75,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 76,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 77,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 78,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 79,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 80,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 81,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 82,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 83,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 84,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 20ms
+index: 85,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 86,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 87,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 88,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 89,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 90,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 91,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 92,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 93,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 94,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 95,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 96,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 97,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 98,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 99,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 100,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 101,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 102,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 103,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 104,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 9ms
+index: 105,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 106,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 107,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 108,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 109,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 110,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 111,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 112,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 113,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 114,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 115,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 116,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 117,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 118,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 119,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 120,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 121,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 122,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 123,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+Motor0: 0, Motor1: 0, Motor2: 0, Motor3: 0
+index: 124,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+
+ Loop Time : 10ms
+index: 125,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 126,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 127,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 128,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 129,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 130,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 131,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 132,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 133,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 134,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 135,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 136,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 137,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 138,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 139,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 140,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 141,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 142,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 5,filtered_roll: 4, motor1: 400,motor2: 450,motor3: 500,motor4: 550
+index: 143,mode: 0,battery: 19,yaw: 171,pitch: 241,roll: 205,filtered_yaw: 1,filtered_pitch: 

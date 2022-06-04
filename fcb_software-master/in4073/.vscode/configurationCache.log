@@ -1,0 +1,1 @@
+{"buildTargets":["_build","_build/.bin","_build/.hex","_build/.out","all","ble","clean","cleanobj","default","echosize","finalize","genbin","genhex","help","in4073","pc","pc-run","upload","upload-run"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}
