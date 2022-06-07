@@ -34,12 +34,13 @@ int32_t roll_buf[3];
 // calibration data
 int16_t C_pitch_offset, C_roll_offset, C_yaw_offset;
 int16_t C_pitch_slope, C_roll_slope;
-int calibration;
+extern int calibration;
 
 // tuned PID values:
 int16_t p_yaw, i_yaw, d_yaw;
 int16_t p_pitch, i_pitch, d_pitch;
 int16_t p_roll, i_roll, d_roll;
+int16_t p_height, i_height, d_height;
 
 // functions:
 void update_motors(void);

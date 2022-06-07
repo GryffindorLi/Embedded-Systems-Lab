@@ -10,3 +10,4 @@ int16_t int16sqrt(int16_t a);
 int16_t int16sqrt2(int16_t motor_val);
 uint16_t uint16clamp(uint16_t a, uint16_t min, uint16_t max);
 int16_t int16clamp(int16_t a, int16_t min, int16_t max);
+int32_t log1000(int32_t a);

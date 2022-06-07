@@ -20,6 +20,7 @@ int16_t d_offset = 0;
 int16_t p_yaw, i_yaw, d_yaw;
 int16_t p_pitch, i_pitch, d_pitch;
 int16_t p_roll, i_roll, d_roll;
+int16_t p_height, i_height, d_height;
 
 /*
  * @Author Kenrick Trip
@@ -41,17 +42,23 @@ void handle_keys(uint8_t key) {
 		case 'c':
 			yaw_offset += angle_per_key;
 			break;
-		case 'h': // up
+		case 'h': 
 			pitch_offset += angle_per_key;
 			break;
-		case 'n': // down
+		case 'n': 
 			pitch_offset -= angle_per_key;
 			break;
-		case 'b': // left
+		case 'b': 
 			roll_offset += angle_per_key;
 			break;
-		case 'm': // right
+		case 'm': 
 			roll_offset -= angle_per_key;
+			break;
+		case 'o': 
+			height_offset += height_per_key;
+			break;
+		case 'l': 
+			height_offset -= height_per_key;
 			break;
 
         // PID tuning offsets:
@@ -62,8 +69,10 @@ void handle_keys(uint8_t key) {
 				p_offset += (tune_offset*Kpp)/100;
 			else if (tuning_axis == 3)
 				p_offset += (tune_offset*Kpr)/100;
+			else if (tuning_axis == 4)
+				p_offset += (tune_offset*Kph)/100;
 			else
-				printf("ERROR: invalid tuning axis should be (1,2,3)");
+				printf("ERROR: invalid tuning axis should be (1,2,3,4)");
 			break;
 
         case 'i':
@@ -73,8 +82,10 @@ void handle_keys(uint8_t key) {
 				i_offset += (tune_offset*Kip)/100;
 			else if (tuning_axis == 3)
 				i_offset += (tune_offset*Kir)/100;
+			else if (tuning_axis == 4)
+				i_offset += (tune_offset*Kih)/100;
 			else
-				printf("ERROR: invalid tuning axis should be (1,2,3)");
+				printf("ERROR: invalid tuning axis should be (1,2,3,4)");
 			break;
 
 		case 'd':
@@ -84,8 +95,10 @@ void handle_keys(uint8_t key) {
 				d_offset += (tune_offset*Kdp)/100;
 			else if (tuning_axis == 3)
 				d_offset += (tune_offset*Kdr)/100;
+			else if (tuning_axis == 4)
+				d_offset += (tune_offset*Kdh)/100;
 			else
-				printf("ERROR: invalid tuning axis should be (1,2,3)");
+				printf("ERROR: invalid tuning axis should be (1,2,3,4)");
 			break;
 
         // resets
@@ -113,6 +126,7 @@ void bound_offsets(){
 	yaw_offset = MIN(20000, MAX(-20000, yaw_offset));
 	pitch_offset = MIN(20000, MAX(-20000, pitch_offset));
 	roll_offset = MIN(20000, MAX(-20000, roll_offset));
+	height_offset = MIN(100, MAX(-100, height_offset));
 
     // PID tuning offset
 	p_offset = MIN(30000, MAX(0, p_offset));
@@ -135,6 +149,8 @@ controls offset_controls(controls cont) {
 	offset_control.pitch = safeint16pint16(cont.pitch, pitch_offset);
 	// roll (int16 + int16)
 	offset_control.roll = safeint16pint16(cont.roll, roll_offset);
+	// height (int16 + int16)
+	offset_control.height = safeint16pint16(cont.height, height_offset);
 
 	return offset_control;
 }
@@ -166,8 +182,15 @@ void update_controller_gains(){
 		if (PID_prints)
 			printf("\nP: %d, I: %d, D: %d\n", p_roll, i_roll, d_roll);
 	}
+	else if (tuning_axis == 4){
+		p_height = safeint16pint16(Kph, p_offset);
+		i_height = safeint16pint16(Kih, i_offset);
+		d_height = safeint16pint16(Kdh, d_offset);
+		if (PID_prints)
+			printf("\nP: %d, I: %d, D: %d\n", p_height, i_height, d_height);
+	}
 	else
-		printf("ERROR: invalid tuning axis should be (1,2,3)");
+		printf("ERROR: invalid tuning axis should be (1,2,3,4)");
 }
 
 /*

@@ -16,6 +16,12 @@
 // uncomment to disbale tuning
 #define tuning
 
+
+// ____PC terminal settings_____:
+#define TRANSMISSION_FREQ 100
+#define JOYSTICK_WATCHDOG_LIFETIME 200
+// #define JOYSTICK
+
 // _____control gains_____:
 
 // yaw control gains:
@@ -32,6 +38,12 @@
 #define Kpr 4000
 #define Kir 85
 #define Kdr 300
+
+// height control gains:
+#define Kph 100
+#define Kih 100
+#define Kdh 100
+
 
 // _____scaling factors_____:
 
@@ -100,7 +112,7 @@
 
 // tuning change in percentage:
 #define tune_offset 3
-// 1 = yaw, 2 = pitch, 3 = roll
+// 1 = yaw, 2 = pitch, 3 = roll, 4 = height
 #define tuning_axis 1
 // enable PID prints, 1 = enable, 0 = disable
 #define PID_prints 0
@@ -110,6 +122,7 @@
 // set offset gains per key hit
 #define throttle_per_key 200
 #define angle_per_key 100
+#define height_per_key 5 // height in cm 
 
 // _____in4073_settings_____:
 #define panic_to_safe_delay 1000000

@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <inttypes.h>
+#include "../config.h"
 
 /*------------------------------------------------------------
  * console I/O
@@ -271,13 +272,19 @@ int send_mode_msg(uint8_t mode) {
 	return bytes;
 }
 
-uint8_t get_mode_change(char key, controls cont, int* buttons) {
+uint8_t get_mode_change(char key, controls cont, int* buttons, uint8_t current_mode) {
 	if (key == 27) return MODE_PANIC;	//escape
 	if (key == '0') return 0;
 	if (key == '1' || buttons[0] == 1) return MODE_PANIC;
 	if (key >= '2' && key <= '8') {
-		if (cont.pitch == 0 && cont.roll == 0 && cont.yaw == 0 && cont.throttle == 0 ) return (uint8_t) key - '0';
-		else fprintf(stderr,"Keep Controls Neutral!!\n");
+		if (cont.pitch == 0 && cont.roll == 0 && cont.yaw == 0 && cont.throttle == 0 ) 
+			return (uint8_t) key - '0';
+		else if (current_mode == MODE_FULL_CONTROL && key == '7')
+			return (uint8_t) key - '0';
+		else if (current_mode == MODE_HEIGHT_CONTROL && key == '5')
+			return (uint8_t) key - '0';
+		else
+			fprintf(stderr,"Keep Controls Neutral!!\n");
 	}
 	return 255;
 }
@@ -334,10 +341,6 @@ float time_dif(struct timeval st, struct timeval ed) {
 	return (ed.tv_sec - st.tv_sec) * 1000.0f + (ed.tv_usec - st.tv_usec) / 1000.0f;
 }
 
-#define TRANSMISSION_FREQ 100
-#define JOYSTICK_WATCHDOG_LIFETIME 200
-
-// #define JOYSTICK
 
 /*----------------------------------------------------------------
  * main -- execute terminal
@@ -374,9 +377,9 @@ int main(int argc, char **argv)
 	struct timeval ctrl_trans_start;
 	struct timeval ctrl_trans_end;
 	#ifndef JOYSTICK
-		struct timeval ctrl_monitor_start;
-		struct timeval ctrl_monitor_end;
-		gettimeofday(&ctrl_monitor_start, 0);
+		// struct timeval ctrl_monitor_start;
+		// struct timeval ctrl_monitor_end;
+		// gettimeofday(&ctrl_monitor_start, 0);
 	#else
 		int joystick_watchdog = JOYSTICK_WATCHDOG_LIFETIME;
 		struct js_event js;
@@ -388,7 +391,7 @@ int main(int argc, char **argv)
 	char tmp_c = -1;
 	uint8_t current_mode = MODE_SAFE;
 	uint8_t tmp_mode = -1;
-	controls cont = {0, 0, 0, 0};
+	controls cont = {0, 0, 0, 0, 0};
 	int buttons[12] = {0};
 	
 	gettimeofday(&ctrl_trans_start, 0);
@@ -401,12 +404,6 @@ int main(int argc, char **argv)
 		
 		#ifndef JOYSTICK
 			if (keyboard_control(&cont, c)) c = -1;
-			gettimeofday(&ctrl_monitor_end, 0);
-			if (time_dif(ctrl_monitor_start, ctrl_monitor_end) > 1000.0) {
-				if (current_mode != MODE_CALIBRATION)
-					printf("\n--==<< controls (trpy): %d %d %d %d >>==--\n", cont.throttle, cont.roll, cont.pitch, cont.yaw);
-				gettimeofday(&ctrl_monitor_start, 0);
-			}
 		#else
 			// read controls and detect connection of joystick
 			if (read_file(fd, js, axis, buttons) == -1) {
@@ -421,7 +418,7 @@ int main(int argc, char **argv)
 		#endif
 
 
-		tmp_mode = get_mode_change(c, cont, buttons);
+		tmp_mode = get_mode_change(c, cont, buttons, current_mode);
 		// transmit mode change signal immediately after detection
 		if (tmp_mode != 255) {
 			current_mode = tmp_mode;
@@ -429,9 +426,9 @@ int main(int argc, char **argv)
 			c = -1;
 		}
 		
-		// transmit control signal at transmission frequency (50Hz)
+		// transmit control signal at transmission frequency
 		gettimeofday(&ctrl_trans_end, 0);
-		if (time_dif(ctrl_trans_start, ctrl_trans_end) > (float) (1000 / TRANSMISSION_FREQ)) {
+		if (time_dif(ctrl_trans_start, ctrl_trans_end)*1000 > (1000000 / TRANSMISSION_FREQ)) {
 			gettimeofday(&ctrl_trans_start, 0);
 			send_ctrl_msg(cont, c);
 			c = -1; // reset key

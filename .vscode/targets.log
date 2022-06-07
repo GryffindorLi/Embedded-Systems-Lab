@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
-
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -8,7 +6,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Jun  1 08:37:52 2022
+# Make data base, printed on Tue Jun  7 14:45:28 2022
 
 # Variables
 
@@ -51,7 +49,7 @@ SNAP_DATA = /var/snap/code/97
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:53367
+JOURNAL_STREAM = 8:48065
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -77,7 +75,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 _ = /snap/code/97/usr/share/code/code
 # environment
-MANAGERPID = 1596
+MANAGERPID = 1686
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -93,7 +91,7 @@ PATH = /home/kenrick/.local/bin:/home/kenrick/.local/bin:/usr/local/sbin:/usr/lo
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/UBUNTUPC:@/tmp/.ICE-unix/1849,unix/UBUNTUPC:/tmp/.ICE-unix/1849
+SESSION_MANAGER = local/UBUNTUPC:@/tmp/.ICE-unix/1940,unix/UBUNTUPC:/tmp/.ICE-unix/1940
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -111,7 +109,7 @@ DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 4889785d58a34122a96b3ce8f90cf78c
+INVOCATION_ID = 583ee8cadffb49a5bc3a84217c724b4a
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/97/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -123,7 +121,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 87823
+GIO_LAUNCHED_DESKTOP_FILE_PID = 27781
 # automatic
 %F = $(notdir $%)
 # environment
@@ -137,7 +135,7 @@ PWD = /home/kenrick/Documents/GitHub/CS4140ES-Embedded-Systems-Lab
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1814
+SSH_AGENT_PID = 1905
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -189,7 +187,7 @@ SHLVL = 0
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-cafaad63-af71-4897-8137-f2d38255fb53.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-e725cdcf-51cc-44fb-879e-80885dd21291.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -269,7 +267,7 @@ LC_ADDRESS = nl_NL.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 87874
+VSCODE_PID = 27866
 # variable set hash-table stats:
 # Load=129/1024=13%, Rehash=0, Collisions=23/151=15%
 
@@ -301,6 +299,9 @@ Makefile:
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has been updated.
+ 
+make: *** No rule to make target 'all'.  Stop.
+
 #  Failed to be updated.
 
 # Not a target:
@@ -337,6 +338,6 @@ GNUmakefile:
 # strcache performance: lookups = 19 / hit rate = 15%
 # hash-table stats:
 # Load=16/8192=0%, Rehash=0, Collisions=1/19=5%
-# Finished Make data base on Wed Jun  1 08:37:52 2022
+# Finished Make data base on Tue Jun  7 14:45:28 2022
 
  

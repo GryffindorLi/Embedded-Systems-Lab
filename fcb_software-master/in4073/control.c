@@ -38,13 +38,14 @@ int16_t sp_scaled[3],phi_scaled[3], sax_scaled[3];
 int16_t C1 = 100;
 int32_t C2 = 1000000; // constants
 
-// for altitude calculations:
+// for altitude control:
+int init_altitude = 0;
 int32_t ref_temp = 0;
 int8_t ref_altitude = 0;
 int32_t ref_pressure = 0;
 int32_t pressure;
 int32_t temperature;
-int16_t altitude = 0;
+int16_t selected_height;
 
 // placeholders:
 uint16_t motor[4];
@@ -64,6 +65,7 @@ int32_t yaw, pitch, roll = 0;
 int32_t yaw_buf[3] = {0, 0, 0};
 int32_t pitch_buf[3] = {0, 0, 0};
 int32_t roll_buf[3] = {0, 0, 0};
+int32_t alt_buf[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 // calibration data
 int16_t C_pitch_offset, C_roll_offset, C_yaw_offset;
@@ -78,11 +80,13 @@ int32_t ierror[4];
 int32_t yaw_command;
 int32_t pitch_command;
 int32_t roll_command;
+int32_t height_control_command;
 
 // tuned PID values:
 int16_t p_yaw = Kpy, i_yaw = Kiy, d_yaw = Kdy;
 int16_t p_pitch = Kpp, i_pitch = Kip, d_pitch = Kdp;
 int16_t p_roll = Kpr, i_roll = Kir, d_roll = Kdr;
+int16_t p_height = Kph, i_height = Kih, d_height = Kdh;
 
 void update_motors(void){
 	motor[0] = ae[0];
@@ -91,6 +95,11 @@ void update_motors(void){
 	motor[3] = ae[3];
 }
 
+/*
+ * @AuthorHanyuan
+ * @Param cont, struct of control commands.
+ * @Return scaled throttle value.
+ */
 void set_aes(uint16_t throttle, int16_t scaled_roll, int16_t scaled_pitch, int16_t scaled_yaw) {
 	if (set_throttle(throttle, t_scale) == 0){
 		ae[0] = ae[1] = ae[2] = ae[3] = 0;
@@ -196,9 +205,12 @@ void filter_angles(void){
  * @Return the square root of this value.
  */
 int16_t find_altitude(int32_t pressure){
-	int32_t pressure_ratio = (pressure/ref_pressure)*1000;
-	int32_t log_pressure_ratio = (-1742 + (2821 + (-1470 + (447 - 56.57 * (pressure_ratio/1000)) * (pressure_ratio/1000)) * (pressure_ratio/1000)) * (pressure_ratio/1000));
-	return ref_altitude + (log_pressure_ratio*8314.46*(ref_temp + 273))/(-9810*29);
+	for (int i=0; i<8; i++){
+		alt_buf[i+1] = alt_buf[i];
+		alt_buf[0] = ref_altitude + (log1000(((pressure - ref_pressure)*1000000)/ref_pressure)*(ref_temp/113 + 273))/(-10*300);
+	}
+
+	return (alt_buf[0] + alt_buf[1] + alt_buf[2] + alt_buf[3] + alt_buf[4] + alt_buf[5] + alt_buf[6] + alt_buf[7] + alt_buf[8])/9;
 }
 
 /*
@@ -229,9 +241,8 @@ void get_error(controls cont){
 
 	// calculate height control error
 	if(height_control_mode == 1 && calibration == 1){
-		altitude = find_altitude(pressure);
-		error[3] = (int32_t) 0; // add cont.height - altitude
-		derror[2] = (int32_t) (error[3] - prev_error[3]) * freq;
+		error[3] = (int32_t) cont.height - find_altitude(pressure);
+		derror[3] = (int32_t) (error[3] - prev_error[3]) * freq;
 		ierror[3] = (int32_t) (error[3] + prev_error[3]) / (2 * freq);
 	}
 }
@@ -246,22 +257,43 @@ void controller(controls cont){
 		ae[0] = ae[1] = ae[2] = ae[3] = 0;
 	} else {
 		// define all 3 PID controllers
-		yaw_command = (int32_t) (p_yaw*error[0] + i_yaw*ierror[0] + d_yaw*derror[0]) / (LSB_drad); // note: do not devide by 1000
+		yaw_command = (int32_t) (p_yaw*error[0] + i_yaw*ierror[0] + d_yaw*derror[0]) / (LSB_drad); 
 
 		if (yaw_control_mode) {
 			pitch_command = 0;
 			roll_command = 0;
 		} else {
 			// yaw_command = 0; // disable yaw control for tuning
-			pitch_command = (int32_t) (p_pitch*error[1] + i_pitch*ierror[1] + d_pitch*derror[1])/(LSB_rad); // note: devide by 1000
-			roll_command = (int32_t) (p_roll*error[2] + i_roll*ierror[2] + d_roll*derror[2])/(LSB_rad); // note: devide by 1000
+			pitch_command = (int32_t) (p_pitch*error[1] + i_pitch*ierror[1] + d_pitch*derror[1])/(LSB_rad); 
+			roll_command = (int32_t) (p_roll*error[2] + i_roll*ierror[2] + d_roll*derror[2])/(LSB_rad);
 		}
-		set_aes(cont.throttle, roll_command, pitch_command, yaw_command);
+
+		if(height_control_mode == 1 && calibration == 1)
+			height_control_command = (p_height*error[3] + i_height*ierror[3] + d_height*derror[3])/100;
+		else
+			height_control_command = 0;
+
+		set_aes(cont.throttle + height_control_command, roll_command, pitch_command, yaw_command);
 	}
 }
 
+
 /*
- * @Author Hanyuan
+ * @Author Kenrick Trip
+ * @Param none.
+ * @Return selected_height, init altitude set to 1.
+ */
+void initialize_height_control(){
+	printf("\nSet initial height\n");
+	find_altitude(pressure);
+	selected_height = alt_buf[0];
+	init_altitude = 1;
+	for(int i=0; i<9; i++)
+		find_altitude(pressure);
+}
+
+/*
+ * @Author Kenrick Trip
  * @Param cont, struct of control commands, key input, controller mode.
  * @Return motor output.
  */
@@ -285,6 +317,8 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			handle_keys(key);
 			actuate_cont = offset_controls(cont);
 			controller_manual(actuate_cont);
+
+			printf("%d\n", find_altitude(pressure));
 			break;
 
 		case MODE_CALIBRATION:
@@ -295,6 +329,8 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 
 		case MODE_YAW_CONTROL:
 			yaw_control_mode = 1;
+			height_control_mode = 0;
+
 			handle_keys(key);
 			actuate_cont = offset_controls(cont);
 
@@ -309,6 +345,9 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 
 		case MODE_FULL_CONTROL:
 			yaw_control_mode = 0;
+			height_control_mode = 0;
+			init_altitude = 0;
+
 			handle_keys(key);
 			actuate_cont = offset_controls(cont);
 
@@ -321,9 +360,9 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			controller(actuate_cont);
 			break;
 
-		case MODE_HEIGHT_CONTROL:
+		case MODE_RAW:
 			yaw_control_mode = 0;
-			height_control_mode = 1;
+			height_control_mode = 0;
 
 			handle_keys(key);
 			actuate_cont = offset_controls(cont);
@@ -332,9 +371,33 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 				update_controller_gains();
 			#endif
 
-			filter_angles();
+			run_kalman_filter();
 			get_error(actuate_cont);
 			controller(actuate_cont);
+			break;
+
+		case MODE_HEIGHT_CONTROL:
+			yaw_control_mode = 0;
+			height_control_mode = 1;
+
+			if (calibration == 0){
+				printf("\nCalibrate first!\n");
+			} else {
+				if (init_altitude == 0)
+					initialize_height_control();
+				cont.height = selected_height;
+
+				handle_keys(key);
+				actuate_cont = offset_controls(cont);
+
+				#ifdef tuning
+					update_controller_gains();
+				#endif
+
+				filter_angles();
+				get_error(actuate_cont);
+				controller(actuate_cont);
+			}
 			break;
 
 		default:

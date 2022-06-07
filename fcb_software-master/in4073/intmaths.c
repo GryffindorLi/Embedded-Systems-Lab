@@ -20,6 +20,11 @@ int16_t safeint16pint16(int16_t a, int16_t b) {
 	}
 }
 
+int32_t log1000(int32_t a) {
+	// a = a*1000;
+	return (-1742 + ((2821 + ((-1470 + ((447 - (56.57 * a)/1000)) * a)/1000) * a)/1000) * a);
+}
+
 int16_t int16sqrt(int16_t a) {
     if (a >= 32761) return 181;
 
@@ -36,32 +41,6 @@ int16_t int16sqrt(int16_t a) {
         } else r = m - 1;
     }
     return 0;
-}
-
-/*
- * @Author Kenrick Trip
- * @Param motor value outputted by the controller.
- * @Return the square root of this value.
- */
-int16_t int16sqrt2(int16_t motor_val){
-	int16_t k = 1;
-	int16_t square = 1;
-    int sign = 1;
-
-    if (motor_val < 0) {
-        motor_val = -motor_val;
-        sign = -1;
-    }
-	
-    if (motor_val == 0 || motor_val == 1)
-		return sign*motor_val;
-	else {
-		while (square <= motor_val) {
-			k++;
-			square = k*k;
-		}
-		return sign*(k - 1);
-	}
 }
 
 uint16_t uint16clamp(uint16_t a, uint16_t min, uint16_t max) {

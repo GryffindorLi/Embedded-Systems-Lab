@@ -15,6 +15,7 @@
 
 extern bool demo_done;
 int32_t yaw, pitch, roll;
+int calibration;
 
 
 #endif // IN4073_H__

@@ -42,14 +42,21 @@ uint32_t panic_to_safe_timer = -1;
 int32_t yaw, pitch, roll;
 int start_calibration;
 int16_t* aes;
+int16_t height_control_throttle;
+char *mode_str[8] = {"safe", "safe", "panic", "calibration", "yaw-control", "full-control", "raw-mode", "height-mode"};
 
 int r_state = 0;
 int c_state = 0;
 int Md_flag = 0;
 int Ct_flag = 0;
 uint8_t Md_buffer[3] = {'M', 'd', -1};
-uint8_t Ct_buffer[12] = {'C', 't', 0};
+uint8_t Ct_buffer[14] = {'C', 't', 0};
 uint8_t Ct_p = 2;
+
+CTRL_msg rec_msg;
+uint8_t current_mode = 0;
+controls current_control;
+char current_key;
 
 void send_data(D2PC_message_p m) {
     uart_put((uint8_t)(m->head));
@@ -152,7 +159,8 @@ uint8_t on_mode_change(uint8_t current_mode, int16_t* aes) {
 	uint8_t mode = Md_buffer[2];
 	switch (mode) {
 		case MODE_SAFE:
-			if (current_mode == MODE_SAFE) return current_mode;
+			if (current_mode == MODE_SAFE)
+				return current_mode;
 			else {
 				start_calibration = 0;
 				printf("\n---===Motors still running! Going to PANIC mode!===---\n");
@@ -231,9 +239,40 @@ uint8_t on_mode_change(uint8_t current_mode, int16_t* aes) {
 					return current_mode;
 				} else {
 					start_calibration = 0;
+					height_control_throttle = current_control.throttle;
 					printf("\n---===Entering FULL CONTROL mode!===---\n");
 					return mode;
 				}
+			}
+			break;
+
+		case MODE_RAW:
+			if (current_mode == MODE_RAW) {
+				return current_mode;
+			} else {
+				if (aes[0] + aes[1] + aes[2] + aes[3] != 0) {
+					reset_control_offset();
+					printf("\n---===Stop motors first to enter RAW mode!===---\n");
+					return current_mode;
+				} else {
+					start_calibration = 0;
+					printf("\n---===Entering RAW mode!===---\n");
+					return mode;
+				}
+			}
+			break;
+
+		case MODE_HEIGHT_CONTROL:
+			if (current_mode == MODE_HEIGHT_CONTROL)
+				return current_mode;
+			else if (current_mode == MODE_FULL_CONTROL) {
+				start_calibration = 0;
+				height_control_throttle = current_control.throttle;
+				printf("\n---===Entering HEIGHT CONTROL mode!===---\n");
+				return mode;
+			} else {
+				printf("\n---===Go to full control first to enter HEIGHT CONTROL mode!===---\n");
+				return current_mode;
 			}
 			break;
 
@@ -284,16 +323,7 @@ void led_indicator(uint8_t current_mode) {
  * @Author Zirui Li
  * @Author Karan
  */
-
-
-CTRL_msg rec_msg;
-uint8_t current_mode = 0;
-controls current_control;
-char current_key;
-
-
-int main(void)
-{
+int main(void){
 	// --------------------------------INITIALIZATION------------------------------------
 	uart_init();
 	gpio_init();
@@ -316,6 +346,7 @@ int main(void)
 	uint32_t idle_timer = get_time_us();
 	demo_done = false;
 	wireless_mode = false;
+	calibration = 0;
 
 	// --------------------------------MAIN LOOP------------------------------------
 
@@ -341,7 +372,8 @@ int main(void)
 			s_period = (get_time_us() - s_timer + 50) / 1000;
 			s_timer = get_time_us();
 			if (get_time_us() - print_s_timer > 1000000) {
-				printf("\n Loop Time : %ldms\n", s_period);
+				if (current_mode != MODE_CALIBRATION)
+					printf("\n Loop Time : %ldms\n", s_period);
 				print_s_timer = get_time_us();
 			}
 		}
@@ -352,6 +384,21 @@ int main(void)
 				current_mode = MODE_SAFE;
 				panic_to_safe_timer = -1;
 				printf("\nentered SAFE MODE\n");
+			}
+		}
+
+		// HEIGHT to FULL control
+		if (current_mode == MODE_HEIGHT_CONTROL){
+			if (calibration == 0){
+				current_mode = MODE_FULL_CONTROL;
+				printf("\nCALIBRATE first before HEIGHT CONTROL\n");
+				printf("\nentered FULL CONTROL MODE\n");
+			}
+			else if ((current_control.throttle - height_control_throttle > 100) || 
+		    		 (current_control.throttle - height_control_throttle < -100)){
+				current_mode = MODE_FULL_CONTROL;
+				printf("\nTHROTTLE disabled HEIGHT CONTROL\n");
+				printf("\nentered FULL CONTROL MODE\n");
 			}
 		}
 
@@ -374,9 +421,15 @@ int main(void)
 			if (counter++%20 == 0) {
 				// 1HZ
 				nrf_gpio_pin_toggle(BLUE);
-				if (current_mode != MODE_CALIBRATION)
+				if (current_mode != MODE_CALIBRATION){
+					printf("\n--==<< controls (trpy): %d %d %d %d >>==--\n", current_control.throttle, current_control.roll, 
+																			 current_control.pitch, current_control.yaw);
 					printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
-				if (check_loop_time) printf("\n%ld\n", loop_time);
+					printf("\nMode: %s\n", mode_str[current_mode]);
+					printf("%d\n", height_control_throttle);
+					if (check_loop_time) 
+						printf("\n%ld\n", loop_time);
+				}
 
 				// D2PC_message m = init_message();
 				// send_data(&m);
@@ -400,7 +453,8 @@ int main(void)
 		if (check_loop_time) {
 			end_time = get_time_us();
 			loop_time = end_time - start_time;
-			if (check_loop_time) printf("%ld\n", loop_time);
+			if (check_loop_time) 
+				printf("%ld\n", loop_time);
 		}
 	}	
 
