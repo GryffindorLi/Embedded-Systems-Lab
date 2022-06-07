@@ -29,7 +29,6 @@
 #include "keyboard.h"
 
 // For Kalman Filter
-
 int16_t e[2], bias[2];//error terms 
 int16_t e_r[2], bias_r[2];
 int16_t e_y[2], bias_y[2];
@@ -75,7 +74,7 @@ int16_t p_yaw = Kpy, i_yaw = Kiy, d_yaw = Kdy;
 int16_t p_pitch = Kpp, i_pitch = Kip, d_pitch = Kdp;
 int16_t p_roll = Kpr, i_roll = Kir, d_roll = Kdr;
 
-
+/*
  * @Author Karan Pathak
  * @Param none.
  * @Return filtered  pitch angles.

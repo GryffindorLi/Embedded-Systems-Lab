@@ -70,6 +70,7 @@ int32_t alt_buf[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 // calibration data
 int16_t C_pitch_offset, C_roll_offset, C_yaw_offset;
 int16_t C_pitch_slope, C_roll_slope;
+int16_t gyro_offsets[3];
 int calibration = 0; // set to true if the calibration mode has been run
 
 // control variables:
@@ -174,9 +175,6 @@ void filter_angles(void){
 		pitch = ((pitch + C_pitch_offset)*16384)/C_pitch_slope;
 		roll = ((roll + C_roll_offset)*16384)/C_roll_slope;
 	}
-
-	if (print_angles)
-		printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
 }
 
 /*

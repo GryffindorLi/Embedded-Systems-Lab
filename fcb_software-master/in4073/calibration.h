@@ -3,6 +3,8 @@
 
 extern int16_t C_pitch_offset, C_roll_offset, C_yaw_offset;
 extern int16_t C_pitch_slope, C_roll_slope;
+extern int16_t gyro_offsets[3];
+extern int16_t sp, sq, sr;
 
 extern int32_t ref_temp;
 extern int8_t ref_altitude;

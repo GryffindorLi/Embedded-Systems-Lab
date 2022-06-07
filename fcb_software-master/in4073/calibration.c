@@ -7,6 +7,7 @@
 #include "config.h"
 #include "hal/barometer.h"
 #include "intmaths.h"
+#include "mpu6050/mpu6050.h"
 
 int start_calibration;
 int calibration;
@@ -14,6 +15,8 @@ int calibration;
 int32_t pitch_data[5], roll_data[5];
 int16_t C_pitch_offset, C_roll_offset, C_yaw_offset;
 int16_t C_pitch_slope, C_roll_slope;
+int16_t gyro_offsets[3];
+int16_t sp, sq, sr;
 
 int32_t ref_temp;
 int8_t ref_altitude;
@@ -47,6 +50,9 @@ void set_offset(){
         C_yaw_offset = -yaw;
         C_pitch_offset = -pitch;
         C_roll_offset = -roll;
+        gyro_offsets[0] = -sr;
+        gyro_offsets[1] = -sq;
+        gyro_offsets[2] = -sp;
     }
     else if (calib_phase == 5) {
         ref_temp = temperature;
