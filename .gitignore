@@ -55,3 +55,6 @@ dkms.conf
 fcb_software-master/in4073/_build/in4073.bin
 fcb_software-master/in4073/pc_terminal/pc-terminal
 *logs/
+fcb_software-master/in4073/pc_terminal/logs_*
+.vscode/
+fcb_software-master/in4073/.vscode

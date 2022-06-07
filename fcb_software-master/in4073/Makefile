@@ -65,10 +65,11 @@ $(abspath ../components/ble/ble_services/ble_nus/ble_nus.c) \
 $(abspath ../components/ble/common/ble_srv_common.c) \
 $(abspath ../components/softdevice/common/softdevice_handler/softdevice_handler.c) \
 $(abspath ./calibration.c) \
-$(abspath ./D2PC_drone.c) \
 $(abspath ./keyboard.c) \
 $(abspath ./D2PC.c) \
 $(abspath ./PC2D.c) \
+$(abspath ./D2PC_drone.c) \
+$(abspath ./logs_flash.c) \
 $(abspath ./intmaths.c) \
 $(abspath ./kalman.c)
 

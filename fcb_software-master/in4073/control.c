@@ -140,27 +140,7 @@ void controller_manual(controls cont){
 
 // ____Control Mode only____:
 
-/*
- * @Author Karan Pathak
- * @Param none.
- * @Return filtered  pitch angles.
- */
-void filter_kalman(void){
-		sp_scaled[0] = sp/LSB_ddeg;
-		phi_scaled[0] = phi/LSB_deg;
-		for (int j=0; j<2; j++){
-			pitch_buf[j+1] = sp_scaled[j] - bias[j];
-			phi_scaled[j+1] = phi_scaled[j] + (pitch_buf[j+1]/freq);
-			e[j+1] =  phi_scaled[j+1] - sax_scaled[j+1];
-			phi_scaled[j+1] = phi_scaled[j+1] - e[j+1]/C1;
-			bias[j+1] = bias[j] + (e[j+1]/freq)/C2;
-		}
 
-	pitch = (pitch_buf[0] + pitch_buf[1] + pitch_buf[2])/3;
-	if( calibration == 1 ){
-			pitch = ((pitch + C_pitch_offset)*16384)/C_pitch_slope;
-	}
-}
 
 /*
  * @Author Kenrick Trip

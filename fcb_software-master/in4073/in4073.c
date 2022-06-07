@@ -36,6 +36,7 @@
 #include "D2PC_drone.h"
 #include "keyboard.h"
 #include "config.h"
+#include "logs_flash.h"
 
 bool demo_done;
 uint32_t panic_to_safe_timer = -1;
@@ -53,55 +54,6 @@ uint8_t Md_buffer[3] = {'M', 'd', -1};
 uint8_t Ct_buffer[14] = {'C', 't', 0};
 uint8_t Ct_p = 2;
 
-CTRL_msg rec_msg;
-uint8_t current_mode = 0;
-controls current_control;
-char current_key;
-
-void send_data(D2PC_message_p m) {
-    uart_put((uint8_t)(m->head));
-
-	uart_put(m->mode);
-
-	uart_put(m->battery);
-
-	uart_put((uint8_t)(m->y >> 24));
-	uart_put((uint8_t)(m->y >> 16)& 0xff);
-	uart_put((uint8_t)(m->y >> 8)& 0xff);
-	uart_put((uint8_t)(m->y & 0xff));
-
-	uart_put((uint8_t)(m->p >> 24));
-	uart_put((uint8_t)(m->p >> 16)& 0xff);
-	uart_put((uint8_t)(m->p >> 8)& 0xff);
-	uart_put((uint8_t)(m->p & 0xff));
-
-	uart_put((uint8_t)(m->r >> 24));
-	uart_put((uint8_t)(m->r >> 16)& 0xff);
-	uart_put((uint8_t)(m->r >> 8)& 0xff);
-	uart_put((uint8_t)(m->r & 0xff));
-	
-	uart_put((uint8_t)(m->filtered_y >> 8));
-	uart_put((uint8_t)(m->filtered_y & 0xff));
-
-	uart_put((uint8_t)(m->filtered_p >> 8));
-	uart_put((uint8_t)(m->filtered_p & 0xff));
-
-	uart_put((uint8_t)(m->filtered_r >> 8));
-	uart_put((uint8_t)(m->filtered_r & 0xff));
-
-	uart_put((uint8_t)(m->motor1 >> 8));
-	uart_put((uint8_t)(m->motor1 & 0xff));
-	uart_put((uint8_t)(m->motor2 >> 8));
-	uart_put((uint8_t)(m->motor2 & 0xff));
-	uart_put((uint8_t)(m->motor3 >> 8));
-	uart_put((uint8_t)(m->motor3 & 0xff));
-	uart_put((uint8_t)(m->motor4 >> 8));
-	uart_put((uint8_t)(m->motor4 & 0xff));
-	uart_put((uint8_t)(m->checksum >> 8));
-	uart_put((uint8_t)(m->checksum & 0xff));
-	uart_put((uint8_t)(m->tail));
-}
-
 /*
  * @Author: Hanyuan Ban
  * @Param lq The receiving local queue, q The queue handling serial data.
@@ -117,7 +69,7 @@ void receive_message(Queue* q) {
 				if (c_state != 2) {  // if not recognized header
 					if (c == 'C') c_state = 1;	// control header 1
 					else if (c == 't') { //control header 2
-						if (c_state == 1) c_state = 2; 
+						if (c_state == 1) c_state = 2;
 						else c_state = 0;
 					} else c_state = 0;
 				} else {
@@ -128,7 +80,7 @@ void receive_message(Queue* q) {
 						if (Ct_buffer[sizeof(CTRL_msg) - 1] == sizeof(CTRL_msg)) {	//check sum
 							Ct_flag = 1;
 							return;
-						} 
+						}
 					}
 				}
 			}
@@ -140,7 +92,7 @@ void receive_message(Queue* q) {
 				if (c_state == 2) {
 					if (Ct_p != sizeof(CTRL_msg) - 1) Ct_buffer[Ct_p++] = 'M';  // bring the byte back
 					else {  // not check sum
-						c_state = 0; 
+						c_state = 0;
 						Ct_p = 2;
 					}
 				}
@@ -172,12 +124,12 @@ uint8_t on_mode_change(uint8_t current_mode, int16_t* aes) {
 			if (current_mode == MODE_SAFE) {
 				return current_mode;
 			} else if (current_mode == MODE_PANIC) {
-				return current_mode; 
+				return current_mode;
 			} else {
 				start_calibration = 0;
 				panic_to_safe_timer = get_time_us();
 				printf("\n---===Entering PANIC mode!===---\n");
-				return mode; 
+				return mode;
 			}
 			break;
 
@@ -357,12 +309,12 @@ int main(void){
 		if (rx_queue.count) {
 			receive_message(&rx_queue);
 		}
-		// check if there is message		
+		// check if there is message
 		if (Md_flag == 1) {
 			current_mode = on_mode_change(current_mode, aes);
 			Md_flag = 0;
 			UART_watch_dog = 1000;
-		} 
+		}
 		if (Ct_flag == 1) {
 			memcpy(&rec_msg, Ct_buffer, sizeof(CTRL_msg));
 			current_control = on_set_control(&rec_msg);
@@ -377,7 +329,7 @@ int main(void){
 				print_s_timer = get_time_us();
 			}
 		}
-		
+
 		// PANIC to SAFE
 		if (panic_to_safe_timer != -1) {
 			if (get_time_us() - panic_to_safe_timer > panic_to_safe_delay) {
@@ -394,7 +346,7 @@ int main(void){
 				printf("\nCALIBRATE first before HEIGHT CONTROL\n");
 				printf("\nentered FULL CONTROL MODE\n");
 			}
-			else if ((current_control.throttle - height_control_throttle > 100) || 
+			else if ((current_control.throttle - height_control_throttle > 100) ||
 		    		 (current_control.throttle - height_control_throttle < -100)){
 				current_mode = MODE_FULL_CONTROL;
 				printf("\nTHROTTLE disabled HEIGHT CONTROL\n");
@@ -422,12 +374,12 @@ int main(void){
 				// 1HZ
 				nrf_gpio_pin_toggle(BLUE);
 				if (current_mode != MODE_CALIBRATION){
-					printf("\n--==<< controls (trpy): %d %d %d %d >>==--\n", current_control.throttle, current_control.roll, 
+					printf("\n--==<< controls (trpy): %d %d %d %d >>==--\n", current_control.throttle, current_control.roll,
 																			 current_control.pitch, current_control.yaw);
 					printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
 					printf("\nMode: %s\n", mode_str[current_mode]);
 					printf("%d\n", height_control_throttle);
-					if (check_loop_time) 
+					if (check_loop_time)
 						printf("\n%ld\n", loop_time);
 				}
 
@@ -436,15 +388,35 @@ int main(void){
 			}
 
 			adc_request_sample();
-			read_baro();		
+			read_baro();
+			D2PC_message p = init_message();
+			//send_data(&m);
+
+			write_D2PC_msg_flash(&p);
+#ifndef LOG_FROM_TERMINAL
+			send_data(&m);
+#endif
+
+#ifdef LOG_FROM_TERMINAL
+/*
+			print_data(&m);
+			printf("index: %hu,mode: %hu,battery: %hu,"\
+            "yaw: %ld,pitch: %ld,roll: %ld,"\
+            "filtered_yaw: %hd,filtered_pitch: %hd,filtered_roll: %hd,"\
+            " motor1: %hd,motor2: %hd,motor3: %hd,motor4: %hd\n",
+            p.idx, p.mode, p.battery, p.y, p.p, p.r,
+            p.filtered_y, p.filtered_p, p.filtered_r, p.motor1,
+            p.motor2, p.motor3, p.motor4);
+*/
+#endif
 
 			clear_timer_flag();
 		}
-		
-		
-		if (check_sensor_int_flag()) {	
+
+
+		if (check_sensor_int_flag()) {
 			//100Hz
-			get_sensor_data();	
+			get_sensor_data();
 
 			aes = run_filters_and_control(current_control, current_key, current_mode);
 			current_key = '\0';
@@ -453,14 +425,13 @@ int main(void){
 		if (check_loop_time) {
 			end_time = get_time_us();
 			loop_time = end_time - start_time;
-			if (check_loop_time) 
+			if (check_loop_time)
 				printf("%ld\n", loop_time);
 		}
-	}	
+	}
 
 	printf("\n\t Goodbye \n\n");
 	nrf_delay_ms(100);
 
 	NVIC_SystemReset();
 }
-

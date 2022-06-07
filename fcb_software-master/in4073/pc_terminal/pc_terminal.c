@@ -13,6 +13,7 @@
 #include <string.h>
 #include <inttypes.h>
 #include "../config.h"
+#include "../D2PC.h"
 
 /*------------------------------------------------------------
  * console I/O
@@ -48,6 +49,13 @@ void term_putchar(char c)
 {
 	putc(c,stderr);
 }
+
+#ifdef LOG_FROM_TERMINAL
+void file_putchar(char c, FILE* fp)
+{
+	putc(c, fp);
+}
+#endif
 
 int	term_getchar_nb()
 {
@@ -95,7 +103,6 @@ int	term_getchar()
 #include <stdio.h>
 #include <assert.h>
 #include <sys/time.h>
-#include "../D2PC.h"
 #include "joystick.h"
 #include <stdlib.h>
 #include "../PC2D.h"
@@ -205,33 +212,51 @@ int16_t serial_port_getstring(char string[]){
 /*
  * @Author Zirui Li
  * @Param mess A byte array holding bytes received from drone.
- * @Param recv_mess A pointer to a D2PC_message struct
+ * Decode the message according to different header.
+ * @Return A void pointer which could later be casted to D2PC_message_p or D2PC_string_message_p.
  */
-void* decode(uint8_t mess[]) {
+
+void* decode(uint8_t mess[], int16_t start) {
+	//int start = 0;
 	if (!is_string){
 		D2PC_message_p recv_mess = (D2PC_message_p)malloc(sizeof(D2PC_message));
-		recv_mess->mode = mess[1];
-		recv_mess->battery = mess[2];
-		recv_mess->y = ((int32_t)(mess[3]) << 24) + ((int32_t)(mess[4]) << 16) +
-			((int32_t)(mess[5]) << 8) + (int32_t)mess[6];
-		recv_mess->p = ((int32_t)(mess[7]) << 24) + ((int32_t)(mess[8]) << 16) +
-			((int32_t)(mess[9]) << 8) + (int32_t)mess[10];;
-		recv_mess->r = ((int32_t)(mess[11]) << 24) + ((int32_t)(mess[12]) << 16) +
-			((int32_t)(mess[13]) << 8) + (int32_t)mess[14];
-		recv_mess->filtered_y = ((int16_t)(mess[15]) << 8) + (int16_t)mess[16];
-		recv_mess->filtered_p = ((int16_t)(mess[17]) << 8) + (int16_t)mess[18];
-		recv_mess->filtered_r = ((int16_t)(mess[19]) << 8) + (int16_t)mess[20];
-		recv_mess->motor1 = ((uint16_t)(mess[21]) << 8) + (uint16_t)mess[22];
-		recv_mess->motor2 = ((uint16_t)(mess[23]) << 8) + (uint16_t)mess[24];
-		recv_mess->motor3 = ((uint16_t)(mess[25]) << 8) + (uint16_t)mess[26];
-		recv_mess->motor4 = ((uint16_t)(mess[27]) << 8) + (uint16_t)mess[28];
-		recv_mess->checksum = ((uint16_t)(mess[29]) << 8) + (uint16_t)mess[30];
+		recv_mess->mode = mess[start + 1];
+		recv_mess->battery = mess[start + 2];
+		
+		// recv_mess->y = (((int32_t)(mess[3])) << 24) + (((int32_t)(mess[4])) << 16) +
+		// 	(((int32_t)(mess[5])) << 8) + (int32_t)mess[6];
+		// recv_mess->p = (((int32_t)(mess[7])) << 24) + (((int32_t)(mess[8])) << 16) +
+		// 	(((int32_t)(mess[9])) << 8) + (int32_t)mess[10];
+		// recv_mess->r = (((int32_t)(mess[11])) << 24) + (((int32_t)(mess[12])) << 16) +
+		// 	(((int32_t)(mess[13])) << 8) + (int32_t)mess[14];
+		// recv_mess->filtered_y = (((int16_t)(mess[15])) << 8) + (int16_t)mess[16];
+		// recv_mess->filtered_p = (((int16_t)(mess[17])) << 8) + (int16_t)mess[18];
+		// recv_mess->filtered_r = (((int16_t)(mess[19])) << 8) + (int16_t)mess[20];
+		// recv_mess->motor1 = (((uint16_t)(mess[21])) << 8) + (uint16_t)mess[22];
+		// recv_mess->motor2 = (((uint16_t)(mess[23])) << 8) + (uint16_t)mess[24];
+		// recv_mess->motor3 = (((uint16_t)(mess[25])) << 8) + (uint16_t)mess[26];
+		// recv_mess->motor4 = (((uint16_t)(mess[27])) << 8) + (uint16_t)mess[28];
+		// recv_mess->checksum = (((uint16_t)(mess[29])) << 8) + (uint16_t)mess[30];
+		
+		recv_mess->y = combine32Byte(mess[start+3], mess[start+4], mess[start+5], mess[start+6]);
+		recv_mess->p = combine32Byte(mess[start+7], mess[start+8], mess[start+9], mess[start+10]);
+		recv_mess->r = combine32Byte(mess[start+11], mess[start+12], mess[start+13], mess[start+14]);
+		recv_mess->filtered_y = combineByte(mess[start+15], mess[start+16]);
+		recv_mess->filtered_p = combineByte(mess[start+17], mess[start+18]);
+		recv_mess->filtered_r = combineByte(mess[start+19], mess[start+20]);
+		recv_mess->motor1 = combineByte(mess[start+21], mess[start+22]);
+		recv_mess->motor2 = combineByte(mess[start+23], mess[start+24]);
+		recv_mess->motor3 = combineByte(mess[start+25], mess[start+26]);
+		recv_mess->motor4 = combineByte(mess[start+27], mess[start+28]);
+		recv_mess->checksum = combineByte(mess[start+29], mess[start+30]);
+		recv_mess->idx = mess[start+31];
+		//recv_mess->timestamp = combine32UByte(mess[31], mess[32], mess[33], mess[34]);
 
 		return (void*)recv_mess;
 
 	} else if (is_string) {
 		string_bytes_array sba;
-		memcpy((void*)(&(sba.bytes)), (void*)(&mess[1]), sizeof(D2PC_string_message));
+		memcpy((void*)(&(sba.bytes)), (void*)(&mess[0]), sizeof(D2PC_string_message));
 		D2PC_string_message_p recv_mess = 
 			(D2PC_string_message_p)malloc(sizeof(D2PC_string_message));
 		memcpy((void*)recv_mess, (void*)(&(sba.sm)), sizeof(D2PC_string_message));
@@ -243,6 +268,7 @@ void* decode(uint8_t mess[]) {
 		return NULL;
 	}
 }
+
 
 int send_ctrl_msg(controls cont, char c) {
 	CTRL_msg msg = new_ctrl_msg();
@@ -373,6 +399,17 @@ int main(int argc, char **argv)
 
 	term_puts("Type ^C to exit\n");
 
+#ifdef LOG_FROM_TERMINAL
+	char FileName[256];
+	time_t curr = time(NULL);
+
+	char* prefix = "logs_";
+	strcpy(FileName, prefix);
+	strcat(FileName, ctime(&curr));
+
+	FILE* fp = fopen(FileName, "a");
+#endif
+
 	// ------------------------------------MAIN LOOP------------------------------------------
 	struct timeval ctrl_trans_start;
 	struct timeval ctrl_trans_end;
@@ -433,42 +470,42 @@ int main(int argc, char **argv)
 			send_ctrl_msg(cont, c);
 			c = -1; // reset key
 		}
-
-		// //uint8_t mess[257];
-		// // if ((serial_port_getmessage(mess)) != -1){
-		// // 	if (is_string){
-		// // 		D2PC_string_message_p recv_mess = (D2PC_string_message_p)decode(mess);
-		// // 		printf("String is %s\n", recv_mess->string);
-		// // 		logging((void*)recv_mess, is_string);
-		// // 		free(recv_mess);
-		// // 	} else {
-		// // 		D2PC_message_p recv_mess = (D2PC_message_p)decode(mess);
-		// // 		uint16_t recv_cs = cal_checksum(*recv_mess);
-		// // 		if (recv_cs == recv_mess->checksum){
-		// // 			logging((void*)recv_mess, is_string);
-		// // 			printf("Mode is %u\n", recv_mess->mode);
-		// // 			printf("Battery is %u\n", recv_mess->battery);
-		// // 			printf("Yaw is %d\n", recv_mess->y);
-		// // 			printf("Pitch is %d\n", recv_mess->p);
-		// // 			printf("Roll is %d\n", recv_mess->r);
-		// // 			printf("Motor1 is %u\n", recv_mess->motor1);
-		// // 			printf("Motor2 is %u\n", recv_mess->motor2);
-		// // 			printf("Motor3 is %u\n", recv_mess->motor3);
-		// // 			printf("Motor4 is %u\n", recv_mess->motor4);
-		// // 			printf("Filtered yaw is %d\n", recv_mess->filtered_y);
-		// // 			printf("Filtered pitch is %d\n", recv_mess->filtered_p);
-		// // 			printf("Filtered roll is %d\n", recv_mess->filtered_r);
-		// // 		} else {
-		// // 			perror("Message disrupted during transmission!");
-		// // 		}
-		// 		//free(recv_mess);
-				
-				
+#ifdef LOG_FROM_TERMINAL
 		if ((rc = serial_port_getchar()) != -1) {
 			term_putchar(rc);
-		}		
-	}
+			file_putchar(rc, fp);
+		}
+#endif
 
+#ifndef LOG_FROM_TERMINAL	
+		uint8_t mess[500];
+		int16_t start;
+		if ((start = serial_port_getmessage(mess)) != -1){
+			//printf("The start position is %d\n", start);
+			if (is_string){
+				D2PC_string_message_p recv_mess = (D2PC_string_message_p)decode(mess, 0);
+				printf("String is %s\n", recv_mess->string);
+				logging((void*)recv_mess, is_string);
+				free(recv_mess);
+			} else {
+				D2PC_message_p recv_mess = (D2PC_message_p)decode(mess, 0);
+				uint16_t recv_cs = cal_checksum(*recv_mess);
+				if (recv_cs == recv_mess->checksum){
+					logging((void*)recv_mess, is_string);
+					//print_D2PC_message(recv_mess);
+					printf("The index is %hhu\n", recv_mess->idx);
+				} else {
+					perror("Message disrupted during transmission!");
+				}
+				free(recv_mess);
+			}
+			
+		}
+#endif
+	}
+#ifdef LOG_FROM_TERMINAL
+	fclose(fp);
+#endif
 	term_exitio();
 	serial_port_close();
 	term_puts("\n<exit>\n");
