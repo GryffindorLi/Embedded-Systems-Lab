@@ -54,6 +54,11 @@ uint8_t Md_buffer[3] = {'M', 'd', -1};
 uint8_t Ct_buffer[14] = {'C', 't', 0};
 uint8_t Ct_p = 2;
 
+CTRL_msg rec_msg;
+uint8_t current_mode = 0;
+controls current_control;
+char current_key;
+
 /*
  * @Author: Hanyuan Ban
  * @Param lq The receiving local queue, q The queue handling serial data.
@@ -275,6 +280,7 @@ void led_indicator(uint8_t current_mode) {
  * @Author Zirui Li
  * @Author Karan
  */
+
 int main(void){
 	// --------------------------------INITIALIZATION------------------------------------
 	uart_init();
