@@ -347,11 +347,13 @@ int main(void){
 			}
 		}
 		
-		if (!check_battery()){
-			current_mode = MODE_PANIC;
-			panic_to_safe_timer = get_time_us();
-			printf("\nThe battery is too low!\n");
-		}
+		#ifdef check_battery
+			if (!check_battery()){
+				current_mode = MODE_PANIC;
+				panic_to_safe_timer = get_time_us();
+				printf("\nThe battery is too low!\n");
+			}
+		#endif
 
 		// PANIC to SAFE
 		if (panic_to_safe_timer != -1) {

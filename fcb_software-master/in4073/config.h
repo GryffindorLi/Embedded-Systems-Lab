@@ -15,10 +15,12 @@
 #define serialprintf
 // uncomment to disbale tuning
 #define tuning
+// uncomment to disable battery check
+// #define protect_battery
 
 
 // ____PC terminal settings_____:
-#define TRANSMISSION_FREQ 100
+#define TRANSMISSION_FREQ 50
 #define JOYSTICK_WATCHDOG_LIFETIME 200
 // #define JOYSTICK
 
