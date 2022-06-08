@@ -352,12 +352,12 @@ int main(void){
 				printf("\nCALIBRATE first before HEIGHT CONTROL\n");
 				printf("\nentered FULL CONTROL MODE\n");
 			}
-			else if ((current_control.throttle - height_control_throttle > 100) ||
-		    		 (current_control.throttle - height_control_throttle < -100)){
-				current_mode = MODE_FULL_CONTROL;
-				printf("\nTHROTTLE disabled HEIGHT CONTROL\n");
-				printf("\nentered FULL CONTROL MODE\n");
-			}
+			//else if ((current_control.throttle - height_control_throttle > 100) ||
+		    //		 (current_control.throttle - height_control_throttle < -100)){
+			//	current_mode = MODE_FULL_CONTROL;
+			//	printf("\nTHROTTLE disabled HEIGHT CONTROL\n");
+			//	printf("\nentered FULL CONTROL MODE\n");
+			//}
 		}
 
 		// Change lights
@@ -389,7 +389,7 @@ int main(void){
 					if (check_loop_time)
 						printf("\n%ld\n", loop_time);
 					if (PID_prints)
-						printf("\nP: %d, I: %d, D: %d\n", p_height, i_height, d_height);
+						printf("\nP: %d, I: %d, D: %d\n", p_roll, i_roll, d_roll);
 				}
 
 				// D2PC_message m = init_message();
@@ -398,10 +398,10 @@ int main(void){
 
 			adc_request_sample();
 			read_baro();
-			D2PC_message p = init_message();
+			//D2PC_message p = init_message();
 			//send_data(&m);
 
-			write_D2PC_msg_flash(&p);
+			// write_D2PC_msg_flash(&p);
 #ifndef LOG_FROM_TERMINAL
 			send_data(&m);
 #endif

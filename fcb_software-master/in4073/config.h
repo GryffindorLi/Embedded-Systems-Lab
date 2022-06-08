@@ -18,7 +18,7 @@
 
 
 // ____PC terminal settings_____:
-#define TRANSMISSION_FREQ 50
+#define TRANSMISSION_FREQ 400
 #define JOYSTICK_WATCHDOG_LIFETIME 200
 #define JOYSTICK
 
@@ -35,12 +35,12 @@
 #define Kdp 200
 
 // roll control gains * 1000:
-#define Kpr 4000
+#define Kpr 7000
 #define Kir 85
 #define Kdr 300
 
 // height control gains:
-#define Kph 100
+#define Kph 350
 #define Kih 100
 #define Kdh 100
 
@@ -98,7 +98,7 @@
 // _____filter_settings_____:
 
 // select kalman filter, 1 = enable, 0 = disable:
-#define use_kalman 0
+#define use_kalman 1
 
 // gyro and accelerometer percentages
 #define gyro_rate 98
@@ -113,7 +113,7 @@
 // tuning change in percentage:
 #define tune_offset 3
 // 1 = yaw, 2 = pitch, 3 = roll, 4 = height
-#define tuning_axis 4
+#define tuning_axis 3
 // enable PID prints, 1 = enable, 0 = disable
 #define PID_prints 1
 
