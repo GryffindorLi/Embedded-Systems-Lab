@@ -25,7 +25,6 @@
 typedef struct {
     char head;  // 1 byte 0
     uint8_t mode; // 1 byte 1
-    uint8_t battery; // 1 byte 2
     int32_t y;  // 2 bytes 3 4 5 6
     int32_t p;  // 2 bytes 7 8 9 10
     int32_t r;  // 2 bytes 11 12 13 14
@@ -37,9 +36,10 @@ typedef struct {
     int16_t motor3;  // 25 26
     int16_t motor4;  // 27 28
     int16_t checksum;  // 2 bytes 29 30
-    uint8_t idx;    // 1 bytes 31
-    char tail;  // 1 byte 32
-} D2PC_message;  //33 bytes
+    uint32_t ts;    // 4 bytes 31 32 33 34
+    uint16_t battery; // 1 byte 35
+    char tail;  // 1 byte 36
+} D2PC_message;  //37 bytes
 /*
  * @Author: Zirui Li
  */

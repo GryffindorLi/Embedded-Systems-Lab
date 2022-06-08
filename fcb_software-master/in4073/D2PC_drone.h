@@ -4,6 +4,7 @@
 #include <inttypes.h>
 #include <stdbool.h>
 #include "D2PC.h"
+#include "in4073.h"
 
 D2PC_message init_message(void);
 
@@ -23,6 +24,6 @@ void delete_string_bytes_array(string_bytes_array* b);
 
 void send_data(D2PC_message_p m);
 
-void print_data(D2PC_message_p p);
+//void print_data(D2PC_message_p p);
 
 #endif

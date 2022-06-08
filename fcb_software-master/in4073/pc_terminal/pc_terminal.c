@@ -221,7 +221,7 @@ void* decode(uint8_t mess[], int16_t start) {
 	if (!is_string){
 		D2PC_message_p recv_mess = (D2PC_message_p)malloc(sizeof(D2PC_message));
 		recv_mess->mode = mess[start + 1];
-		recv_mess->battery = mess[start + 2];
+		//recv_mess->battery = mess[start + 2];
 		
 		// recv_mess->y = (((int32_t)(mess[3])) << 24) + (((int32_t)(mess[4])) << 16) +
 		// 	(((int32_t)(mess[5])) << 8) + (int32_t)mess[6];
@@ -238,18 +238,18 @@ void* decode(uint8_t mess[], int16_t start) {
 		// recv_mess->motor4 = (((uint16_t)(mess[27])) << 8) + (uint16_t)mess[28];
 		// recv_mess->checksum = (((uint16_t)(mess[29])) << 8) + (uint16_t)mess[30];
 		
-		recv_mess->y = combine32Byte(mess[start+3], mess[start+4], mess[start+5], mess[start+6]);
-		recv_mess->p = combine32Byte(mess[start+7], mess[start+8], mess[start+9], mess[start+10]);
-		recv_mess->r = combine32Byte(mess[start+11], mess[start+12], mess[start+13], mess[start+14]);
-		recv_mess->filtered_y = combineByte(mess[start+15], mess[start+16]);
-		recv_mess->filtered_p = combineByte(mess[start+17], mess[start+18]);
-		recv_mess->filtered_r = combineByte(mess[start+19], mess[start+20]);
-		recv_mess->motor1 = combineByte(mess[start+21], mess[start+22]);
-		recv_mess->motor2 = combineByte(mess[start+23], mess[start+24]);
-		recv_mess->motor3 = combineByte(mess[start+25], mess[start+26]);
-		recv_mess->motor4 = combineByte(mess[start+27], mess[start+28]);
-		recv_mess->checksum = combineByte(mess[start+29], mess[start+30]);
-		recv_mess->idx = mess[start+31];
+		recv_mess->y = combine32Byte(mess[start+2], mess[start+3], mess[start+4], mess[start+5]);
+		recv_mess->p = combine32Byte(mess[start+6], mess[start+7], mess[start+8], mess[start+9]);
+		recv_mess->r = combine32Byte(mess[start+10], mess[start+11], mess[start+12], mess[start+13]);
+		recv_mess->filtered_y = combineByte(mess[start+14], mess[start+15]);
+		recv_mess->filtered_p = combineByte(mess[start+16], mess[start+17]);
+		recv_mess->filtered_r = combineByte(mess[start+18], mess[start+19]);
+		recv_mess->motor1 = combineByte(mess[start+20], mess[start+21]);
+		recv_mess->motor2 = combineByte(mess[start+22], mess[start+23]);
+		recv_mess->motor3 = combineByte(mess[start+24], mess[start+25]);
+		recv_mess->motor4 = combineByte(mess[start+26], mess[start+27]);
+		recv_mess->checksum = combineByte(mess[start+28], mess[start+29]);
+		recv_mess->ts = combine32UByte(mess[30], mess[31], mess[32], mess[33]);
 		//recv_mess->timestamp = combine32UByte(mess[31], mess[32], mess[33], mess[34]);
 
 		return (void*)recv_mess;

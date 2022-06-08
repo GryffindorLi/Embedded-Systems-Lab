@@ -6,15 +6,12 @@ static uint32_t curr_addr = 0x00000000;
 static bool full = 0;
 
 void write_D2PC_msg_flash(D2PC_message_p msg){
-    if (full){
-        printf("The flash is full!\n");
-        return;
-    }
+
     uint8_t data[100];
 
     data[0] = (uint8_t)(msg->head);
     data[1] = msg->mode;
-    data[2] = msg->battery;
+    data[2] = highByte(msg->battery);
 
     data[3] = fourthByte(msg->y);
     data[4] = thirdByte(msg->y);
@@ -55,48 +52,44 @@ void write_D2PC_msg_flash(D2PC_message_p msg){
     data[29] = highByte(msg->checksum);
     data[30] = lowByte(msg->checksum);
 
-    data[31] = msg->idx;
+    data[31] = fourthByte(msg->ts);
+    data[32] = thirdByte(msg->ts);
+    data[33] = secondByte(msg->ts);
+    data[34] = lowByte(msg->ts);
 
-    data[32] = (uint8_t)(msg->tail);
+    data[35] = lowByte(msg->battery);
 
-    bool res = flash_write_bytes(curr_addr, data, 33);
+    data[36] = (uint8_t)(msg->tail);
+
+    bool res = flash_write_bytes(curr_addr, data, 37);
 
     if (!res){
         printf("Fail to write to flash!\n");
         return;
     }
 
-    curr_addr += 33;
+    curr_addr += 37;
     if (curr_addr >= 0x01FFFF){
         full = 1;
     }
 }
 
 int8_t read_D2PC_msg_flash(D2PC_message_p msg){
-    if (curr_addr == 0x00000000){
-        printf("The flash is empty!\n");
-        return -1;
-    }
 
     static uint32_t head = 0;
 
     uint32_t pos = 0x00000000 + head;
 
-    if (pos > 0x01FFFF || pos >= curr_addr){
-        printf("No more data to read\n");
-        return -1;
-    } else {
-        head += 33;
-    }
+    head += 37;
     
     uint8_t data[100];
 
     //curr_addr -= 33;
-    flash_read_bytes(pos, data, 33);
+    flash_read_bytes(pos, data, 37);
 
     msg->head = (char)data[0];
     msg->mode = data[1];
-    msg->battery = data[2];
+    msg->battery = combineByte(data[2], data[35]);
 
     msg->y = combine32Byte(data[3], data[4], data[5], data[6]);
     msg->p = combine32Byte(data[7], data[8], data[9], data[10]);
@@ -113,9 +106,9 @@ int8_t read_D2PC_msg_flash(D2PC_message_p msg){
 
     msg->checksum = combineByte(data[29], data[30]);
 
-    msg->idx = data[31];
+    msg->ts = combine32Byte(data[31], data[32], data[33], data[34]);
     
-    msg->tail = (char)data[32];
+    msg->tail = (char)data[36];
     return 0;
 }
 

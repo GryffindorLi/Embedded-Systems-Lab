@@ -6,8 +6,12 @@
 #include "uart.h"
 #include "control.h"
 
-static uint8_t curr_idx = 0;
-
+//static uint8_t curr_idx = 0;
+extern uint8_t current_mode;
+extern int32_t yaw, pitch, roll;
+extern int16_t* aes;
+extern uint16_t bat_volt;
+extern int16_t phi, theta, psi;
 
 /*
  * @Author Zirui Li
@@ -16,20 +20,20 @@ static uint8_t curr_idx = 0;
  */
 D2PC_message init_message(void){
     D2PC_message m = {.head=DATA_HEADER, 
-                      .mode=0,
-                      .battery=19, 
-                      .y=0xAB, 
-                      .r=0xCD,
-                      .p=0Xf1,
-                      .filtered_y=1,
-                      .filtered_r=4,
-                      .filtered_p=5,
-                      .motor1=400, 
-                      .motor2=450,
-                      .motor3=500,
-                      .motor4=550,
+                      .mode=current_mode,
+                      .battery=bat_volt, 
+                      .y=yaw, 
+                      .r=roll,
+                      .p=pitch,
+                      .filtered_y=phi,
+                      .filtered_r=psi,
+                      .filtered_p=theta,
+                      .motor1=aes[0], 
+                      .motor2=aes[1],
+                      .motor3=aes[2],
+                      .motor4=aes[3],
                       .tail=TAIL,
-                      .idx=(curr_idx++)};
+                      .ts=get_time_us()};
 
     /* A conceputual implementation
     adc_request_sample();
@@ -120,7 +124,6 @@ void send_data(D2PC_message_p m) {
 
 	uart_put(m->mode);
 
-	uart_put(m->battery);
 	uart_put(fourthByte(m->y));
 	uart_put(thirdByte(m->y));
 	uart_put(secondByte(m->y));
@@ -155,16 +158,11 @@ void send_data(D2PC_message_p m) {
 	uart_put(lowByte(m->motor4));
 	uart_put(highByte(m->checksum));
 	uart_put(lowByte(m->checksum));
-    uart_put(m->idx);
+    
+    
+    uart_put(fourthByte(m->ts));
+	uart_put(thirdByte(m->ts));
+	uart_put(secondByte(m->ts));
+	uart_put(lowByte(m->ts));
 	uart_put((uint8_t)(m->tail));
-}
-
-void print_data(D2PC_message_p p) {
-    printf("index: %hhu,mode: %hhu,battery: %hhu,"\
-            "yaw: %ld,pitch: %ld,roll: %ld,"\
-            "filtered_yaw: %hd,filtered_pitch: %hd,filtered_roll: %hd,"\
-            " motor1: %hd,motor2: %hd,motor3: %hd,motor4: %hd\n", 
-            p->idx, p->mode, p->battery, p->y, p->p, p->r,
-            p->filtered_y, p->filtered_p, p->filtered_r, p->motor1,
-            p->motor2, p->motor3, p->motor4);
 }

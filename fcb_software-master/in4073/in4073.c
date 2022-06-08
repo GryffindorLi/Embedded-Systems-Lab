@@ -59,6 +59,13 @@ uint8_t current_mode = 0;
 controls current_control;
 char current_key;
 
+bool check_battery(){
+    if (bat_volt < BATTERY_LEVEL && current_mode != MODE_PANIC && current_mode != MODE_SAFE){
+		return false;
+	}
+	return true;
+}
+
 /*
  * @Author: Hanyuan Ban
  * @Param lq The receiving local queue, q The queue handling serial data.
@@ -336,6 +343,12 @@ int main(void){
 			}
 		}
 
+		if (!check_battery()){
+			current_mode = MODE_PANIC;
+			panic_to_safe_timer = get_time_us();
+			printf("\nThe battery is too low!\n");
+		}
+
 		// PANIC to SAFE
 		if (panic_to_safe_timer != -1) {
 			if (get_time_us() - panic_to_safe_timer > panic_to_safe_delay) {
@@ -406,12 +419,11 @@ int main(void){
 
 #ifdef LOG_FROM_TERMINAL
 /*
-			print_data(&m);
-			printf("index: %hu,mode: %hu,battery: %hu,"\
+			printf("ts: %lu,mode: %hu,\
             "yaw: %ld,pitch: %ld,roll: %ld,"\
             "filtered_yaw: %hd,filtered_pitch: %hd,filtered_roll: %hd,"\
             " motor1: %hd,motor2: %hd,motor3: %hd,motor4: %hd\n",
-            p.idx, p.mode, p.battery, p.y, p.p, p.r,
+            p.ts, p.mode, p.y, p.p, p.r,
             p.filtered_y, p.filtered_p, p.filtered_r, p.motor1,
             p.motor2, p.motor3, p.motor4);
 */

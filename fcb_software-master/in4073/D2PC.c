@@ -71,9 +71,9 @@ int16_t cal_checksum(D2PC_message message){
         message.filtered_r >>= 1;
     }
 
-    while (message.idx != 0){
-        sum += (message.idx) & 1;
-        message.idx >>= 1;
+    while (message.ts != 0){
+        sum += (message.ts) & 1;
+        message.ts >>= 1;
     }
 
     return sum;    

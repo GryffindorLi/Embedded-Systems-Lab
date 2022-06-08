@@ -28,8 +28,8 @@ typedef struct {
 // the message type
 typedef struct {
     char h1;      // 1 byte
-    char h2;
-    controls control; // 2 * 4 byte
+    char h2;      // 1 byte
+    controls control; // 2 * 5 byte
     char key;         // 1 byte
     uint8_t checksum; // 1 byte
 } CTRL_msg;
