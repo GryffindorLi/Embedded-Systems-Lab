@@ -84,7 +84,7 @@ void receive_message(Queue* q) {
 						Ct_p = 2;
 						if (Ct_buffer[sizeof(CTRL_msg) - 1] == sizeof(CTRL_msg)) {	//check sum
 							Ct_flag = 1;
-							return;
+							memcpy(&rec_msg, Ct_buffer, sizeof(CTRL_msg));
 						}
 					}
 				}
@@ -322,7 +322,6 @@ int main(void){
 			UART_watch_dog = 1000;
 		}
 		if (Ct_flag == 1) {
-			memcpy(&rec_msg, Ct_buffer, sizeof(CTRL_msg));
 			current_control = on_set_control(&rec_msg);
 			current_key = on_set_key(&rec_msg);
 			Ct_flag = 0;
