@@ -18,18 +18,18 @@
 
 // control type define
 typedef struct {
-    uint8_t throttle;
-    int8_t roll;
-    int8_t pitch;
-    int8_t yaw;
-    int8_t height;
+    uint16_t throttle;
+    int16_t roll;
+    int16_t pitch;
+    int16_t yaw;
+    int16_t height;
 } controls;
 
 // the message type
 typedef struct {
     char h1;      // 1 byte
     char h2;
-    controls control; // 1 * 5 byte
+    controls control; // 2 * 4 byte
     char key;         // 1 byte
     uint8_t checksum; // 1 byte
 } CTRL_msg;

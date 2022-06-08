@@ -51,7 +51,7 @@ int c_state = 0;
 int Md_flag = 0;
 int Ct_flag = 0;
 uint8_t Md_buffer[3] = {'M', 'd', -1};
-uint8_t Ct_buffer[9] = {'C', 't', 0};
+uint8_t Ct_buffer[14] = {'C', 't', 0};
 uint8_t Ct_p = 2;
 
 CTRL_msg rec_msg;
