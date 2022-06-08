@@ -376,6 +376,11 @@ int main(void){
 				printf("\nTHROTTLE disabled HEIGHT CONTROL\n");
 				printf("\nentered FULL CONTROL MODE\n");
 			}
+			else if (current_key == '5'){
+				current_mode = MODE_FULL_CONTROL;
+				printf("\nKEY disbaled HEIGHT CONTROL\n");
+				printf("\nentered FULL CONTROL MODE\n");
+			}
 		}
 
 		// Change lights
