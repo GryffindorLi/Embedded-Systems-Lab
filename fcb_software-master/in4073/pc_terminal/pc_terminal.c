@@ -316,39 +316,46 @@ uint8_t get_mode_change(char key, controls cont, int* buttons, uint8_t current_m
 }
 
 void joystick_control(controls* cont, int* axis) {
-	cont->roll = axis[ROLL_AXIS];
-	cont->pitch = -axis[PITCH_AXIS];
-	cont->yaw = axis[YAW_AXIS];
-	cont->throttle = -axis[THROTTLE_AXIS] + 32767;
+	cont->roll = remap1628(axis[ROLL_AXIS]);
+	cont->pitch = remap1628(-axis[PITCH_AXIS]);
+	cont->yaw = remap1628(axis[YAW_AXIS]);
+	cont->throttle = remapu1628(-axis[THROTTLE_AXIS] + 32767);
 }
 
 int keyboard_control(controls* cont, char c) {
 	switch (c) {
 		case 32:	// space
-			cont->throttle = safeuint16pint16(cont->throttle, 100);
+			cont->throttle = safeuint8pint8(cont->throttle, 1);
 			break;
 		case 'x':
-			cont->throttle = safeuint16pint16(cont->throttle, -100);
+			cont->throttle = safeuint8pint8(cont->throttle, -1);
 
 			break;
 		case 't':
-			cont->pitch = safeint16pint16(cont->pitch, 100);
+			cont->pitch = safeuint8pint8(cont->pitch, 1);
 			break;
 		case 'g':
-			cont->pitch = safeint16pint16(cont->pitch, -100);
+			cont->pitch = safeuint8pint8(cont->pitch, -1);
 			break;
 		case 'f':
-			cont->roll = safeint16pint16(cont->roll, 100);
+			cont->roll = safeuint8pint8(cont->roll, 1);
 			break;
 		case 'h':
-			cont->roll = safeint16pint16(cont->roll, -100);
+			cont->roll = safeuint8pint8(cont->roll, -1);
 			break;
 		case 'r':
-			cont->yaw = safeint16pint16(cont->yaw, 100);
+			cont->yaw = safeuint8pint8(cont->yaw, 1);
 			break;
 		case 'y':
-			cont->yaw = safeint16pint16(cont->yaw, -100);
+			cont->yaw = safeuint8pint8(cont->yaw, -1);
 			break;
+		case 'u': 
+			height_offset = safeuint8pint8(cont->height, 1);
+			break;
+		case 'j': 
+			height_offset = safeuint8pint8(cont->height, -1);
+			break;
+			
 		case 'c':	// clear
 			cont->throttle = 0;
 			cont->pitch = 0;
