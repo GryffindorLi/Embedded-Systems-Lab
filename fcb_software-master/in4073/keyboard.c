@@ -166,29 +166,29 @@ void update_controller_gains(){
 		p_yaw = safeint16pint16(Kpy, p_offset);
 		i_yaw = safeint16pint16(Kiy, i_offset);
 		d_yaw = safeint16pint16(Kdy, d_offset);
-		if (PID_prints)
-			printf("\nP: %d, I: %d, D: %d\n", p_yaw, i_yaw, d_yaw);
+		//if (PID_prints)
+			//printf("\nP: %d, I: %d, D: %d\n", p_yaw, i_yaw, d_yaw);
 	}
 	else if (tuning_axis == 2){
 		p_pitch = safeint16pint16(Kpp, p_offset);
 		i_pitch = safeint16pint16(Kip, i_offset);
 		d_pitch = safeint16pint16(Kdp, d_offset);
-		if (PID_prints)
-			printf("\nP: %d, I: %d, D: %d\n", p_pitch, i_pitch, d_pitch);
+		//if (PID_prints)
+			//printf("\nP: %d, I: %d, D: %d\n", p_pitch, i_pitch, d_pitch);
 	}
 	else if (tuning_axis == 3){
 		p_roll = safeint16pint16(Kpr, p_offset);
 		i_roll = safeint16pint16(Kir, i_offset);
 		d_roll = safeint16pint16(Kdr, d_offset);
-		if (PID_prints)
-			printf("\nP: %d, I: %d, D: %d\n", p_roll, i_roll, d_roll);
+		//if (PID_prints)
+			//printf("\nP: %d, I: %d, D: %d\n", p_roll, i_roll, d_roll);
 	}
 	else if (tuning_axis == 4){
 		p_height = safeint16pint16(Kph, p_offset);
 		i_height = safeint16pint16(Kih, i_offset);
 		d_height = safeint16pint16(Kdh, d_offset);
-		if (PID_prints)
-			printf("\nP: %d, I: %d, D: %d\n", p_height, i_height, d_height);
+		// if (PID_prints)
+			// printf("\nP: %d, I: %d, D: %d\n", p_height, i_height, d_height);
 	}
 	else
 		printf("ERROR: invalid tuning axis should be (1,2,3,4)");
