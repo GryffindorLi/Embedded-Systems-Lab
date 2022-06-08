@@ -352,12 +352,12 @@ int main(void){
 				printf("\nCALIBRATE first before HEIGHT CONTROL\n");
 				printf("\nentered FULL CONTROL MODE\n");
 			}
-			//else if ((current_control.throttle - height_control_throttle > 100) ||
-		    //		 (current_control.throttle - height_control_throttle < -100)){
-			//	current_mode = MODE_FULL_CONTROL;
-			//	printf("\nTHROTTLE disabled HEIGHT CONTROL\n");
-			//	printf("\nentered FULL CONTROL MODE\n");
-			//}
+			else if ((current_control.throttle - height_control_throttle > 100) ||
+		    		 (current_control.throttle - height_control_throttle < -100)){
+				current_mode = MODE_FULL_CONTROL;
+				printf("\nTHROTTLE disabled HEIGHT CONTROL\n");
+				printf("\nentered FULL CONTROL MODE\n");
+			}
 		}
 
 		// Change lights
