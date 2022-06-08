@@ -15,6 +15,7 @@
 #include "../config.h"
 #include "../D2PC.h"
 #include "../config.h"
+#include "../PC2D.h"
 
 /*------------------------------------------------------------
  * console I/O

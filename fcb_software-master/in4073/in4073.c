@@ -60,6 +60,17 @@ controls current_control;
 char current_key;
 
 /*
+ * @Author: Zirui Li
+ */
+bool check_battery(){
+    if (bat_volt < BATTERY_LEVEL && current_mode != MODE_PANIC && current_mode != MODE_SAFE){
+		return false;
+	}
+	return true;
+}
+
+
+/*
  * @Author: Hanyuan Ban
  * @Param lq The receiving local queue, q The queue handling serial data.
  */
@@ -334,6 +345,12 @@ int main(void){
 				print_s_timer = get_time_us();
 			}
 		}
+		
+		if (!check_battery()){
+			current_mode = MODE_PANIC;
+			panic_to_safe_timer = get_time_us();
+			printf("\nThe battery is too low!\n");
+		}
 
 		// PANIC to SAFE
 		if (panic_to_safe_timer != -1) {
@@ -351,12 +368,12 @@ int main(void){
 				printf("\nCALIBRATE first before HEIGHT CONTROL\n");
 				printf("\nentered FULL CONTROL MODE\n");
 			}
-			//else if ((current_control.throttle - height_control_throttle > 100) ||
-		    //		 (current_control.throttle - height_control_throttle < -100)){
-			//	current_mode = MODE_FULL_CONTROL;
-			//	printf("\nTHROTTLE disabled HEIGHT CONTROL\n");
-			//	printf("\nentered FULL CONTROL MODE\n");
-			//}
+			else if ((current_control.throttle - height_control_throttle > 100) ||
+		    		 (current_control.throttle - height_control_throttle < -100)){
+				current_mode = MODE_FULL_CONTROL;
+				printf("\nTHROTTLE disabled HEIGHT CONTROL\n");
+				printf("\nentered FULL CONTROL MODE\n");
+			}
 		}
 
 		// Change lights
@@ -383,6 +400,7 @@ int main(void){
 																			 current_control.pitch, current_control.yaw);
 					printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
 					printf("\nMode: %s\n", mode_str[current_mode]);
+					printf("theta: %d, sq: %d, say: %d, pitch: %ld\n", theta, sq, say, pitch);
 					if (print_angles)
 						printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
 					if (check_loop_time)
