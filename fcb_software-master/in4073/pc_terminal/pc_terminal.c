@@ -110,6 +110,7 @@ int	term_getchar()
 #include "../keyboard.h"
 #include "logging.h"
 #include "../intmaths.h"
+#include "../config.h"
 
 static int fd_serial_port;
 static int is_string = 0;
