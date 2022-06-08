@@ -198,9 +198,9 @@ int16_t find_altitude(int32_t pressure){
  */
 void get_error(controls cont){
 	// find the error between control input and filtered IMU values:
-	error[0] = (int32_t) cont.yaw/2 - yaw; // scale yaw control input
-	error[1] = (int32_t) cont.pitch - pitch; // scale pitch control input
-	error[2] = (int32_t) cont.roll - roll; // scale roll control input
+	error[0] = (int32_t) cont.yaw / 5 - yaw; // scale yaw control input
+	error[1] = (int32_t) cont.pitch / 3 - pitch; // scale pitch control input
+	error[2] = (int32_t) cont.roll / 5 - roll; // scale roll control input
 
 	// compute the derivative of the error:
 	derror[0] = (int32_t) (error[0] - prev_error[0]) * freq;
