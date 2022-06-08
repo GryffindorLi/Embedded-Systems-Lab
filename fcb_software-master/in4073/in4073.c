@@ -322,6 +322,7 @@ int main(void){
 			UART_watch_dog = 1000;
 		}
 		if (Ct_flag == 1) {
+			//printf("\nsefsef\n");
 			memcpy(&rec_msg, Ct_buffer, sizeof(CTRL_msg));
 			current_control = on_set_control(&rec_msg);
 			current_key = on_set_key(&rec_msg);
@@ -383,6 +384,7 @@ int main(void){
 					printf("\n--==<< controls (trpy): %d %d %d %d >>==--\n", current_control.throttle, current_control.roll,
 																			 current_control.pitch, current_control.yaw);
 					printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
+					printf("theta : %d, sq : %d, say : %d, pitch : %ld ", theta, sq, say, pitch);
 					printf("\nMode: %s\n", mode_str[current_mode]);
 					if (print_angles)
 						printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
