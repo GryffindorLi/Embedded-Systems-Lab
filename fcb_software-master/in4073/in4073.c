@@ -398,8 +398,8 @@ int main(void){
 
 			adc_request_sample();
 			read_baro();
-			//D2PC_message p = init_message();
-			//send_data(&m);
+			// D2PC_message p = init_message();
+			// send_data(&m);
 
 			// write_D2PC_msg_flash(&p);
 #ifndef LOG_FROM_TERMINAL

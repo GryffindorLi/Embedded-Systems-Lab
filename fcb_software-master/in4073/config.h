@@ -18,9 +18,9 @@
 
 
 // ____PC terminal settings_____:
-#define TRANSMISSION_FREQ 400
+#define TRANSMISSION_FREQ 100
 #define JOYSTICK_WATCHDOG_LIFETIME 200
-#define JOYSTICK
+// #define JOYSTICK
 
 // _____control gains_____:
 
