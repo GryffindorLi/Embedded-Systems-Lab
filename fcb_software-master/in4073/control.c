@@ -295,8 +295,6 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			handle_keys(key);
 			actuate_cont = offset_controls(cont);
 			controller_manual(actuate_cont);
-
-			printf("%d\n", find_altitude(pressure));
 			break;
 
 		case MODE_CALIBRATION:

@@ -14,6 +14,9 @@
 #include <inttypes.h>
 #include "../config.h"
 #include "../D2PC.h"
+// #include "../config.h"
+
+#define JOYSTICK
 
 /*------------------------------------------------------------
  * console I/O

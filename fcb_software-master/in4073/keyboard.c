@@ -22,6 +22,8 @@ int16_t p_pitch, i_pitch, d_pitch;
 int16_t p_roll, i_roll, d_roll;
 int16_t p_height, i_height, d_height;
 
+int16_t roll_offset = -3700;
+
 /*
  * @Author Kenrick Trip
  * @Param cont, struct of control commands, key input, controller mode.
@@ -186,8 +188,8 @@ void update_controller_gains(){
 		p_height = safeint16pint16(Kph, p_offset);
 		i_height = safeint16pint16(Kih, i_offset);
 		d_height = safeint16pint16(Kdh, d_offset);
-		if (PID_prints)
-			printf("\nP: %d, I: %d, D: %d\n", p_height, i_height, d_height);
+		// if (PID_prints)
+			// printf("\nP: %d, I: %d, D: %d\n", p_height, i_height, d_height);
 	}
 	else
 		printf("ERROR: invalid tuning axis should be (1,2,3,4)");

@@ -388,6 +388,8 @@ int main(void){
 						printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
 					if (check_loop_time)
 						printf("\n%ld\n", loop_time);
+					if (PID_prints)
+						printf("\nP: %d, I: %d, D: %d\n", p_height, i_height, d_height);
 				}
 
 				// D2PC_message m = init_message();
