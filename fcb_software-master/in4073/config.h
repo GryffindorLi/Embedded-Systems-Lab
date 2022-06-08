@@ -122,8 +122,8 @@
 // _____keyboard_control_settings_____:
 
 // set offset gains per key hit
-#define throttle_per_key 1
-#define angle_per_key 1
+#define throttle_per_key 200
+#define angle_per_key 100
 #define height_per_key 5 // height in cm 
 
 // _____in4073_settings_____:

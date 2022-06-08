@@ -44,14 +44,14 @@ int32_t yaw, pitch, roll;
 int start_calibration;
 int16_t* aes;
 int16_t height_control_throttle;
-char *mode_str[8] = {"safe", "safe", "panic", "calibration", "yaw-control", "full-control", "raw-mode", "height-mode"};
+char *mode_str[8] = {"safe", "panic", "manual", "calibration", "yaw-control", "full-control", "raw-mode", "height-mode"};
 
 int r_state = 0;
 int c_state = 0;
 int Md_flag = 0;
 int Ct_flag = 0;
 uint8_t Md_buffer[3] = {'M', 'd', -1};
-uint8_t Ct_buffer[9] = {'C', 't', 0};
+uint8_t Ct_buffer[14] = {'C', 't', 0};
 uint8_t Ct_p = 2;
 
 CTRL_msg rec_msg;
