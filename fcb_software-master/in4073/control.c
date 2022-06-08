@@ -136,7 +136,11 @@ int16_t set_throttle(uint16_t throttle, uint16_t throttle_scale){
  * @Return updated motor commands in ae array.
  */
 void controller_manual(controls cont){
-	set_aes(cont.throttle, cont.roll / a_scale, cont.pitch / a_scale, cont.yaw / y_scale);
+	int16_t roll = remap8216(cont.roll);
+	int16_t pitch = remap8216(cont.pitch);
+	int16_t yaw = remap8216(cont.yaw);
+	uint16_t throttle = remapu8216(cont.throttle);
+	set_aes(throttle, roll / a_scale, pitch / a_scale, yaw / y_scale);
 }
 
 // ____Control Mode only____:
@@ -198,9 +202,11 @@ int16_t find_altitude(int32_t pressure){
  */
 void get_error(controls cont){
 	// find the error between control input and filtered IMU values:
+
 	error[0] = (int32_t) cont.yaw / 5 - yaw; // scale yaw control input
 	error[1] = (int32_t) cont.pitch / 2 - pitch; // scale pitch control input
 	error[2] = (int32_t) cont.roll / 5 - roll; // scale roll control input
+
 
 	// compute the derivative of the error:
 	derror[0] = (int32_t) (error[0] - prev_error[0]) * freq;
@@ -231,18 +237,19 @@ void get_error(controls cont){
  * @Return updated motor commands in ae array.
  */
 void controller(controls cont){
-	if(set_throttle(cont.throttle, t_scale) < 100){
+	uint16_t throttle = remapu8216(cont.throttle);
+	if(set_throttle(throttle, t_scale) < 100){
 		ae[0] = ae[1] = ae[2] = ae[3] = 0;
 	} else {
 		// define all 3 PID controllers
-		yaw_command = (int32_t) (p_yaw*error[0] + i_yaw*ierror[0] + d_yaw*derror[0]) / (LSB_drad); 
+		yaw_command = (int32_t) (p_yaw*error[0] + i_yaw*ierror[0] + d_yaw*derror[0]) / (LSB_drad);
 
 		if (yaw_control_mode) {
 			pitch_command = 0;
 			roll_command = 0;
 		} else {
 			// yaw_command = 0; // disable yaw control for tuning
-			pitch_command = (int32_t) (p_pitch*error[1] + i_pitch*ierror[1] + d_pitch*derror[1])/(LSB_rad); 
+			pitch_command = (int32_t) (p_pitch*error[1] + i_pitch*ierror[1] + d_pitch*derror[1])/(LSB_rad);
 			roll_command = (int32_t) (p_roll*error[2] + i_roll*ierror[2] + d_roll*derror[2])/(LSB_rad);
 		}
 
@@ -251,7 +258,7 @@ void controller(controls cont){
 		else
 			height_control_command = 0;
 
-		set_aes(cont.throttle + height_control_command, roll_command, pitch_command, yaw_command);
+		set_aes(throttle + height_control_command, roll_command, pitch_command, yaw_command);
 	}
 }
 

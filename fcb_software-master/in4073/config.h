@@ -113,15 +113,17 @@
 // tuning change in percentage:
 #define tune_offset 3
 // 1 = yaw, 2 = pitch, 3 = roll, 4 = height
+
 #define tuning_axis 3
+
 // enable PID prints, 1 = enable, 0 = disable
 #define PID_prints 1
 
 // _____keyboard_control_settings_____:
 
 // set offset gains per key hit
-#define throttle_per_key 200
-#define angle_per_key 100
+#define throttle_per_key 1
+#define angle_per_key 1
 #define height_per_key 5 // height in cm 
 
 // _____in4073_settings_____:

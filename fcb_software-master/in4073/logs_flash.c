@@ -7,7 +7,7 @@ static bool full = 0;
 
 void write_D2PC_msg_flash(D2PC_message_p msg){
     if (full){
-        printf("The flash is full!\n");
+        // printf("The flash is full!\n");
         return;
     }
     uint8_t data[100];
@@ -62,7 +62,7 @@ void write_D2PC_msg_flash(D2PC_message_p msg){
     bool res = flash_write_bytes(curr_addr, data, 33);
 
     if (!res){
-        printf("Fail to write to flash!\n");
+        // printf("Fail to write to flash!\n");
         return;
     }
 
@@ -74,7 +74,7 @@ void write_D2PC_msg_flash(D2PC_message_p msg){
 
 int8_t read_D2PC_msg_flash(D2PC_message_p msg){
     if (curr_addr == 0x00000000){
-        printf("The flash is empty!\n");
+        // printf("The flash is empty!\n");
         return -1;
     }
 
@@ -83,7 +83,7 @@ int8_t read_D2PC_msg_flash(D2PC_message_p msg){
     uint32_t pos = 0x00000000 + head;
 
     if (pos > 0x01FFFF || pos >= curr_addr){
-        printf("No more data to read\n");
+        // printf("No more data to read\n");
         return -1;
     } else {
         head += 33;
