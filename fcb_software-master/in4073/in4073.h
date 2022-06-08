@@ -13,7 +13,10 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
+#define BATTERY_LEVEL 1050
+
 extern bool demo_done;
+extern uint16_t bat_volt;
 int32_t yaw, pitch, roll;
 int calibration;
 
