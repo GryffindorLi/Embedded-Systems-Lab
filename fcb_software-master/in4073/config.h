@@ -22,7 +22,7 @@
 // ____PC terminal settings_____:
 #define TRANSMISSION_FREQ 50
 #define JOYSTICK_WATCHDOG_LIFETIME 200
-// #define JOYSTICK
+#define JOYSTICK
 
 // _____control gains_____:
 
@@ -100,7 +100,7 @@
 // _____filter_settings_____:
 
 // select kalman filter, 1 = enable, 0 = disable:
-#define use_kalman 1
+#define use_kalman 0
 
 // gyro and accelerometer percentages
 #define gyro_rate 98
