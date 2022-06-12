@@ -100,7 +100,7 @@
 // _____filter_settings_____:
 
 // select kalman filter, 1 = enable, 0 = disable:
-#define use_kalman 1
+#define use_kalman 0
 
 // gyro and accelerometer percentages
 #define gyro_rate 98

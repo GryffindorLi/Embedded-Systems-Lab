@@ -312,6 +312,8 @@ uint8_t get_mode_change(char key, controls cont, int* buttons, uint8_t current_m
 			return (uint8_t) key - '0';
 		else if (current_mode == MODE_HEIGHT_CONTROL && key == '5')
 			return (uint8_t) key - '0';
+		else if (current_mode == MODE_HEIGHT_CONTROL && key == '7')
+			return (uint8_t) key - '0';
 		else
 			fprintf(stderr,"Keep Controls Neutral!!\n");
 	}

@@ -201,7 +201,12 @@ uint8_t on_mode_change(uint8_t current_mode, int16_t* aes) {
 			if (current_mode == MODE_FULL_CONTROL) {
 				return current_mode;
 			} else {
-				if (aes[0] + aes[1] + aes[2] + aes[3] != 0) {
+				if ((current_mode == MODE_HEIGHT_CONTROL) && (aes[0] + aes[1] + aes[2] + aes[3] != 0)) {
+					start_calibration = 0;
+					height_control_throttle = current_control.throttle;
+					printf("\n---===Entering FULL CONTROL mode!===---\n");
+					return mode;
+				} else if (aes[0] + aes[1] + aes[2] + aes[3] != 0){
 					reset_control_offset();
 					printf("\n---===Stop motors first to enter FULL CONTROL mode!===---\n");
 					return current_mode;
@@ -370,8 +375,8 @@ int main(void){
 				printf("\nCALIBRATE first before HEIGHT CONTROL\n");
 				printf("\nentered FULL CONTROL MODE\n");
 			}
-			else if ((current_control.throttle - height_control_throttle > 100) ||
-		    		 (current_control.throttle - height_control_throttle < -100)){
+			else if ((current_control.throttle - height_control_throttle > 200) ||
+		    		 (current_control.throttle - height_control_throttle < -200)){
 				current_mode = MODE_FULL_CONTROL;
 				printf("\nTHROTTLE disabled HEIGHT CONTROL\n");
 				printf("\nentered FULL CONTROL MODE\n");
@@ -407,6 +412,7 @@ int main(void){
 																			 current_control.pitch, current_control.yaw);
 					printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
 					printf("\nMode: %s\n", mode_str[current_mode]);
+					printf("\nHeight: %d\n", height_control_throttle);
 					printf("theta: %d, sq: %d, say: %d, pitch: %ld\n", theta, sq, say, pitch);
 					if (print_angles)
 						printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);

@@ -141,7 +141,18 @@ void controller_manual(controls cont){
 
 // ____Control Mode only____:
 
-
+/*
+ * @Author Kenrick Trip
+ * @Param calabration condition 0 or 1.
+ * @Return adjusted ypr values.
+ */
+void adjust_after_calibration(){
+	if( calibration == 1 ){
+		yaw = yaw + C_yaw_offset;
+		pitch = ((pitch + C_pitch_offset)*16384)/C_pitch_slope;
+		roll = ((roll + C_roll_offset)*16384)/C_roll_slope;
+	}
+}
 
 /*
  * @Author Kenrick Trip
@@ -170,11 +181,7 @@ void filter_angles(void){
 	else
 		run_kalman_filter();
 
-	if( calibration == 1 ){
-		yaw = yaw + C_yaw_offset;
-		pitch = ((pitch + C_pitch_offset)*16384)/C_pitch_slope;
-		roll = ((roll + C_roll_offset)*16384)/C_roll_slope;
-	}
+	adjust_after_calibration();
 }
 
 /*
@@ -349,6 +356,7 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			#endif
 
 			run_kalman_filter();
+			adjust_after_calibration();
 			get_error(actuate_cont);
 			controller(actuate_cont);
 			break;

@@ -109,8 +109,8 @@ void pitch_cov(){
 void pitch_error(){
     // Yp[0] = theta - p_next[0];
     // Yp[0] = arccos164((164*say)/(acc_abs*181))*100 - r_next[0];
-    Yp[0] = say - p_next[0];
-    Yp[1] = (gyro_rate*(sq + gyro_offsets[1]) + acc_rate*(say/LSB_acc))/100 - p_next[1];
+    Yp[0] = -sax - p_next[0];
+    Yp[1] = (gyro_rate*(sq + gyro_offsets[1]) + acc_rate*(-sax/LSB_acc))/100 - p_next[1];
 }
 
 void pitch_gain(){
@@ -169,8 +169,8 @@ void roll_cov(){
 void roll_error(){
     // Yr[0] = phi - r_next[0];
     // Yr[0] = arccos164((164*sax)/(acc_abs*181))*100 - r_next[0];
-    Yr[0] = sax - r_next[0];
-    Yr[1] = (gyro_rate*(sp + gyro_offsets[2]) + acc_rate*(sax/LSB_acc))/100 - r_next[1];
+    Yr[0] = say - r_next[0];
+    Yr[1] = (gyro_rate*(sp + gyro_offsets[2]) + acc_rate*(say/LSB_acc))/100 - r_next[1];
 }
 
 void roll_gain(){

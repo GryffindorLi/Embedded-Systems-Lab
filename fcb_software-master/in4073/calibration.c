@@ -70,21 +70,18 @@ void send_instruction(){
     if (calib_notice) {
         switch (calib_phase) {
             case 0:
-                printf("\nPlace level, hit '+' key when ready \n");
-                break;
-            case 1:
                 printf("\nPlace nose up, hit '+' key when ready\n");
                 break;
-            case 2:
+            case 1:
                 printf("\nPlace nose down, hit '+' key when ready\n");
                 break;
-            case 3:
+            case 2:
                 printf("\nPlace sideways Left, hit '+' key when ready\n");
                 break;
-            case 4:
+            case 3:
                 printf("\nPlace sideways Right, hit '+' key when ready\n");
                 break;
-            case 5:
+            case 4:
                 printf("\nPlace level at ground level, hit '+' key when ready\n");
                 break;
 
@@ -101,8 +98,10 @@ void send_instruction(){
  * @Return maximum value at 90 degrees bank.
  */
 void data_to_slope(){
-    C_pitch_slope = (MAX(pitch_data[1], -pitch_data[1]) + MAX(pitch_data[2], -pitch_data[2]) + 2*C_pitch_offset)/2;
-    C_roll_slope = (MAX(roll_data[3], -roll_data[3]) + MAX(roll_data[4], -roll_data[4]) + 2*C_roll_offset)/2;
+    C_pitch_slope = (MAX(pitch_data[1], -pitch_data[1]) + MAX(pitch_data[2], -pitch_data[2]))/2;
+    printf("\nPitch slope = %d\n", C_pitch_slope);
+    C_roll_slope = (MAX(roll_data[3], -roll_data[3]) + MAX(roll_data[4], -roll_data[4]))/2;
+    printf("\nRoll slope = %d\n", C_roll_slope);
 }
 
 /*
@@ -113,18 +112,19 @@ void data_to_slope(){
 void run_calibration(uint8_t key){
     if (start_calibration > 0){
         if (calib_notice == 0)
-            printf("\nHit '+' key to start \n");
+            printf("\nHit '+' key and keep level to start \n");
 
         if (start_calibration == 1) {
             calib_notice = 1;
         }
         
-        if (calib_phase < 6) {
+        if (calib_phase < 5) {
             if (key == '+') {
                 send_instruction();
                 if (calib_phase < 5)
                     collect_data();
-                set_offset();
+                if (calib_phase == 0)
+                    set_offset();
                 calib_phase += 1;
                 calib_notice = 1;
             }
