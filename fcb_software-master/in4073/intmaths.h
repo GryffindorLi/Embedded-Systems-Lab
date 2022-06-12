@@ -22,7 +22,4 @@ int16_t int16clamp(int16_t a, int16_t min, int16_t max);
 uint8_t uint8clamp(uint8_t a, uint8_t min, uint8_t max);
 int8_t int8clamp(int8_t a, int8_t min, int8_t max);
 int32_t log1000(int32_t a);
-
-// int32_t atan2(int16_t a, int16_t b);
-// int32_t arctan(int16_t a);
-int32_t arccos1000(int16_t a);
+int32_t arccos164(int16_t a);
