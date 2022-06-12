@@ -108,7 +108,7 @@
 #define gyro_rate_yaw 1000
 #define acc_rate_yaw 1
 // print tuned angle values, 1 = enable, 0 = disable
-#define print_angles 0
+#define print_angles 1
 
 // _____tuning_settings_____:
 

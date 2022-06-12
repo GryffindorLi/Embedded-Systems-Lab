@@ -79,20 +79,20 @@ int16_t int16sqrt(int16_t a) {
  * @Param motor value outputted by the controller.
  * @Return the square root of this value.
  */
-int16_t int16sqrt2(int16_t motor_val){
+int16_t int16sqrt2(int32_t a){
 	int16_t k = 1;
 	int16_t square = 1;
     int sign = 1;
 
-    if (motor_val < 0) {
-        motor_val = -motor_val;
+    if (a < 0) {
+        a = -a;
         sign = -1;
     }
 	
-    if (motor_val == 0 || motor_val == 1)
-		return sign*motor_val;
+    if (a == 0 || a == 1)
+		return sign*a;
 	else {
-		while (square <= motor_val) {
+		while (square <= a) {
 			k++;
 			square = k*k;
 		}
@@ -121,3 +121,6 @@ int32_t log1000(int32_t a) {
 	return (-1742 + ((2821 + ((-1470 + ((447 - (56.57 * a)/1000)) * a)/1000) * a)/1000) * a);
 }
 
+int32_t arccos164(int16_t a) {
+	return ((-4897*a)/164 + (4807*a*a*a)/(164*164*164)) / (5215 - (6699*a*a)/(164*164) + (1542*a*a*a*a)/(164*164*164*164));
+}

@@ -6,6 +6,7 @@
 #include "keyboard.h"
 #include "kalman.h"
 #include <stdio.h>
+#include "intmaths.h"
 
 // motor values
 int16_t ae[4];
@@ -15,9 +16,10 @@ int32_t yaw, pitch, roll;
 int16_t gyro_offsets[3] = {0, 0, 0};
 
 // for IMU:
-int16_t phi, theta, psi; // computed angles  (deg to int16), LSB = 182
+// int16_t phi, theta, psi; // computed angles  (deg to int16), LSB = 182
 int16_t sp, sq, sr; // x,y,z gyro (deg/s to int16), LSB = 16.4
 int16_t sax, say, saz; // x,y,z accel (m/s^2 to int16), LSB = 1670
+int16_t acc_abs; // absolute of acceleration vectors
 
 
 // for yaw axis:
@@ -105,7 +107,9 @@ void pitch_cov(){
 }
 
 void pitch_error(){
-    Yp[0] = theta - p_next[0];
+    // Yp[0] = theta - p_next[0];
+    // Yp[0] = arccos164((164*say)/(acc_abs*181))*100 - r_next[0];
+    Yp[0] = say - p_next[0];
     Yp[1] = (gyro_rate*(sq + gyro_offsets[1]) + acc_rate*(say/LSB_acc))/100 - p_next[1];
 }
 
@@ -163,7 +167,9 @@ void roll_cov(){
 }
 
 void roll_error(){
-    Yr[0] = phi - r_next[0];
+    // Yr[0] = phi - r_next[0];
+    // Yr[0] = arccos164((164*sax)/(acc_abs*181))*100 - r_next[0];
+    Yr[0] = sax - r_next[0];
     Yr[1] = (gyro_rate*(sp + gyro_offsets[2]) + acc_rate*(sax/LSB_acc))/100 - r_next[1];
 }
 
@@ -201,6 +207,7 @@ void set_angles(){
 }
 
 void run_kalman_filter(){
+    // acc_abs = int16sqrt2((sax*sax + say*say)/(16384*2));
     // yaw:
     yaw_state();
     yaw_cov();
