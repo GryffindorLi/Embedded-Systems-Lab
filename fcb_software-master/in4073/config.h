@@ -15,7 +15,7 @@
 #define serialprintf
 // uncomment to disbale tuning
 #define tuning
-// uncomment to disable battery check
+// uncomment to disable battery check when no battery is connected
 // #define protect_battery
 
 
@@ -32,9 +32,9 @@
 #define Kdy 50
 
 // pitch control gains * 1000:
-#define Kpp 2000
-#define Kip 50
-#define Kdp 200
+#define Kpp 7000 // 2000
+#define Kip 85 // 50
+#define Kdp 300 // 200
 
 // roll control gains * 1000:
 #define Kpr 7000
@@ -42,7 +42,7 @@
 #define Kdr 300
 
 // height control gains:
-#define Kph 350
+#define Kph 500 // 350
 #define Kih 100
 #define Kdh 100
 

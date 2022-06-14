@@ -338,12 +338,13 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			yaw_control_mode = 1;
 			height_control_mode = 0;
 
-			set_full_control_gains();
 			handle_keys(key);
 			actuate_cont = offset_controls(cont);
 
 			#ifdef tuning
 				update_controller_gains();
+			#else
+				set_full_control_gains();
 			#endif
 
 			filter_angles();
@@ -356,12 +357,13 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			height_control_mode = 0;
 			init_altitude = 0;
 
-			set_full_control_gains();
 			handle_keys(key);
 			actuate_cont = offset_controls(cont);
 
 			#ifdef tuning
 				update_controller_gains();
+			#else
+				set_full_control_gains();
 			#endif
 
 			filter_angles();
@@ -373,12 +375,13 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			yaw_control_mode = 0;
 			height_control_mode = 0;
 
-			set_raw_mode_gains();
 			handle_keys(key);
 			actuate_cont = offset_controls(cont);
 
 			#ifdef tuning
 				update_controller_gains();
+			#else
+				set_raw_mode_gains();
 			#endif
 
 			run_kalman_filter();

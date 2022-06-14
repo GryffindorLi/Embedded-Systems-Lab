@@ -43,7 +43,7 @@ uint32_t panic_to_safe_timer = -1;
 int32_t yaw, pitch, roll;
 int start_calibration;
 int16_t* aes;
-int16_t height_control_throttle;
+uint16_t height_control_throttle;
 char *mode_str[8] = {"safe", "panic", "manual", "calibration", "yaw-control", "full-control", "raw-mode", "height-mode"};
 
 int r_state = 0;
@@ -346,7 +346,7 @@ int main(void){
 			s_timer = get_time_us();
 			if (get_time_us() - print_s_timer > 1000000) {
 				if (current_mode != MODE_CALIBRATION)
-					printf("\n Loop Time : %ldms\n", s_period);
+					printf("Loop time : %ld ms\n", s_period);
 				print_s_timer = get_time_us();
 			}
 		}
@@ -411,15 +411,14 @@ int main(void){
 					printf("\n--==<< controls (trpy): %d %d %d %d >>==--\n", current_control.throttle, current_control.roll,
 																			 current_control.pitch, current_control.yaw);
 					printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
-					printf("\nMode: %s\n", mode_str[current_mode]);
-					// printf("\nHeight: %d\n", height_control_throttle);
 					printf("theta: %d, sq: %d, -sax: %d, pitch: %ld\n", theta, sq, -sax, pitch);
 					if (print_angles)
-						printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
-					if (check_loop_time)
-						printf("\n%ld\n", loop_time);
+						printf("Yaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
 					if (PID_prints)
-						printf("\nP: %d, I: %d, D: %d\n", p_roll, i_roll, d_roll);
+						printf("P: %d, I: %d, D: %d\n", p_roll, i_roll, d_roll);
+
+					printf("\nMode: %s\n", mode_str[current_mode]);
+					printf("Height throttle: %d\n", height_control_throttle);
 				}
 
 				// D2PC_message m = init_message();
