@@ -71,6 +71,7 @@ int32_t alt_buf[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 int16_t C_pitch_offset, C_roll_offset, C_yaw_offset;
 int16_t C_pitch_slope, C_roll_slope;
 int16_t gyro_offsets[3];
+int16_t acc_offsets[3];
 int calibration = 0; // set to true if the calibration mode has been run
 
 // control variables:
@@ -177,11 +178,11 @@ void filter_angles(void){
 		yaw = (yaw_buf[0] + yaw_buf[1] + yaw_buf[2])/3;
 		pitch = (pitch_buf[0] + pitch_buf[1] + pitch_buf[2])/3;
 		roll = (roll_buf[0] + roll_buf[1] + roll_buf[2])/3;
+
+		adjust_after_calibration();
 	}
 	else
 		run_kalman_filter();
-
-	adjust_after_calibration();
 }
 
 /*
@@ -381,7 +382,6 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			#endif
 
 			run_kalman_filter();
-			adjust_after_calibration();
 			get_error(actuate_cont);
 			controller(actuate_cont);
 			break;

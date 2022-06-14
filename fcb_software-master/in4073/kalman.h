@@ -1,9 +1,14 @@
 #include <inttypes.h>
 #include <stdbool.h>
+#include <inttypes.h>
+#include <stdio.h>
 
 extern int16_t ae[4];
 // Angle definitions
 extern int32_t yaw, pitch, roll;
+
+extern int16_t acc_offsets[3];
+extern int16_t gyro_offsets[3];
 
 // for yaw axis:
 int16_t c1;

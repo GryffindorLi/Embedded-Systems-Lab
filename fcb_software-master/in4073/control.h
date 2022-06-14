@@ -35,6 +35,7 @@ int32_t roll_buf[3];
 int16_t C_pitch_offset, C_roll_offset, C_yaw_offset;
 int16_t C_pitch_slope, C_roll_slope;
 int16_t gyro_offsets[3];
+int16_t acc_offsets[3];
 extern int calibration;
 
 // tuned PID values:

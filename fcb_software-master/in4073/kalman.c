@@ -14,6 +14,7 @@ int16_t ae[4];
 // angles
 int32_t yaw, pitch, roll;
 int16_t gyro_offsets[3] = {0, 0, 0};
+int16_t acc_offsets[3] = {0, 0, 0};
 
 // for IMU:
 // int16_t phi, theta, psi; // computed angles  (deg to int16), LSB = 182
@@ -50,7 +51,7 @@ void yaw_cov(){
 
 void yaw_error(){
     Yy[0] = sr + gyro_offsets[0] - y_next[0];
-    Yy[1] = (acc_rate_yaw*saz)/1000 - y_next[1];
+    Yy[1] = (acc_rate_yaw*(saz + acc_offsets[0]))/1000 - y_next[1];
 }
 
 void yaw_gain(){
@@ -109,7 +110,7 @@ void pitch_cov(){
 void pitch_error(){
     // Yp[0] = theta - p_next[0];
     // Yp[0] = arccos164((164*say)/(acc_abs*181))*100 - r_next[0];
-    Yp[0] = -sax - p_next[0];
+    Yp[0] = -(sax  + acc_offsets[1]) - p_next[0];
     Yp[1] = (LSB_rad*(sq + gyro_offsets[1]))/LSB_drad - p_next[1];
 }
 
@@ -169,7 +170,7 @@ void roll_cov(){
 void roll_error(){
     // Yr[0] = phi - r_next[0];
     // Yr[0] = arccos164((164*sax)/(acc_abs*181))*100 - r_next[0];
-    Yr[0] = say - r_next[0];
+    Yr[0] = say + acc_offsets[2] - r_next[0];
     Yr[1] = (LSB_rad*(sp + gyro_offsets[2]))/LSB_drad - r_next[1];
 }
 
