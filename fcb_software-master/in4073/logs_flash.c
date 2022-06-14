@@ -5,6 +5,9 @@
 static uint32_t curr_addr = 0x00000000;
 static bool full = 0;
 
+/*
+ * @Author Zirui Li
+*/
 void write_D2PC_msg_flash(D2PC_message_p msg){
     if (full){
         // printf("The flash is full!\n");
@@ -72,6 +75,9 @@ void write_D2PC_msg_flash(D2PC_message_p msg){
     }
 }
 
+/*
+ * @Author Zirui Li
+*/
 int8_t read_D2PC_msg_flash(D2PC_message_p msg){
     if (curr_addr == 0x00000000){
         // printf("The flash is empty!\n");
@@ -119,7 +125,9 @@ int8_t read_D2PC_msg_flash(D2PC_message_p msg){
     return 0;
 }
 
-
+/*
+ * @Author Zirui Li
+*/
 uint32_t read_all_from_flash(D2PC_message_p* msgs) {
     uint32_t i = 0;
     int8_t res;
@@ -129,6 +137,9 @@ uint32_t read_all_from_flash(D2PC_message_p* msgs) {
     return i;
 }
 
+/*
+ * @Author Zirui Li
+*/
 void send_all_flash_data(){
     D2PC_message_p* flash_ms = (D2PC_message_p*)malloc(SEND_INTERVAL * sizeof(D2PC_message_p));
 	for (uint8_t i = 0; i < SEND_INTERVAL; ++i){
