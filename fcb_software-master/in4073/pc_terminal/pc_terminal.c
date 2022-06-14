@@ -463,7 +463,7 @@ int main(int argc, char **argv)
 	// if no argument is given at execution time, /dev/ttyUSB0 is assumed
 	// asserts are in the function
 	if (argc == 1) {
-		serial_port_open("/dev/ttyUSB3", &fd_serial_port);
+		serial_port_open("/dev/ttyUSB0", &fd_serial_port);
 	} else if (argc == 2) {
 		serial_port_open(argv[1],&fd_serial_port);
 	} else {
@@ -551,7 +551,7 @@ int main(int argc, char **argv)
 // #ifdef USE_WIRELESS
 // 		if (current_mode == MODE_WIRELESS && !wireless_open){
 // 			serial_port_close();
-// 			serial_port_open("/dev/pts/4");
+// 			serial_port_open("/dev/pts/3");
 // 			wireless_open = 1;
 // 		}
 
@@ -566,6 +566,7 @@ int main(int argc, char **argv)
 		}
 #ifdef LOG_FROM_TERMINAL
 		if ((rc = serial_port_getchar((current_mode == MODE_WIRELESS ? &wireless_port : &fd_serial_port))) != -1) {
+			printf("%c\n", rc);
 			term_putchar(rc);
 			file_putchar(rc, fp);
 		}
@@ -574,7 +575,7 @@ int main(int argc, char **argv)
 			if (rc == '#' && !wireless_open){
 				serial_port_close(&fd_serial_port);
 				current_mode = MODE_WIRELESS;
-				serial_port_open("/dev/pts/11",&wireless_port);
+				serial_port_open("/dev/pts/3",&wireless_port);
 				wireless_open = 1;
 			}
 

@@ -443,9 +443,9 @@ int main(void){
 				else if (current_mode == MODE_WIRELESS){
 					nrf_gpio_pin_toggle(BLUE);
 					printf("%c",'#');
-					printf("\nMode: %s\n", mode_str[current_mode]);
+					// printf("\nMode: %s\n", mode_str[current_mode]);
 					// printf("\nP: %d, I: %d, D: %d\n", p_roll, i_roll, d_roll);
-						enqueue(&ble_tx_queue, highByte(aes[0]));
+						enqueue(&ble_tx_queue, highByte(10));
 						// enqueue(&ble_tx_queue, lowByte(aes[0]));
 						// enqueue(&ble_tx_queue, highByte(aes[1]));
 						// enqueue(&ble_tx_queue, lowByte(aes[1]));
