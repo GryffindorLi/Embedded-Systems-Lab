@@ -96,6 +96,7 @@
 
 // 1/looptime in hz
 #define freq 280
+#define raw_freq 100
 
 // _____filter_settings_____:
 

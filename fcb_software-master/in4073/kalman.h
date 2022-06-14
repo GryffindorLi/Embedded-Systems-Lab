@@ -34,8 +34,8 @@ int32_t r_next[3];
 int32_t Pr[9];
 int32_t Pr_next[9];
 int32_t Yr[2];
-int8_t Qr[3];
-int8_t Rr[2];
+int16_t Qr[3];
+int16_t Rr[2];
 int32_t Kr[6];
 
 // functions:

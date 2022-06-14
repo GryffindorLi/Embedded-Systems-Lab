@@ -413,7 +413,8 @@ int main(void){
 					printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
 					printf("\nMode: %s\n", mode_str[current_mode]);
 					printf("\nHeight: %d\n", height_control_throttle);
-					printf("theta: %d, sq: %d, say: %d, pitch: %ld\n", theta, sq, say, pitch);
+					// printf("theta: %d, sq: %d, sax: %d, pitch: %ld\n", theta, sq, sax, pitch);
+					printf("phi: %d, sp: %d, sax: %d, roll: %ld\n", phi, sp, sax, roll);
 					if (print_angles)
 						printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
 					if (check_loop_time)

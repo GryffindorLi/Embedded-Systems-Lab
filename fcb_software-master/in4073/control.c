@@ -171,8 +171,8 @@ void filter_angles(void){
 		}
 
 		yaw_buf[0] = (int32_t) (gyro_rate_yaw*sr + acc_rate_yaw*(saz/LSB_acc))/1000; // this is a rate
-		pitch_buf[0] = (int32_t) (LSB_deg*(gyro_rate*(theta/LSB_deg + (sq*10)/(LSB_ddeg*freq)) + acc_rate*(say/LSB_acc)))/100;
-		roll_buf[0] = (int32_t) (LSB_deg*(gyro_rate*(phi/LSB_deg + (sp*10)/(LSB_ddeg*freq)) + acc_rate*(sax/LSB_acc)))/100;
+		pitch_buf[0] = (int32_t) (LSB_deg*(gyro_rate*(theta/LSB_deg + (sq*10)/(LSB_ddeg*freq)) + acc_rate*(-sax/LSB_acc)))/100;
+		roll_buf[0] = (int32_t) (LSB_deg*(gyro_rate*(phi/LSB_deg + (sp*10)/(LSB_ddeg*freq)) + acc_rate*(say/LSB_acc)))/100;
 
 		yaw = (yaw_buf[0] + yaw_buf[1] + yaw_buf[2])/3;
 		pitch = (pitch_buf[0] + pitch_buf[1] + pitch_buf[2])/3;
@@ -280,6 +280,28 @@ void initialize_height_control(){
 
 /*
  * @Author Kenrick Trip
+ * @Param pid gains.
+ * @Return scaled pid gains.
+ */
+void set_raw_mode_gains(){
+	p_yaw = 1000, i_yaw = 100, d_yaw = 50;
+	p_pitch = 2000, i_pitch = 50, d_pitch = 200;
+	p_roll = 7000, i_roll = 85, d_roll = 300;
+}
+
+/*
+ * @Author Kenrick Trip
+ * @Param pid gains.
+ * @Return scaled pid gains.
+ */
+void set_full_control_gains(){
+	p_yaw = Kpy, i_yaw = Kiy, d_yaw = Kdy;
+	p_pitch = Kpp, i_pitch = Kip, d_pitch = Kdp;
+	p_roll = Kpr, i_roll = Kir, d_roll = Kdr;
+}
+
+/*
+ * @Author Kenrick Trip
  * @Param cont, struct of control commands, key input, controller mode.
  * @Return motor output.
  */
@@ -315,6 +337,7 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			yaw_control_mode = 1;
 			height_control_mode = 0;
 
+			set_full_control_gains();
 			handle_keys(key);
 			actuate_cont = offset_controls(cont);
 
@@ -332,6 +355,7 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			height_control_mode = 0;
 			init_altitude = 0;
 
+			set_full_control_gains();
 			handle_keys(key);
 			actuate_cont = offset_controls(cont);
 
@@ -348,6 +372,7 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 			yaw_control_mode = 0;
 			height_control_mode = 0;
 
+			set_raw_mode_gains();
 			handle_keys(key);
 			actuate_cont = offset_controls(cont);
 

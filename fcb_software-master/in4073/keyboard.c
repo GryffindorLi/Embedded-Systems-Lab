@@ -22,7 +22,9 @@ int16_t p_pitch, i_pitch, d_pitch;
 int16_t p_roll, i_roll, d_roll;
 int16_t p_height, i_height, d_height;
 
-int16_t roll_offset = -3700;
+int16_t yaw_offset = 0;
+int16_t pitch_offset = 0;
+int16_t roll_offset = 0;
 
 /*
  * @Author Kenrick Trip
