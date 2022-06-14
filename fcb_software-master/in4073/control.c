@@ -376,6 +376,23 @@ int16_t* run_filters_and_control(controls cont, uint8_t key, uint8_t mode)
 				controller(actuate_cont);
 			}
 			break;
+			case MODE_WIRELESS:
+			yaw_control_mode = 0;
+			height_control_mode = 0;
+			init_altitude = 0;
+
+			handle_keys(key);
+			actuate_cont = offset_controls(cont);
+
+			#ifdef tuning
+				update_controller_gains();
+			#endif
+
+			filter_angles();
+			get_error(actuate_cont);
+			controller(actuate_cont);
+			
+			break;
 
 		default:
 			break;

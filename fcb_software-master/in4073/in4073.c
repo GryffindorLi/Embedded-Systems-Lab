@@ -44,7 +44,7 @@ int32_t yaw, pitch, roll;
 int start_calibration;
 int16_t* aes;
 int16_t height_control_throttle;
-char *mode_str[8] = {"safe", "panic", "manual", "calibration", "yaw-control", "full-control", "raw-mode", "height-mode"};
+char *mode_str[9] = {"safe", "panic", "manual", "calibration", "yaw-control", "full-control", "raw-mode", "height-mode", "wireless"};
 
 int r_state = 0;
 int c_state = 0;
@@ -243,6 +243,18 @@ uint8_t on_mode_change(uint8_t current_mode, int16_t* aes) {
 				return current_mode;
 			}
 			break;
+		case MODE_WIRELESS:
+			if (current_mode == MODE_WIRELESS)
+				return current_mode;
+			else if (current_mode == MODE_SAFE){
+				wireless_mode = true;
+				printf("\n---===Entering WIRELESS mode!===---\n");
+				return mode;
+			} else {
+				printf("\n---===Go to SAFE MODE first to enter WIRELESS mode!===---\n");
+				return current_mode;
+			}
+			break;
 
 		default:
 			return current_mode;
@@ -316,15 +328,22 @@ int main(void){
 	demo_done = false;
 	wireless_mode = false;
 	calibration = 0;
-
+	
 	// --------------------------------MAIN LOOP------------------------------------
 
 	while (!demo_done) {
 		if (check_loop_time)
 			start_time = get_time_us();
 
-		if (rx_queue.count) {
+		if (rx_queue.count && current_mode != MODE_WIRELESS) {
 			receive_message(&rx_queue);
+			
+		}
+		else if (ble_rx_queue.count && current_mode == MODE_WIRELESS)
+		{
+			wireless_mode = true;
+			receive_message(&ble_rx_queue);
+			
 		}
 		// check if there is message
 		if (Md_flag == 1) {
@@ -387,7 +406,8 @@ int main(void){
 		led_indicator(current_mode);
 
 		// Check Disconnection
-		if (get_time_us() - idle_timer > 1000) {
+		if (current_mode != MODE_WIRELESS){
+		if (get_time_us() - idle_timer > 10000) {
 			UART_watch_dog -= 3;
 			idle_timer = get_time_us();
 			if (UART_watch_dog < 1) {
@@ -396,28 +416,48 @@ int main(void){
 				printf("\nDISCONNECTION!!\n");
 			}
 		}
+	}
 
 		if (check_timer_flag()) {
 			// 20HZ
 			if (counter++%20 == 0) {
-				// 1HZ
-				nrf_gpio_pin_toggle(BLUE);
-				if (current_mode != MODE_CALIBRATION){
-					printf("\n--==<< controls (trpy): %d %d %d %d >>==--\n", current_control.throttle, current_control.roll,
-																			 current_control.pitch, current_control.yaw);
-					printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
+				
+				if (current_mode != MODE_CALIBRATION && current_mode != MODE_WIRELESS){
+					// 1HZ
+					nrf_gpio_pin_toggle(RED);
+					
+					
+				// 	printf("\n--==<< controls (trpy): %d %d %d %d >>==--\n", current_control.throttle, current_control.roll,
+				// 															 current_control.pitch, current_control.yaw);
+				// 	printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
+				// 	printf("\nMode: %s\n", mode_str[current_mode]);
+				// 	printf("theta: %d, sq: %d, say: %d, pitch: %ld\n", theta, sq, say, pitch);
+				// 	if (print_angles)
+				// 		printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
+				// 	if (check_loop_time)
+				// 		printf("\n%ld\n", loop_time);
+				// 	if (PID_prints)
+				// 		printf("\nP: %d, I: %d, D: %d\n", p_roll, i_roll, d_roll);
+				 }
+				
+				else if (current_mode == MODE_WIRELESS){
+					nrf_gpio_pin_toggle(BLUE);
+					printf("%c",'#');
 					printf("\nMode: %s\n", mode_str[current_mode]);
-					printf("theta: %d, sq: %d, say: %d, pitch: %ld\n", theta, sq, say, pitch);
-					if (print_angles)
-						printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
-					if (check_loop_time)
-						printf("\n%ld\n", loop_time);
-					if (PID_prints)
-						printf("\nP: %d, I: %d, D: %d\n", p_roll, i_roll, d_roll);
-				}
+					// printf("\nP: %d, I: %d, D: %d\n", p_roll, i_roll, d_roll);
+						enqueue(&ble_tx_queue, highByte(aes[0]));
+						// enqueue(&ble_tx_queue, lowByte(aes[0]));
+						// enqueue(&ble_tx_queue, highByte(aes[1]));
+						// enqueue(&ble_tx_queue, lowByte(aes[1]));
+						// enqueue(&ble_tx_queue, highByte(aes[2]));
+						// enqueue(&ble_tx_queue, lowByte(aes[2]));
+						// enqueue(&ble_tx_queue, highByte(aes[3]));
+						// enqueue(&ble_tx_queue, lowByte(aes[3]));
+						quad_ble_send();
 
-				// D2PC_message m = init_message();
-				// send_data(&m);
+					// D2PC_message m = init_message();
+					// send_data(&m);
+				}
 			}
 
 			adc_request_sample();

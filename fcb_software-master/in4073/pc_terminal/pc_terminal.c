@@ -117,11 +117,69 @@ int	term_getchar()
 #include "../config.h"
 
 static int fd_serial_port;
+static int wireless_port;
 static int is_string = 0;
+static int wireless_open = 0;
+#define USE_WIRELESS
 /*
  * Open the terminal I/O interface to the serial/pseudo serial port.
  *
- */
+*/
+void serial_port_open(const char *serial_device, int* port)
+{
+	char *name;
+	int result;
+	struct termios tty;
+
+
+	*port = open(serial_device, O_RDWR | O_NOCTTY);
+
+
+	assert(*port>=0);
+
+
+	result = isatty(*port);
+	assert(result == 1);
+
+
+	name = ttyname(*port);
+	assert(name != 0);
+
+
+	result = tcgetattr(*port, &tty);
+	assert(result == 0);
+
+
+	fcntl(*port, F_SETFL, O_NONBLOCK); // set unblocking
+
+
+	tty.c_iflag = IGNBRK; /* ignore break condition */
+	tty.c_oflag = 0;
+	tty.c_lflag = 0;
+
+
+	tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8; /* 8 bits-per-character */
+	tty.c_cflag |= CLOCAL | CREAD; /* Ignore model status + read input */
+
+
+	cfsetospeed(&tty, B115200);
+	cfsetispeed(&tty, B115200);
+
+
+	tty.c_cc[VMIN]  = 0;
+	tty.c_cc[VTIME] = 1; // TODO check cpu usage
+
+
+	tty.c_iflag &= ~(IXON|IXOFF|IXANY);
+
+
+	result = tcsetattr (*port, TCSANOW, &tty); /* non-canonical */
+
+
+	tcflush(*port, TCIOFLUSH); /* flush I/O buffer */
+}
+
+/*
 void serial_port_open(const char *serial_device)
 {
 	char *name;
@@ -143,12 +201,12 @@ void serial_port_open(const char *serial_device)
 
 	fcntl(fd_serial_port, F_SETFL, O_NONBLOCK); // set unblocking
 
-	tty.c_iflag = IGNBRK; /* ignore break condition */
+	tty.c_iflag = IGNBRK; 
 	tty.c_oflag = 0;
 	tty.c_lflag = 0;
 
-	tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8; /* 8 bits-per-character */
-	tty.c_cflag |= CLOCAL | CREAD; /* Ignore model status + read input */
+	tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8; 
+	tty.c_cflag |= CLOCAL | CREAD; 
 
 	cfsetospeed(&tty, B115200);
 	cfsetispeed(&tty, B115200);
@@ -158,27 +216,27 @@ void serial_port_open(const char *serial_device)
 
 	tty.c_iflag &= ~(IXON|IXOFF|IXANY);
 
-	result = tcsetattr (fd_serial_port, TCSANOW, &tty); /* non-canonical */
+	result = tcsetattr (fd_serial_port, TCSANOW, &tty); 
 
-	tcflush(fd_serial_port, TCIOFLUSH); /* flush I/O buffer */
+	tcflush(fd_serial_port, TCIOFLUSH); 
 }
 
-
-void serial_port_close(void)
+*/
+void serial_port_close(int *port)
 {
 	int 	result;
 
-	result = close(fd_serial_port);
+	result = close(*port);
 	assert (result==0);
 }
 
 
-uint8_t serial_port_getchar()
+uint8_t serial_port_getchar(int *port)
 {
 	int8_t result;
 	uint8_t c;
 
-	result = read(fd_serial_port, &c, 1);
+	result = read(*port, &c, 1);
 	if (result == 1) return c;
 	else return -1;
 }
@@ -275,14 +333,14 @@ void* decode(uint8_t mess[], int16_t start) {
 }
 
 
-int send_ctrl_msg(controls cont, char c) {
+int send_ctrl_msg(controls cont, char c, int *port) {
 	CTRL_msg msg = new_ctrl_msg();
 	msg.checksum = sizeof(CTRL_msg);
 	msg.key = c;
 	msg.control = cont;
 	int bytes;
 	do {
-		bytes = (int) write(fd_serial_port, &msg, sizeof(CTRL_msg));
+		bytes = (int) write(*port, &msg, sizeof(CTRL_msg));
 	} while (bytes == 0);
 	if (bytes == -1) {
 		fprintf(stderr,"Failed to send from PC to DRONE\n");
@@ -307,15 +365,19 @@ uint8_t get_mode_change(char key, controls cont, int* buttons, uint8_t current_m
 	if (key == 27) return MODE_PANIC;	//escape
 	if (key == '0') return 0;
 	if (key == '1' || buttons[0] == 1) return MODE_PANIC;
-	if (key >= '2' && key <= '8') {
-		if (cont.pitch == 0 && cont.roll == 0 && cont.yaw == 0 && cont.throttle == 0 ) 
+	if (key >= '2' && key <= '7') {
+		if (cont.pitch == 0 && cont.roll == 0 && cont.yaw == 0 && cont.throttle == 0) 
 			return (uint8_t) key - '0';
 		else if (current_mode == MODE_FULL_CONTROL && key == '7')
 			return (uint8_t) key - '0';
 		else if (current_mode == MODE_HEIGHT_CONTROL && key == '5')
 			return (uint8_t) key - '0';
-		else
+		else 
 			fprintf(stderr,"Keep Controls Neutral!!\n");
+	}
+
+	if (key == '8'){
+		return (uint8_t) key - '0';
 	}
 	return 255;
 }
@@ -401,9 +463,9 @@ int main(int argc, char **argv)
 	// if no argument is given at execution time, /dev/ttyUSB0 is assumed
 	// asserts are in the function
 	if (argc == 1) {
-		serial_port_open("/dev/ttyUSB0");
+		serial_port_open("/dev/ttyUSB3", &fd_serial_port);
 	} else if (argc == 2) {
-		serial_port_open(argv[1]);
+		serial_port_open(argv[1],&fd_serial_port);
 	} else {
 		printf("wrong number of arguments\n");
 		return -1;
@@ -426,6 +488,7 @@ int main(int argc, char **argv)
 	struct timeval ctrl_trans_start;
 	struct timeval ctrl_trans_end;
 	#ifndef JOYSTICK
+
 		// struct timeval ctrl_monitor_start;
 		// struct timeval ctrl_monitor_end;
 		// gettimeofday(&ctrl_monitor_start, 0);
@@ -445,11 +508,16 @@ int main(int argc, char **argv)
 	
 	gettimeofday(&ctrl_trans_start, 0);
 	for (;;) {
+		
+
+
 
 		// read the keyboard command every loop
 		if ((tmp_c = term_getchar_nb()) != -1) {
 			c = tmp_c;
 		}
+
+		
 		
 		#ifndef JOYSTICK
 			if (keyboard_control(&cont, c)) c = -1;
@@ -469,26 +537,48 @@ int main(int argc, char **argv)
 
 		tmp_mode = get_mode_change(c, cont, buttons, current_mode);
 		// transmit mode change signal immediately after detection
-		if (tmp_mode != 255) {
+		if (tmp_mode != 255 && tmp_mode !=8) {
 			current_mode = tmp_mode;
 			send_mode_msg(current_mode);
 			c = -1;
 		}
+		else if (tmp_mode ==8)
+		{
+			send_mode_msg(tmp_mode);
+			c= -1;
+		}
+
+// #ifdef USE_WIRELESS
+// 		if (current_mode == MODE_WIRELESS && !wireless_open){
+// 			serial_port_close();
+// 			serial_port_open("/dev/pts/4");
+// 			wireless_open = 1;
+// 		}
+
+// #endif
 		
 		// transmit control signal at transmission frequency
 		gettimeofday(&ctrl_trans_end, 0);
 		if (time_dif(ctrl_trans_start, ctrl_trans_end)*1000 > (1000000 / TRANSMISSION_FREQ)) {
 			gettimeofday(&ctrl_trans_start, 0);
-			send_ctrl_msg(cont, c);
+			send_ctrl_msg(cont, c, (current_mode == MODE_WIRELESS ? &wireless_port : &fd_serial_port));
 			c = -1; // reset key
 		}
 #ifdef LOG_FROM_TERMINAL
-		if ((rc = serial_port_getchar()) != -1) {
+		if ((rc = serial_port_getchar((current_mode == MODE_WIRELESS ? &wireless_port : &fd_serial_port))) != -1) {
 			term_putchar(rc);
 			file_putchar(rc, fp);
 		}
 #endif
+#ifdef USE_WIRELESS
+			if (rc == '#' && !wireless_open){
+				serial_port_close(&fd_serial_port);
+				current_mode = MODE_WIRELESS;
+				serial_port_open("/dev/pts/11",&wireless_port);
+				wireless_open = 1;
+			}
 
+#endif
 #ifndef LOG_FROM_TERMINAL	
 		uint8_t mess[500];
 		int16_t start;
@@ -519,7 +609,7 @@ int main(int argc, char **argv)
 	fclose(fp);
 #endif
 	term_exitio();
-	serial_port_close();
+	serial_port_close(&wireless_port);
 	term_puts("\n<exit>\n");
 }
 
