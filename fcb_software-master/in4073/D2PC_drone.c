@@ -159,6 +159,9 @@ void send_data(D2PC_message_p m) {
 	uart_put((uint8_t)(m->tail));
 }
 
+/*
+ * @Author Zirui Li
+*/
 void print_data(D2PC_message_p p) {
     printf("index: %hhu,mode: %hhu,battery: %hhu,"\
             "yaw: %ld,pitch: %ld,roll: %ld,"\
