@@ -206,7 +206,7 @@ int16_t find_altitude(int32_t pressure){
  */
 void get_error(controls cont){
 	// find the error between control input and filtered IMU values:
-	error[0] = (int32_t) cont.yaw / 5 - yaw; // scale yaw control input
+	error[0] = (int32_t) -cont.yaw / 5 - yaw; // scale yaw control input
 	error[1] = (int32_t) cont.pitch / 2 - pitch; // scale pitch control input
 	error[2] = (int32_t) cont.roll / 5 - roll; // scale roll control input
 
@@ -285,9 +285,9 @@ void initialize_height_control(){
  * @Return scaled pid gains.
  */
 void set_raw_mode_gains(){
-	p_yaw = 1000, i_yaw = 100, d_yaw = 50;
-	p_pitch = 100, i_pitch = 5, d_pitch = 100;
-	p_roll = 100, i_roll = 5, d_roll = 100;
+	p_yaw = 2000, i_yaw = 100, d_yaw = 50;
+	p_pitch = 1000, i_pitch = 50, d_pitch = 100;
+	p_roll = 1000, i_roll = 50, d_roll = 100;
 }
 
 /*

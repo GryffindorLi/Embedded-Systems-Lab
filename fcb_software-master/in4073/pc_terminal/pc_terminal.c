@@ -17,7 +17,7 @@
 #include "../config.h"
 #include "../PC2D.h"
 
-#define JOYSTICK
+// #define JOYSTICK
 
 /*------------------------------------------------------------
  * console I/O
