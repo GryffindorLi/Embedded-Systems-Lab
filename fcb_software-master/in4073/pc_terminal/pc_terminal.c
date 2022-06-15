@@ -452,7 +452,11 @@ int main(int argc, char **argv)
 		if ((tmp_c = term_getchar_nb()) != -1) {
 			c = tmp_c;
 		}
-		
+/*
+ * @Author KARAN PATHAK
+ * @Param CHECK FOR DISCONNECTION OF JOYSTICK USING WATCHDOG TIMER
+ * reset the watchdog once messgae is recieved
+ */
 		#ifndef JOYSTICK
 			if (keyboard_control(&cont, c)) c = -1;
 		#else
