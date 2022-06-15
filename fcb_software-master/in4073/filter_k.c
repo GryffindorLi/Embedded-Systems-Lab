@@ -76,7 +76,7 @@ int16_t p_roll = Kpr, i_roll = Kir, d_roll = Kdr;
 
 /*
  * @Author Karan Pathak
- * @Param none.
+ * @Param none. Moving Avergae with gyro bias correction using accelerometer outputs
  * @Return filtered  pitch angles.
  */
 void filter_k(void)
