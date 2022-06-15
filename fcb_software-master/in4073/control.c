@@ -260,7 +260,7 @@ void controller(controls cont){
 		else
 			height_control_command = 0;
 
-		set_aes(cont.throttle + height_control_command, roll_command, pitch_command, yaw_command);
+		set_aes(cont.throttle + height_control_command, roll_command, pitch_command, -yaw_command);
 	}
 }
 
@@ -286,8 +286,8 @@ void initialize_height_control(){
  */
 void set_raw_mode_gains(){
 	p_yaw = 1000, i_yaw = 100, d_yaw = 50;
-	p_pitch = 2000, i_pitch = 50, d_pitch = 200;
-	p_roll = 7000, i_roll = 85, d_roll = 300;
+	p_pitch = 100, i_pitch = 5, d_pitch = 100;
+	p_roll = 100, i_roll = 5, d_roll = 100;
 }
 
 /*

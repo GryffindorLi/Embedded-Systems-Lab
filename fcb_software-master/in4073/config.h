@@ -22,12 +22,12 @@
 // ____PC terminal settings_____:
 #define TRANSMISSION_FREQ 50
 #define JOYSTICK_WATCHDOG_LIFETIME 200
-// #define JOYSTICK
+#define JOYSTICK
 
 // _____control gains_____:
 
 // yaw control gains:
-#define Kpy 1000
+#define Kpy 2000
 #define Kiy 100
 #define Kdy 50
 
@@ -117,7 +117,7 @@
 #define tune_offset 3
 // 1 = yaw, 2 = pitch, 3 = roll, 4 = height
 
-#define tuning_axis 3
+#define tuning_axis 1
 
 // enable PID prints, 1 = enable, 0 = disable
 #define PID_prints 1
