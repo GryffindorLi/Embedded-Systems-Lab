@@ -15,7 +15,7 @@
  */
 int	axis[6];
 int button[12];
-
+//@Author : Karan Pathak
 // void new_JS2PC_msg(JS_message* message, int* axis, int* button)
 // {
 // 	for (int i = 0; i < 6; i++)
