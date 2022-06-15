@@ -55,6 +55,9 @@ void term_putchar(char c)
 }
 
 #ifdef LOG_FROM_TERMINAL
+/*
+ * @Author Zirui Li
+*/
 void file_putchar(char c, FILE* fp)
 {
 	putc(c, fp);
@@ -183,6 +186,10 @@ uint8_t serial_port_getchar()
 	else return -1;
 }
 
+
+/*
+ * @Author Zirui Li
+*/
 int16_t serial_port_getmessage(uint8_t bytes[]){
 	int16_t size = 0;
 	int8_t flag;
@@ -220,7 +227,6 @@ int16_t serial_port_getstring(char string[]){
  * Decode the message according to different header.
  * @Return A void pointer which could later be casted to D2PC_message_p or D2PC_string_message_p.
  */
-
 void* decode(uint8_t mess[], int16_t start) {
 	//int start = 0;
 	if (!is_string){
@@ -412,7 +418,9 @@ int main(int argc, char **argv)
 	}
 
 	term_puts("Type ^C to exit\n");
-
+/*
+ * @Author Zirui Li
+*/
 #ifdef LOG_FROM_TERMINAL
 	char FileName[256];
 	time_t curr = time(NULL);
@@ -488,6 +496,9 @@ int main(int argc, char **argv)
 			send_ctrl_msg(cont, c);
 			c = -1; // reset key
 		}
+/*
+ * @Author Zirui Li
+*/
 #ifdef LOG_FROM_TERMINAL
 		if ((rc = serial_port_getchar()) != -1) {
 			term_putchar(rc);
@@ -495,6 +506,9 @@ int main(int argc, char **argv)
 		}
 #endif
 
+/*
+ * @Author Zirui Li
+*/
 #ifndef LOG_FROM_TERMINAL	
 		uint8_t mess[500];
 		int16_t start;
