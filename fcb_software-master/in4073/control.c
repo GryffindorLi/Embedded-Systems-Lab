@@ -108,10 +108,10 @@ void set_aes(uint16_t throttle, int16_t scaled_roll, int16_t scaled_pitch, int16
 	}
 	else {
 		// result after square root
-		ae[0] = int16sqrt(set_throttle(throttle, t_scale) - scaled_pitch * 2 - scaled_yaw)
-		ae[1] = int16sqrt(set_throttle(throttle, t_scale) - scaled_roll * 2 + scaled_yaw)
-		ae[2] = int16sqrt(set_throttle(throttle, t_scale) + scaled_pitch * 2 - scaled_yaw)
-		ae[3] = int16sqrt(set_throttle(throttle, t_scale) + scaled_roll * 2 + scaled_yaw)
+		ae[0] = int16sqrt(set_throttle(throttle, t_scale) - scaled_pitch * 2 - scaled_yaw);
+		ae[1] = int16sqrt(set_throttle(throttle, t_scale) - scaled_roll * 2 + scaled_yaw);
+		ae[2] = int16sqrt(set_throttle(throttle, t_scale) + scaled_pitch * 2 - scaled_yaw);
+		ae[3] = int16sqrt(set_throttle(throttle, t_scale) + scaled_roll * 2 + scaled_yaw);
 
 		// scaled and clamped to make them manueverable
 		ae[0] = int16clamp(after_sqrt_scale * ae[0], min_motor, max_motor);

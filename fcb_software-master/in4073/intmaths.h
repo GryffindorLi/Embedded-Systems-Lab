@@ -10,7 +10,6 @@ uint8_t safeuint8pint8(uint8_t a, int8_t b);
 int8_t safeint8pint8(int8_t a, int8_t b);
 
 int16_t int16sqrt(int16_t a);
-int16_t int16sqrt2(int32_t a);
 
 int8_t remap1628(int16_t a);
 uint8_t remapu1628(uint16_t a);

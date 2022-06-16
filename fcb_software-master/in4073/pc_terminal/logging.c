@@ -4,15 +4,15 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+static int created = 0;
+static char File_Name[256];
+
 /*
  * @Author Zirui Li
  * @Param message A pointer to void to accomandate 2 different types of message
  * @Param is_string A int represent whether it is a string message
  */
-
-static int created = 0;
-static char File_Name[256];
-
 void logging(void* message, int is_string){
 
     time_t curr_time = time(NULL);

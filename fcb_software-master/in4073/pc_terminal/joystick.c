@@ -16,8 +16,7 @@
 int	axis[6];
 int button[12];
 
-//@Author : Karan Pathak
-
+// @Author : Karan Pathak
 int js_init() {
 	int fd;
 	if ((fd = open(JS_DEV, O_RDONLY)) < 0) {
@@ -27,6 +26,7 @@ int js_init() {
 	return fd;
 }
 
+// @Author : Karan Pathak
 int read_file(int fd, struct js_event js, int* axis, int* button) {
 	int result;
 	result = read(fd, &js, sizeof(struct js_event));

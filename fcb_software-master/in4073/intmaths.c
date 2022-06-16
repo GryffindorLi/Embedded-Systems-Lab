@@ -101,32 +101,6 @@ int16_t int16sqrt(int16_t a) {
 }
 
 /*
- * @Author Kenrick Trip
- * @Param motor value outputted by the controller.
- * @Return the square root of this value.
- */
-int16_t int16sqrt2(int32_t a){
-	int16_t k = 1;
-	int16_t square = 1;
-    int sign = 1;
-
-    if (a < 0) {
-        a = -a;
-        sign = -1;
-    }
-	
-    if (a == 0 || a == 1)
-		return sign*a;
-	else {
-		while (square <= a) {
-			k++;
-			square = k*k;
-		}
-		return sign*(k - 1);
-	}
-}
-
-/*
 * @Author: Karan Pathak
 */
 uint16_t uint16clamp(uint16_t a, uint16_t min, uint16_t max) {
