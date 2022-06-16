@@ -293,8 +293,8 @@ void initialize_height_control(){
  */
 void set_raw_mode_gains(){
 	p_yaw = 2000, i_yaw = 100, d_yaw = 50;
-	p_pitch = 1000, i_pitch = 50, d_pitch = 100;
-	p_roll = 1000, i_roll = 50, d_roll = 100;
+	p_pitch = 3000, i_pitch = 70, d_pitch = 150;
+	p_roll = 3000, i_roll = 70, d_roll = 150;
 }
 
 /*
