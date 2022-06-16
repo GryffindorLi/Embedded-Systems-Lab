@@ -52,28 +52,28 @@ int8_t safeint8pint8(int8_t a, int8_t b) {
 }
 
 /*
-* @Author: Hanyuan Ban
+* @Author: Karan Pathak
 */
 int8_t remap1628(int16_t a) {
 	return (int8_t) (a / 256);
 }
 
 /*
-* @Author: Hanyuan Ban
+* @Author: Karan Pathak
 */
 uint8_t remapu1628(uint16_t a) {
 	return (uint8_t) (a / 256);
 }
 
 /*
-* @Author: Hanyuan Ban
+* @Author: Karan Pathak
 */
 int16_t remap8216(int8_t a) {
 	return (int16_t) a * 256;
 }
 
 /*
-* @Author: Hanyuan Ban
+* @Author: Karan Pathak
 */
 uint16_t remapu8216(uint8_t a) {
 	return (uint16_t) a * 256;
@@ -127,28 +127,28 @@ int16_t int16sqrt2(int32_t a){
 }
 
 /*
-* @Author: Hanyuan Ban
+* @Author: Karan Pathak
 */
 uint16_t uint16clamp(uint16_t a, uint16_t min, uint16_t max) {
     return MIN(max, MAX(min, a));
 }
 
 /*
-* @Author: Hanyuan Ban
+* @Author: Karan Pathak
 */
 int16_t int16clamp(int16_t a, int16_t min, int16_t max) {
     return MIN(max, MAX(min, a));
 }
 
 /*
-* @Author: Hanyuan Ban
+* @Author: Karan Pathak
 */
 uint8_t uint8clamp(uint8_t a, uint8_t min, uint8_t max) {
     return MIN(max, MAX(min, a));
 }
 
 /*
-* @Author: Hanyuan Ban
+* @Author: Karan Pathak
 */
 int8_t int8clamp(int8_t a, int8_t min, int8_t max) {
     return MIN(max, MAX(min, a));

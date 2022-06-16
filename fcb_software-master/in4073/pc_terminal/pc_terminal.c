@@ -347,7 +347,7 @@ uint8_t get_mode_change(char key, controls cont, int* buttons, uint8_t current_m
 }
 
 /*
- * @Author Hanyuan Ban
+ * @Author Karan Pathak
  * @Param cont: the control message being written, axis: control read from joystick
  * @Return None
  */
