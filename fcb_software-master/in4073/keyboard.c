@@ -198,7 +198,7 @@ void update_controller_gains(){
 }
 
 /*
- * @Author Hanyuan
+ * @Author Hanyuan Ban
  * @Param none.
  * @Return all control offsets set to 0.
  */

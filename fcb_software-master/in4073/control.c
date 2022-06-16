@@ -98,19 +98,26 @@ void update_motors(void){
 }
 
 /*
- * @AuthorHanyuan
- * @Param cont, struct of control commands.
- * @Return scaled throttle value.
- */
+* @Author Hanyuan Ban
+* @Param set the motors given scaled input. Implemented final scaling after square root.
+* @Return None
+*/
 void set_aes(uint16_t throttle, int16_t scaled_roll, int16_t scaled_pitch, int16_t scaled_yaw) {
 	if (set_throttle(throttle, t_scale) == 0){
 		ae[0] = ae[1] = ae[2] = ae[3] = 0;
 	}
 	else {
-		ae[0] = int16clamp(after_sqrt_scale * int16sqrt(set_throttle(throttle, t_scale) - scaled_pitch * 2 - scaled_yaw), min_motor, max_motor);
-		ae[1] = int16clamp(after_sqrt_scale * int16sqrt(set_throttle(throttle, t_scale) - scaled_roll * 2 + scaled_yaw), min_motor, max_motor);
-		ae[2] = int16clamp(after_sqrt_scale * int16sqrt(set_throttle(throttle, t_scale) + scaled_pitch * 2 - scaled_yaw), min_motor, max_motor);
-		ae[3] = int16clamp(after_sqrt_scale * int16sqrt(set_throttle(throttle, t_scale) + scaled_roll * 2 + scaled_yaw), min_motor, max_motor);
+		// result after square root
+		ae[0] = int16sqrt(set_throttle(throttle, t_scale) - scaled_pitch * 2 - scaled_yaw)
+		ae[1] = int16sqrt(set_throttle(throttle, t_scale) - scaled_roll * 2 + scaled_yaw)
+		ae[2] = int16sqrt(set_throttle(throttle, t_scale) + scaled_pitch * 2 - scaled_yaw)
+		ae[3] = int16sqrt(set_throttle(throttle, t_scale) + scaled_roll * 2 + scaled_yaw)
+
+		// scaled and clamped to make them manueverable
+		ae[0] = int16clamp(after_sqrt_scale * ae[0], min_motor, max_motor);
+		ae[1] = int16clamp(after_sqrt_scale * ae[1], min_motor, max_motor);
+		ae[2] = int16clamp(after_sqrt_scale * ae[2], min_motor, max_motor);
+		ae[3] = int16clamp(after_sqrt_scale * ae[3], min_motor, max_motor);
 	}
 }
 
