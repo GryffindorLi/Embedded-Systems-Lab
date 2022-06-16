@@ -17,6 +17,8 @@
 #include "../config.h"
 #include "../PC2D.h"
 
+// #define JOYSTICK
+
 /*------------------------------------------------------------
  * console I/O
  *------------------------------------------------------------
@@ -53,12 +55,20 @@ void term_putchar(char c)
 }
 
 #ifdef LOG_FROM_TERMINAL
+/*
+ * @Author Zirui Li
+*/
 void file_putchar(char c, FILE* fp)
 {
 	putc(c, fp);
 }
 #endif
 
+/*
+ * @Author Hanyuan Ban
+ * @Param None
+ * @Return inputted char, if is arrow key, tranlate to one special char
+ */
 int	term_getchar_nb()
 {
 	static unsigned char c1[2];
@@ -181,6 +191,10 @@ uint8_t serial_port_getchar()
 	else return -1;
 }
 
+
+/*
+ * @Author Zirui Li
+*/
 int16_t serial_port_getmessage(uint8_t bytes[]){
 	int16_t size = 0;
 	int8_t flag;
@@ -218,7 +232,6 @@ int16_t serial_port_getstring(char string[]){
  * Decode the message according to different header.
  * @Return A void pointer which could later be casted to D2PC_message_p or D2PC_string_message_p.
  */
-
 void* decode(uint8_t mess[], int16_t start) {
 	//int start = 0;
 	if (!is_string){
@@ -272,7 +285,11 @@ void* decode(uint8_t mess[], int16_t start) {
 	}
 }
 
-
+/*
+ * @Author Hanyuan Ban
+ * @Param cont: the controls, c: the control key
+ * @Return sent data length
+ */
 int send_ctrl_msg(controls cont, char c) {
 	CTRL_msg msg = new_ctrl_msg();
 	msg.checksum = sizeof(CTRL_msg);
@@ -288,6 +305,11 @@ int send_ctrl_msg(controls cont, char c) {
 	return bytes;
 }
 
+/*
+ * @Author Hanyuan Ban
+ * @Param mode: the mode
+ * @Return sent data length
+ */
 int send_mode_msg(uint8_t mode) {
 	MODE_msg msg = new_mode_msg();
 	msg.mode = mode;
@@ -301,6 +323,10 @@ int send_mode_msg(uint8_t mode) {
 	return bytes;
 }
 
+/*
+ * @Author Hanyuan Ban
+ * @Return the mode change according to key/button press and the current condition
+ */
 uint8_t get_mode_change(char key, controls cont, int* buttons, uint8_t current_mode) {
 	if (key == 27) return MODE_PANIC;	//escape
 	if (key == '0') return 0;
@@ -312,12 +338,19 @@ uint8_t get_mode_change(char key, controls cont, int* buttons, uint8_t current_m
 			return (uint8_t) key - '0';
 		else if (current_mode == MODE_HEIGHT_CONTROL && key == '5')
 			return (uint8_t) key - '0';
+		else if (current_mode == MODE_HEIGHT_CONTROL && key == '7')
+			return (uint8_t) key - '0';
 		else
 			fprintf(stderr,"Keep Controls Neutral!!\n");
 	}
 	return 255;
 }
 
+/*
+ * @Author Karan Pathak
+ * @Param cont: the control message being written, axis: control read from joystick
+ * @Return None
+ */
 void joystick_control(controls* cont, int* axis) {
 	cont->roll = axis[ROLL_AXIS];
 	cont->pitch = -axis[PITCH_AXIS];
@@ -325,6 +358,11 @@ void joystick_control(controls* cont, int* axis) {
 	cont->throttle = -axis[THROTTLE_AXIS] + 32767;
 }
 
+/*
+ * @Author Hanyuan Ban
+ * @Param cont: the control message being written, c: the input key. This is for tuning with keyboard only.
+ * @Return 1 if legal, 0 if not.
+ */
 int keyboard_control(controls* cont, char c) {
 	switch (c) {
 		case 32:	// space
@@ -372,9 +410,13 @@ int keyboard_control(controls* cont, char c) {
 	return 1;
 }
 
-
-float time_dif(struct timeval st, struct timeval ed) {
-	return (ed.tv_sec - st.tv_sec) * 1000.0f + (ed.tv_usec - st.tv_usec) / 1000.0f;
+/*
+ * @Author Hanyuan Ban
+ * @Param start: starting time, end: ending time
+ * @Return the time interval of two timestamps
+ */
+float time_dif(struct timeval start, struct timeval end) {
+	return (end.tv_sec - start.tv_sec) * 1000.0f + (end.tv_usec - start.tv_usec) / 1000.0f;
 }
 
 
@@ -382,7 +424,6 @@ float time_dif(struct timeval st, struct timeval ed) {
  * main -- execute terminal
  *----------------------------------------------------------------
  */
-
 int main(int argc, char **argv)
 {	
 	// ----------------------------------INITIALIZATION----------------------------------------
@@ -408,7 +449,9 @@ int main(int argc, char **argv)
 	}
 
 	term_puts("Type ^C to exit\n");
-
+/*
+ * @Author Zirui Li
+*/
 #ifdef LOG_FROM_TERMINAL
 	char FileName[256];
 	time_t curr = time(NULL);
@@ -448,7 +491,12 @@ int main(int argc, char **argv)
 		if ((tmp_c = term_getchar_nb()) != -1) {
 			c = tmp_c;
 		}
-		
+
+		/*
+		* @Author KARAN PATHAK
+		* @Param CHECK FOR DISCONNECTION OF JOYSTICK USING WATCHDOG TIMER
+		* reset the watchdog once message is recieved
+		*/
 		#ifndef JOYSTICK
 			if (keyboard_control(&cont, c)) c = -1;
 		#else
@@ -465,6 +513,11 @@ int main(int argc, char **argv)
 		#endif
 
 
+		/*
+		* @Author Hanyuan Ban
+		* @Param Send control message at TRANSMISSION FREQ, and mode message when legal mode change
+		* @Return None
+		*/
 		tmp_mode = get_mode_change(c, cont, buttons, current_mode);
 		// transmit mode change signal immediately after detection
 		if (tmp_mode != 255) {
@@ -480,6 +533,9 @@ int main(int argc, char **argv)
 			send_ctrl_msg(cont, c);
 			c = -1; // reset key
 		}
+/*
+ * @Author Zirui Li
+*/
 #ifdef LOG_FROM_TERMINAL
 		if ((rc = serial_port_getchar()) != -1) {
 			term_putchar(rc);
@@ -487,6 +543,9 @@ int main(int argc, char **argv)
 		}
 #endif
 
+/*
+ * @Author Zirui Li
+*/
 #ifndef LOG_FROM_TERMINAL	
 		uint8_t mess[500];
 		int16_t start;

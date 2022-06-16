@@ -43,7 +43,7 @@ uint32_t panic_to_safe_timer = -1;
 int32_t yaw, pitch, roll;
 int start_calibration;
 int16_t* aes;
-int16_t height_control_throttle;
+uint16_t height_control_throttle;
 char *mode_str[8] = {"safe", "panic", "manual", "calibration", "yaw-control", "full-control", "raw-mode", "height-mode"};
 
 int r_state = 0;
@@ -72,7 +72,7 @@ bool check_battery(){
 
 /*
  * @Author: Hanyuan Ban
- * @Param lq The receiving local queue, q The queue handling serial data.
+ * @Param q The queue handling serial data.
  */
 void receive_message(Queue* q) {
 	uint8_t c;
@@ -122,7 +122,11 @@ void receive_message(Queue* q) {
 	}
 }
 
-
+/*
+ * @Author: Hanyuan Ban
+ * @Param: current_mode: the current mode on board, aes: the motor values
+ * @Return: the current mode after changing
+ */
 uint8_t on_mode_change(uint8_t current_mode, int16_t* aes) {
 	uint8_t mode = Md_buffer[2];
 	switch (mode) {
@@ -201,7 +205,12 @@ uint8_t on_mode_change(uint8_t current_mode, int16_t* aes) {
 			if (current_mode == MODE_FULL_CONTROL) {
 				return current_mode;
 			} else {
-				if (aes[0] + aes[1] + aes[2] + aes[3] != 0) {
+				if ((current_mode == MODE_HEIGHT_CONTROL) && (aes[0] + aes[1] + aes[2] + aes[3] != 0)) {
+					start_calibration = 0;
+					height_control_throttle = current_control.throttle;
+					printf("\n---===Entering FULL CONTROL mode!===---\n");
+					return mode;
+				} else if (aes[0] + aes[1] + aes[2] + aes[3] != 0){
 					reset_control_offset();
 					printf("\n---===Stop motors first to enter FULL CONTROL mode!===---\n");
 					return current_mode;
@@ -249,6 +258,11 @@ uint8_t on_mode_change(uint8_t current_mode, int16_t* aes) {
 	}
 }
 
+/*
+ * @Author: Hanyuan Ban
+ * @Param: msg: the control message
+ * @Return: the current mode after changing
+ */
 controls on_set_control(CTRL_msg* msg) {
 	if (aes[0] / 4 + aes[1] / 4 + aes[2] / 4 + aes[3] / 4 < 125) {
 		if (msg->control.roll != 0 || msg->control.pitch != 0 || msg->control.yaw != 0 ) {
@@ -261,10 +275,16 @@ controls on_set_control(CTRL_msg* msg) {
 	return msg->control;
 }
 
+/*
+ * @Author: Hanyuan Ban
+ */
 char on_set_key(CTRL_msg* msg) {
 	return msg->key;
 }
 
+/*
+ * @Author: Hanyuan Ban
+ */
 void led_indicator(uint8_t current_mode) {
 	// change lights, set clear is reversed due to hardware
 	if (current_mode == MODE_PANIC) {
@@ -284,12 +304,6 @@ void led_indicator(uint8_t current_mode) {
 /*------------------------------------------------------------------
  * main -- everything you need is here :)
  *------------------------------------------------------------------
- */
-
-/*
- * @Author Hanyuan Ban
- * @Author Zirui Li
- * @Author Karan
  */
 
 int main(void){
@@ -320,18 +334,26 @@ int main(void){
 	// --------------------------------MAIN LOOP------------------------------------
 
 	while (!demo_done) {
+		/*
+		* @Author: Hanyuan Ban
+		*/
 		if (check_loop_time)
 			start_time = get_time_us();
 
 		if (rx_queue.count) {
 			receive_message(&rx_queue);
 		}
-		// check if there is message
+		/*
+		* @Author: Hanyuan Ban
+		*/
 		if (Md_flag == 1) {
 			current_mode = on_mode_change(current_mode, aes);
 			Md_flag = 0;
 			UART_watch_dog = 1000;
 		}
+		/*
+		* @Author: Hanyuan Ban
+		*/
 		if (Ct_flag == 1) {
 			current_control = on_set_control(&rec_msg);
 			current_key = on_set_key(&rec_msg);
@@ -341,11 +363,14 @@ int main(void){
 			s_timer = get_time_us();
 			if (get_time_us() - print_s_timer > 1000000) {
 				if (current_mode != MODE_CALIBRATION)
-					printf("\n Loop Time : %ldms\n", s_period);
+					printf("Loop time : %ld ms\n", s_period);
 				print_s_timer = get_time_us();
 			}
 		}
 		
+		/*
+		* @Author: Zirui Li
+		*/
 		#ifdef check_battery
 			if (!check_battery()){
 				current_mode = MODE_PANIC;
@@ -354,7 +379,9 @@ int main(void){
 			}
 		#endif
 
-		// PANIC to SAFE
+		/*
+		* @Author: Hanyuan Ban
+		*/
 		if (panic_to_safe_timer != -1) {
 			if (get_time_us() - panic_to_safe_timer > panic_to_safe_delay) {
 				current_mode = MODE_SAFE;
@@ -363,6 +390,9 @@ int main(void){
 			}
 		}
 
+		/*
+		* @Author: Kenrick Trip
+		*/
 		// HEIGHT to FULL control
 		if (current_mode == MODE_HEIGHT_CONTROL){
 			if (calibration == 0){
@@ -370,8 +400,8 @@ int main(void){
 				printf("\nCALIBRATE first before HEIGHT CONTROL\n");
 				printf("\nentered FULL CONTROL MODE\n");
 			}
-			else if ((current_control.throttle - height_control_throttle > 100) ||
-		    		 (current_control.throttle - height_control_throttle < -100)){
+			else if ((current_control.throttle - height_control_throttle > 200) ||
+		    		 (current_control.throttle - height_control_throttle < -200)){
 				current_mode = MODE_FULL_CONTROL;
 				printf("\nTHROTTLE disabled HEIGHT CONTROL\n");
 				printf("\nentered FULL CONTROL MODE\n");
@@ -386,6 +416,9 @@ int main(void){
 		// Change lights
 		led_indicator(current_mode);
 
+		/*
+		* @Author: Hanyuan Ban
+		*/
 		// Check Disconnection
 		if (get_time_us() - idle_timer > 1000) {
 			UART_watch_dog -= 3;
@@ -397,6 +430,7 @@ int main(void){
 			}
 		}
 
+
 		if (check_timer_flag()) {
 			// 20HZ
 			if (counter++%20 == 0) {
@@ -406,14 +440,14 @@ int main(void){
 					printf("\n--==<< controls (trpy): %d %d %d %d >>==--\n", current_control.throttle, current_control.roll,
 																			 current_control.pitch, current_control.yaw);
 					printf("\nMotor0: %d, Motor1: %d, Motor2: %d, Motor3: %d\n", aes[0], aes[1], aes[2], aes[3]);
-					printf("\nMode: %s\n", mode_str[current_mode]);
-					printf("theta: %d, sq: %d, say: %d, pitch: %ld\n", theta, sq, say, pitch);
+					printf("theta: %d, sq: %d, -sax: %d, pitch: %ld\n", theta, sq, -sax, pitch);
 					if (print_angles)
-						printf("\nYaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
-					if (check_loop_time)
-						printf("\n%ld\n", loop_time);
+						printf("Yaw: %ld, Pitch: %ld, Roll: %ld\n", yaw, pitch, roll);
 					if (PID_prints)
-						printf("\nP: %d, I: %d, D: %d\n", p_roll, i_roll, d_roll);
+						printf("P: %d, I: %d, D: %d\n", p_roll, i_roll, d_roll);
+
+					printf("\nMode: %s\n", mode_str[current_mode]);
+					printf("Height throttle: %d\n", height_control_throttle);
 				}
 
 				// D2PC_message m = init_message();
@@ -425,7 +459,11 @@ int main(void){
 			// D2PC_message p = init_message();
 			// send_data(&m);
 
+
 			// write_D2PC_msg_flash(&p);
+			/*
+			* @Author: Zirui Li
+			*/
 #ifndef LOG_FROM_TERMINAL
 			send_data(&m);
 #endif
@@ -455,6 +493,9 @@ int main(void){
 			current_key = '\0';
 		}
 
+		/*
+		* @Author: Karan Pathak
+		*/
 		if (check_loop_time) {
 			end_time = get_time_us();
 			loop_time = end_time - start_time;

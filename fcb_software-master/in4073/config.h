@@ -15,7 +15,7 @@
 #define serialprintf
 // uncomment to disbale tuning
 #define tuning
-// uncomment to disable battery check
+// uncomment to disable battery check when no battery is connected
 // #define protect_battery
 
 
@@ -27,14 +27,14 @@
 // _____control gains_____:
 
 // yaw control gains:
-#define Kpy 1000
+#define Kpy 2000
 #define Kiy 100
 #define Kdy 50
 
 // pitch control gains * 1000:
-#define Kpp 2000
-#define Kip 50
-#define Kdp 200
+#define Kpp 7000 // 2000
+#define Kip 85 // 50
+#define Kdp 300 // 200
 
 // roll control gains * 1000:
 #define Kpr 7000
@@ -42,7 +42,7 @@
 #define Kdr 300
 
 // height control gains:
-#define Kph 350
+#define Kph 500 // 350
 #define Kih 100
 #define Kdh 100
 
@@ -96,11 +96,12 @@
 
 // 1/looptime in hz
 #define freq 280
+#define raw_freq 100
 
 // _____filter_settings_____:
 
 // select kalman filter, 1 = enable, 0 = disable:
-#define use_kalman 1
+#define use_kalman 0
 
 // gyro and accelerometer percentages
 #define gyro_rate 98
@@ -108,7 +109,7 @@
 #define gyro_rate_yaw 1000
 #define acc_rate_yaw 1
 // print tuned angle values, 1 = enable, 0 = disable
-#define print_angles 0
+#define print_angles 1
 
 // _____tuning_settings_____:
 
@@ -116,7 +117,7 @@
 #define tune_offset 3
 // 1 = yaw, 2 = pitch, 3 = roll, 4 = height
 
-#define tuning_axis 3
+#define tuning_axis 1
 
 // enable PID prints, 1 = enable, 0 = disable
 #define PID_prints 1

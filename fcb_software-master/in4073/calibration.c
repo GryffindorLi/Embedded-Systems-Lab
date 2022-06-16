@@ -16,7 +16,10 @@ int32_t pitch_data[5], roll_data[5];
 int16_t C_pitch_offset, C_roll_offset, C_yaw_offset;
 int16_t C_pitch_slope, C_roll_slope;
 int16_t gyro_offsets[3];
+int16_t acc_offsets[3];
+
 int16_t sp, sq, sr;
+int16_t sax, say, saz;
 
 int32_t ref_temp;
 int8_t ref_altitude;
@@ -36,8 +39,8 @@ int32_t yaw, pitch, roll;
  * @Return calibration data.
  */
 void collect_data(){
-	pitch_data[calib_phase] = -pitch;
-	roll_data[calib_phase] = -roll;
+	pitch_data[calib_phase-1] = -pitch;
+	roll_data[calib_phase-1] = -roll;
 }
 
 /*
@@ -46,13 +49,16 @@ void collect_data(){
  * @Return angle offsets.
  */
 void set_offset(){
-    if (calib_phase == 0) {
+    if (calib_phase == 1) {
         C_yaw_offset = -yaw;
         C_pitch_offset = -pitch;
         C_roll_offset = -roll;
         gyro_offsets[0] = -sr;
         gyro_offsets[1] = -sq;
         gyro_offsets[2] = -sp;
+        acc_offsets[0] = -say;
+        acc_offsets[1] = -sax;
+        acc_offsets[2] = -say;
     }
     else if (calib_phase == 5) {
         ref_temp = temperature;
@@ -69,9 +75,6 @@ void set_offset(){
 void send_instruction(){
     if (calib_notice) {
         switch (calib_phase) {
-            case 0:
-                printf("\nPlace level, hit '+' key when ready \n");
-                break;
             case 1:
                 printf("\nPlace nose up, hit '+' key when ready\n");
                 break;
@@ -101,8 +104,10 @@ void send_instruction(){
  * @Return maximum value at 90 degrees bank.
  */
 void data_to_slope(){
-    C_pitch_slope = (MAX(pitch_data[1], -pitch_data[1]) + MAX(pitch_data[2], -pitch_data[2]) + 2*C_pitch_offset)/2;
-    C_roll_slope = (MAX(roll_data[3], -roll_data[3]) + MAX(roll_data[4], -roll_data[4]) + 2*C_roll_offset)/2;
+    C_pitch_slope = (MAX(pitch_data[1], -pitch_data[1]) + MAX(pitch_data[2], -pitch_data[2]))/2;
+    printf("\nPitch slope = %d\n", C_pitch_slope);
+    C_roll_slope = (MAX(roll_data[3], -roll_data[3]) + MAX(roll_data[4], -roll_data[4]))/2;
+    printf("\nRoll slope = %d\n", C_roll_slope);
 }
 
 /*
@@ -113,7 +118,7 @@ void data_to_slope(){
 void run_calibration(uint8_t key){
     if (start_calibration > 0){
         if (calib_notice == 0)
-            printf("\nHit '+' key to start \n");
+            printf("\nHit '+' key and keep level to start \n");
 
         if (start_calibration == 1) {
             calib_notice = 1;
@@ -121,11 +126,11 @@ void run_calibration(uint8_t key){
         
         if (calib_phase < 6) {
             if (key == '+') {
+                calib_phase += 1;
                 send_instruction();
-                if (calib_phase < 5)
+                if (calib_phase < 6)
                     collect_data();
                 set_offset();
-                calib_phase += 1;
                 calib_notice = 1;
             }
         }
