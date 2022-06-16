@@ -10,13 +10,13 @@ m2 = 0.08; % kg
 r1 = 0.045; % m
 r2 = l/sqrt(2); % m
 
-Iy = (2*m1*r1^2)/5 + 4*m2*l^2; % yaw inertia
-Ip = (2*m1*r1^2)/5 + 4*m2*r2^2; % pitch inertia
-Ir = Ip; % roll inertia
+Iy = (2*m1*r1^2)/5 + 4*m2*l^2 % yaw inertia
+Ip = (2*m1*r1^2)/5 + 4*m2*r2^2 % pitch inertia
+Ir = Ip % roll inertia
 
 % PWM to thrust (T) and torque (Q):
-cT = (0.78*9.81)/255;
-cQ = 0.07/255;
+cT = (0.78*9.81)/1000;
+cQ = 0.07/1000;
 
 % period of microcontroller
 dt = 0.1; % s
@@ -49,17 +49,17 @@ OLsys.Outputname = {'y','p','r'};
 % Closed loop control
 tau = 0.1;
 
-Kpy = 18.5; % controller P gain yaw
-Kiy = 1.07; % controller I gain yaw
-Kdy = 79.8; % controller D gain yaw
+Kpy = 72.4; % controller P gain yaw
+Kiy = 4.19; % controller I gain yaw
+Kdy = 313.0; % controller D gain yaw
 
-Kpp = 0.471; % controller P gain pitch
-Kip = 0.0273; % controller I gain pitch
-Kdp = 2.04; % controller D gain pitch
+Kpp = 1.85; % controller P gain pitch
+Kip = 0.107; % controller I gain pitch
+Kdp = 7.98; % controller D gain pitch
 
-Kpr = 0.471; % controller P gain roll
-Kir = 0.0273; % controller I gain roll
-Kdr = 2.04; % controller D gain roll
+Kpr = 1.85; % controller P gain roll
+Kir = 0.107; % controller I gain roll
+Kdr = 7.98; % controller D gain roll
 
 s = tf('s');
 Cy = (Kpy + Kiy/s + Kdy*s)/(tau*s+1); % yaw controller
@@ -110,8 +110,8 @@ step(DT_CLsys, 3);
 % simulate input control sequences:
 t = 0:dt:15;
 y_ref = 0.1*square(t);
-p_ref = -0.2*square(t-1);
-r_ref = 0.2*square(t-0.5); %zeros(1,length(t));
+p_ref = zeros(1,length(t));
+r_ref = zeros(1,length(t));
 u = [y_ref; p_ref; r_ref];
 
 y = lsim(DT_CLsys,u,t);

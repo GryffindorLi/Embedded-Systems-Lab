@@ -148,9 +148,11 @@ void pitch_cov(){
  * @Return error in state and derivative of state.
  */
 void pitch_error(){
-    // Yp[0] = theta - p_next[0];
     // Yp[0] = arccos164((164*say)/(acc_abs*181))*100 - r_next[0];
-    Yp[0] = -(sax  + acc_offsets[1]) - p_next[0];
+    if (use_kalman == 0)
+        Yp[0] = theta - p_next[0];
+    else
+        Yp[0] = -(sax  + acc_offsets[1]) - p_next[0];
     Yp[1] = (LSB_rad*(sq + gyro_offsets[1]))/LSB_drad - p_next[1];
 }
 
@@ -232,9 +234,11 @@ void roll_cov(){
  * @Return error in state and derivative of state.
  */
 void roll_error(){
-    // Yr[0] = phi - r_next[0];
     // Yr[0] = arccos164((164*sax)/(acc_abs*181))*100 - r_next[0];
-    Yr[0] = say + acc_offsets[2] - r_next[0];
+    if (use_kalman == 0)
+        Yr[0] = phi - r_next[0];
+    else
+        Yr[0] = say + acc_offsets[2] - r_next[0];
     Yr[1] = (LSB_rad*(sp + gyro_offsets[2]))/LSB_drad - r_next[1];
 }
 
